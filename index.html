@@ -562,7 +562,7 @@ function syncDots(){
         });
       } else { markerEntities[t.id].billboard.image=DOT_SUN; markerEntities[t.id].show=true; }
     } else {
-      if(markerEntities[t.id]) markerEntities[t.id].show=true;
+      if(markerEntities[t.id]) markerEntities[t.id].show=false;
     }
   });
 }
@@ -670,6 +670,13 @@ async function loadTerrasses(){
     terrasses=data; terrasses.forEach(t=>{sunStates[t.id]=true;});
     document.getElementById('footerText').textContent=`${terrasses.length} terrasses · OpenStreetMap`;
     renderList(currentHeure,'');
+    const launch=()=>{
+      viewer.scene.postRender.addEventListener(function once(){
+        viewer.scene.postRender.removeEventListener(once); runShadow();
+      });
+    };
+    if(splashDone) launch();
+    else { const w=setInterval(()=>{ if(splashDone){ clearInterval(w); launch(); } },100); }
   } catch(e){
     document.getElementById('loadingState').style.display='none';
     document.getElementById('terrasseList').style.display='block';
@@ -686,4 +693,6 @@ async function init(){
 init();
 </script></body>
 </html>
+
+
 
