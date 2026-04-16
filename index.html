@@ -387,8 +387,8 @@ viewer.scene.globe.preloadAncestors = true;
 viewer.scene.globe.preloadSiblings = false;
 viewer.scene.globe.enableLighting = true;
 viewer.scene.fog.enabled = false;
-viewer.shadows = false;
-viewer.resolutionScale = 1;
+viewer.shadows = true;
+viewer.resolutionScale = window.devicePixelRatio || 1; 
 viewer.scene.globe.showWaterEffect = false;
 viewer.scene.postProcessStages.fxaa.enabled = false;
 
