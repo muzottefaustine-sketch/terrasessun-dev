@@ -400,6 +400,9 @@ viewer.shadows = true;
 viewer.resolutionScale = window.devicePixelRatio || 1;
 viewer.scene.globe.showWaterEffect = false;
 viewer.scene.postProcessStages.fxaa.enabled = false;
+viewer.scene.screenSpaceCameraController.inertiaSpin = 0.9;
+viewer.scene.screenSpaceCameraController.inertiaTranslate = 0.9;
+viewer.scene.screenSpaceCameraController.inertiaZoom = 0.8;
 
 viewer.camera.setView({
   destination: Cesium.Cartesian3.fromDegrees(-0.57918, 44.837789, 450),
