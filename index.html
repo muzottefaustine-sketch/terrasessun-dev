@@ -282,8 +282,8 @@ isolation: isolate;
       <div class="splash-progress-bar" id="progressBar"></div>
     </div>
   </div>
-  <div class="splash-status" id="splashStatus">Chargement…</div>
-</div><!-- MAP --><div id="cesiumContainer"></div><!-- BARRE HAUT --><div id="topBar">
+</div><!-- MAP --><div id="cesiumContainer"></div><div id="liveDateBadge" style="position:fixed;top:calc(env(safe-area-inset-top,44px) - 4px);left:50%;transform:translateX(-50%);z-index:30;background:rgba(255,255,255,0.7);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.6);border-radius:20px;padding:4px 14px;font-family:Arial,sans-serif;font-size:12px;font-weight:600;color:#1C1C1E;white-space:nowrap;box-shadow:0 2px 12px rgba(0,0,0,0.08);"></div><!-- BARRE HAUT --><div id="topBar">
+
   <div class="search-glass">
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
       <circle cx="6.5" cy="6.5" r="5" stroke="#1C1C1E" stroke-width="1.5"/>
@@ -700,10 +700,21 @@ async function init(){
   const now=new Date();
   const initH=Math.min(21,Math.max(8,now.getHours()+(Math.round(now.getMinutes()/15)*15/60)));
   slider.value=initH; slider.dispatchEvent(new Event('input'));
-  loadTerrasses();
+   loadTerrasses();
 }
+
+function updateDateBadge() {
+  const now = new Date();
+  const jours = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+  const mois = ['jan','fév','mar','avr','mai','juin','juil','août','sep','oct','nov','déc'];
+  document.getElementById('liveDateBadge').textContent = `${jours[now.getDay()]} ${now.getDate()} ${mois[now.getMonth()]}`;
+}
+updateDateBadge();
+setInterval(updateDateBadge, 60000);
+
 init();
 </script></body>
+
 </html>
 
 
