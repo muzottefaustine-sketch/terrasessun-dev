@@ -300,7 +300,7 @@ isolation: isolate;
 </div><!-- CURSEUR BAS --><div class="panel-map">
   <h3>☀️ <span class="heure" id="heureAffichee">14h00</span></h3>
   <input type="range" id="timeSlider" min="8" max="21" value="14" step="0.25">
-  <div class="panel-labels"><span>8h</span><span>12h</span><span>17h</span><span>21</span></div>
+<div class="panel-labels"><span>8h</span><span>20h</span></div>
 </div><!-- TOOLTIP --><div id="tooltip">
   <div id="ttName"></div>
   <div class="tt-type" id="ttType"></div>
@@ -388,7 +388,7 @@ viewer.scene.globe.preloadSiblings = false;
 viewer.scene.globe.enableLighting = true;
 viewer.scene.fog.enabled = false;
 viewer.shadows = true;
-viewer.resolutionScale = window.devicePixelRatio || 1; 
+viewer.resolutionScale = window.devicePixelRatio || 1;
 viewer.scene.globe.showWaterEffect = false;
 viewer.scene.postProcessStages.fxaa.enabled = false;
 
@@ -693,6 +693,8 @@ async function init(){
 init();
 </script></body>
 </html>
+
+
 
 
 
