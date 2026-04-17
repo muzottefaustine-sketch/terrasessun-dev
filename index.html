@@ -520,10 +520,19 @@ viewer.camera.moveEnd.addEventListener(()=>{ cameraMoving=false; });
 let shadowDebounce=null, computing=false, shadowVersion=0;
 function scheduleShadow(){
   clearTimeout(shadowDebounce);
-  shadowDebounce=setTimeout(()=>{
-    if(cameraMoving) return;
-    const unsub=viewer.scene.postRender.addEventListener(()=>{ unsub(); runShadow(); });
-  }, 500);
+ shadowDebounce=setTimeout(()=>{
+  if(cameraMoving) return;
+  const waitTiles=()=>{
+    if(viewer.scene.globe.tilesLoaded){
+      runShadow();
+    } else {
+      const unsub=viewer.scene.postRender.addEventListener(()=>{
+        if(viewer.scene.globe.tilesLoaded){ unsub(); runShadow(); }
+      });
+    }
+  };
+  waitTiles();
+}, 500);
 }
 async function runShadow(){
   if(computing) return;
