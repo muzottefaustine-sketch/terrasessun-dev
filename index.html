@@ -662,7 +662,7 @@ slider.addEventListener('input',e=>{
   const val=parseFloat(e.target.value), h=Math.floor(val), m=Math.round((val-h)*60);
   document.getElementById('heureAffichee').textContent=h+'h'+(m<10?'0'+m:m);
 slider.style.setProperty('--pct',((val-8)/10)*100+'%');
-const date=new Date(); date.setHours(h+2,m,0,0);
+const date=new Date(); date.setHours(h-2,m,0,0);
 viewer.clock.currentTime=Cesium.JulianDate.fromDate(date);
   currentHeure=val;
 });
