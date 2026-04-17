@@ -1,5 +1,6 @@
 il<!DOCTYPE html><html lang="fr">
 <head>
+  <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.js"></script>
   <meta charset="UTF-8">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
@@ -498,12 +499,20 @@ async function fetchTerrasses(){
 }
 
 function getSunDir(jd){
-  const s=Cesium.Simon1994PlanetaryPositions.computeSunPositionInEarthInertialFrame(jd);
-  const m=Cesium.Transforms.computeIcrfToFixedMatrix(jd);
-  if(!m) return null;
-  const d=new Cesium.Cartesian3();
-  Cesium.Matrix3.multiplyByVector(m,s,d);
-  return Cesium.Cartesian3.normalize(d,d);
+  const date = Cesium.JulianDate.toDate(jd);
+  const pos = SunCalc.getPosition(date, 44.837789, -0.57918);
+  // altitude = hauteur au-dessus de l'horizon, azimuth = direction
+  if(pos.altitude <= 0) return null; // soleil sous l'horizon
+  // Convertir altitude/azimuth en vecteur 3D
+  const alt = pos.altitude;
+  const az = pos.azimuth;
+  const x = Math.cos(alt) * Math.sin(az);
+  const y = Math.cos(alt) * Math.cos(az);
+  const z = Math.sin(alt);
+  return Cesium.Cartesian3.normalize(
+    new Cesium.Cartesian3(x, y, z),
+    new Cesium.Cartesian3()
+  );
 }
 function checkSunny(t, sunDir){
   if(!sunDir) return false;
