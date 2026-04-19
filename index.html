@@ -507,7 +507,7 @@ function getSunDir(jd){
 }
 function checkSunny(t, sunDir){
   if(!sunDir) return false;
-  const pos=Cesium.Cartesian3.fromDegrees(t.lng,t.lat,4);
+  const pos=Cesium.Cartesian3.fromDegrees(t.lng,t.lat,1.0);
   const up=Cesium.Cartesian3.normalize(pos,new Cesium.Cartesian3());
   if(Cesium.Cartesian3.dot(sunDir,up)<=0.0) return false;
   return !viewer.scene.pickFromRay(new Cesium.Ray(pos,sunDir),Object.values(markerEntities));
