@@ -573,25 +573,17 @@ function makeSunIcon(sunny){
 const DOT_SUN=makeSunIcon(true), DOT_SHADE=makeSunIcon(false);
 
 function syncDots(){
-  terrasses.forEach(t=>{
-    const s=sunStates[t.id]===true;
-    if(s){
-      if(!markerEntities[t.id]){
-        markerEntities[t.id]=viewer.entities.add({
-          position:Cesium.Cartesian3.fromDegrees(t.lng,t.lat,2),
-          billboard:{image:DOT_SUN,verticalOrigin:Cesium.VerticalOrigin.CENTER,heightReference:Cesium.HeightReference.RELATIVE_TO_GROUND,width:20,height:20,disableDepthTestDistance:Number.POSITIVE_INFINITY},
-          properties:{id:t.id}
-        });
- } else {
-  if(!markerEntities[t.id]){
-    markerEntities[t.id]=viewer.entities.add({
-      position:Cesium.Cartesian3.fromDegrees(t.lng,t.lat,2),
-      billboard:{image:DOT_SUN,verticalOrigin:Cesium.VerticalOrigin.CENTER,heightReference:Cesium.HeightReference.RELATIVE_TO_GROUND,width:20,height:20,disableDepthTestDistance:Number.POSITIVE_INFINITY},
-      properties:{id:t.id}
-    });
-  } else { markerEntities[t.id].show=true; }
-}
-  });
+  terrasses.forEach(t=>{
+    if(!markerEntities[t.id]){
+      markerEntities[t.id]=viewer.entities.add({
+        position:Cesium.Cartesian3.fromDegrees(t.lng,t.lat,2),
+        billboard:{image:DOT_SUN,verticalOrigin:Cesium.VerticalOrigin.CENTER,heightReference:Cesium.HeightReference.RELATIVE_TO_GROUND,width:20,height:20,disableDepthTestDistance:Number.POSITIVE_INFINITY},
+        properties:{id:t.id}
+      });
+    } else {
+      markerEntities[t.id].show=true;
+    }
+  });
 }
 
 const tooltip=document.getElementById('tooltip');
