@@ -710,6 +710,8 @@ async function init(){
   const now=new Date();
   const initH=Math.min(21,Math.max(8,now.getHours()+(Math.round(now.getMinutes()/15)*15/60)));
   slider.value=initH; slider.dispatchEvent(new Event('input'));
+  const cityScroll=document.getElementById('cityScroll');
+CITIES.forEach(city=>{const chip=document.createElement('div');chip.className='city-chip'+(city.id==='bordeaux'?' active':'');chip.dataset.id=city.id;chip.textContent=city.flag+' '+city.nom;chip.addEventListener('click',()=>{currentCity=city;document.querySelectorAll('.city-chip').forEach(c=>c.classList.toggle('active',c.dataset.id===city.id));Object.keys(markerEntities).forEach(k=>{viewer.entities.remove(markerEntities[k]);delete markerEntities[k];});terrasses=[];sunStates={};viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(city.lng,city.lat,500),orientation:{heading:0,pitch:Cesium.Math.toRadians(-50),roll:0},duration:1.8});loadTerrasses();});cityScroll.appendChild(chip);});
   loadTerrasses();
 }
 init();
