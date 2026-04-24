@@ -582,10 +582,15 @@ function syncDots(){
           billboard:{image:DOT_SUN,verticalOrigin:Cesium.VerticalOrigin.CENTER,heightReference:Cesium.HeightReference.RELATIVE_TO_GROUND,width:20,height:20,disableDepthTestDistance:Number.POSITIVE_INFINITY},
           properties:{id:t.id}
         });
-      } else { markerEntities[t.id].billboard.image=DOT_SUN; markerEntities[t.id].show=true; }
-    } else {
-      if(markerEntities[t.id]) markerEntities[t.id].show=true;
-    }
+ } else {
+  if(!markerEntities[t.id]){
+    markerEntities[t.id]=viewer.entities.add({
+      position:Cesium.Cartesian3.fromDegrees(t.lng,t.lat,2),
+      billboard:{image:DOT_SUN,verticalOrigin:Cesium.VerticalOrigin.CENTER,heightReference:Cesium.HeightReference.RELATIVE_TO_GROUND,width:20,height:20,disableDepthTestDistance:Number.POSITIVE_INFINITY},
+      properties:{id:t.id}
+    });
+  } else { markerEntities[t.id].show=true; }
+}
   });
 }
 
