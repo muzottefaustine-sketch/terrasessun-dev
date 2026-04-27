@@ -11,8 +11,8 @@
   <meta name="apple-mobile-web-app-title" content="Soleilenterrasse">
   <meta name="format-detection" content="telephone=no">
   <title>Soleilenterrasse</title>
-  <script src="https://cesium.com/downloads/cesiumjs/releases/1.104/Build/Cesium/Cesium.js"></script>
-  <link href="https://cesium.com/downloads/cesiumjs/releases/1.104/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.115/Build/Cesium/Cesium.js"></script>
+  <link href="https://cesium.com/downloads/cesiumjs/releases/1.115/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -344,7 +344,7 @@ Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOi
 
 // ✅ On garde le terrain mondial comme référence de sol
 const viewer = new Cesium.Viewer('cesiumContainer', {
-  terrainProvider: Cesium.createWorldTerrain(),
+  terrain: Cesium.Terrain.fromWorldTerrain(),
   skyBox: false, skyAtmosphere: false,
   baseLayerPicker: false, homeButton: false, infoBox: false, selectionIndicator: false,
   navigationHelpButton: false, sceneModePicker: false, animation: false, timeline: false,
@@ -393,9 +393,9 @@ async function initGoogleTiles() {
   } catch(e) {
     console.warn('Google 3D Tiles erreur, fallback OSM…', e);
     // Fallback OSM si Google échoue
-    const osm = viewer.scene.primitives.add(Cesium.createOsmBuildings());
-    viewer.scene.globe.show = true;
-    osm.readyPromise.then(() => { buildingsOk = true; tryOpen(); }).catch(() => { buildingsOk = true; tryOpen(); });
+    const osm = await Cesium.createOsmBuildingsAsync();
+    viewer.scene.primitives.add(osm);
+    buildingsOk = true; tryOpen();
   }
 }
 
