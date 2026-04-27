@@ -342,9 +342,9 @@ setTimeout(completeSplash, 10000);
 // ══ CESIUM ══
 Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIwM2M0Njk1Yi1iYzI1LTQ3MzAtOGU1MS1iNzU4MTRiNWVkY2QiLCJpZCI6Mzk5MDg5LCJpYXQiOjE3NzI3ODI3NTh9.aGJt8zcDKPwk-pJsAcp0egE1wgJ5Vg41y_yQKNfUtYw';
 
-// ✅ CHANGÉ : plus de terrainProvider (Google 3D Tiles inclut le terrain)
+// ✅ On garde le terrain mondial comme référence de sol
 const viewer = new Cesium.Viewer('cesiumContainer', {
-  terrainProvider: new Cesium.EllipsoidTerrainProvider(),
+  terrainProvider: Cesium.createWorldTerrain(),
   skyBox: false, skyAtmosphere: false,
   baseLayerPicker: false, homeButton: false, infoBox: false, selectionIndicator: false,
   navigationHelpButton: false, sceneModePicker: false, animation: false, timeline: false,
@@ -355,9 +355,9 @@ viewer.scene.globe.maximumScreenSpaceError = 2;
 viewer.scene.globe.tileCacheSize = 100;
 viewer.scene.globe.preloadAncestors = false;
 viewer.scene.globe.preloadSiblings = false;
-viewer.scene.globe.enableLighting = false;   // ✅ Google tiles gèrent leur propre éclairage
+viewer.scene.globe.enableLighting = true;
 viewer.scene.fog.enabled = false;
-viewer.shadows = true;                        // ✅ Ombres activées pour le ray casting
+viewer.shadows = true;
 viewer.resolutionScale = window.devicePixelRatio || 1;
 viewer.scene.globe.showWaterEffect = false;
 viewer.scene.postProcessStages.fxaa.enabled = false;
@@ -365,8 +365,8 @@ viewer.scene.screenSpaceCameraController.inertiaSpin = 0.9;
 viewer.scene.screenSpaceCameraController.inertiaTranslate = 0.9;
 viewer.scene.screenSpaceCameraController.inertiaZoom = 0.8;
 
-// ✅ Cacher le globe car Google 3D Tiles couvrent tout
-viewer.scene.globe.show = false;
+// ✅ Globe visible = les tuiles Google s'ancrent correctement au sol
+viewer.scene.globe.show = true;
 
 viewer.camera.setView({
   destination: Cesium.Cartesian3.fromDegrees(-0.57918, 44.837789, 450),
@@ -653,7 +653,6 @@ init();
 
 </body>
 </html>
-
 
 
 
