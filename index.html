@@ -252,9 +252,9 @@ isolation: isolate;
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 .privacy-link { margin-left:auto; font-size:10px; color:var(--text-3); cursor:pointer; text-decoration:none; }
 
-.city-scroll { display:flex; gap:8px; overflow-x:auto; padding:0 0 12px 0; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
+.city-scroll { display:flex; flex-direction:column; gap:4px; padding:0 0 12px 0; overflow-y:auto; max-height:160px; scrollbar-width:none; }
 .city-scroll::-webkit-scrollbar { display:none; }
-.city-chip { flex-shrink:0; background:var(--bg); border:2px solid transparent; border-radius:20px; padding:7px 12px; font-size:13px; font-weight:600; color:var(--text); cursor:pointer; white-space:nowrap; font-family:Arial,sans-serif; }
+.city-chip { background:var(--bg); border:2px solid transparent; border-radius:10px; padding:8px 12px; font-size:13px; font-weight:600; color:var(--text); cursor:pointer; font-family:Arial,sans-serif; }
 .city-chip.active { background:var(--yellow-bg); border-color:var(--yellow); }
     
 </style>
@@ -355,7 +355,7 @@ isolation: isolate;
     _orig(p => { _pos = p; ok(p); }, err, { enableHighAccuracy: false, timeout: 6000, maximumAge: 300000 });
   };
 })();
-const CITIES=[{id:'bordeaux',nom:'Bordeaux',flag:'🌊',lat:44.837789,lng:-0.57918},{id:'paris',nom:'Paris',flag:'🗼',lat:48.856613,lng:2.352222},{id:'marseille',nom:'Marseille',flag:'⛵',lat:43.296482,lng:5.381118},{id:'lyon',nom:'Lyon',flag:'🦁',lat:45.764043,lng:4.835659},{id:'nice',nom:'Nice',flag:'🌴',lat:43.710173,lng:7.262011},{id:'madrid',nom:'Madrid',flag:'🇪🇸',lat:40.416775,lng:-3.703790},{id:'rome',nom:'Rome',flag:'🇮🇹',lat:41.902782,lng:12.496366},{id:'amsterdam',nom:'Amsterdam',flag:'🇳🇱',lat:52.370216,lng:4.895168}];
+const CITIES=[{id:'bordeaux',nom:'Bordeaux',lat:44.837789,lng:-0.57918},{id:'paris',nom:'Paris',lat:48.856613,lng:2.352222},{id:'marseille',nom:'Marseille',lat:43.296482,lng:5.381118},{id:'lyon',nom:'Lyon',lat:45.764043,lng:4.835659},{id:'toulouse',nom:'Toulouse',lat:43.604652,lng:1.444209},{id:'nice',nom:'Nice',lat:43.710173,lng:7.262011},{id:'cannes',nom:'Cannes',lat:43.552847,lng:7.017369},{id:'nantes',nom:'Nantes',lat:47.218371,lng:-1.553621},{id:'strasbourg',nom:'Strasbourg',lat:48.573405,lng:7.752111},{id:'montpellier',nom:'Montpellier',lat:43.610769,lng:3.876716},{id:'lille',nom:'Lille',lat:50.629250,lng:3.057256}];
 let currentCity=CITIES[0];
 const drawer = document.getElementById('drawer');
 function openDrawer()  { drawer.classList.add('open'); }
@@ -708,7 +708,7 @@ async function init(){
   const initH=Math.min(21,Math.max(8,now.getHours()+(Math.round(now.getMinutes()/15)*15/60)));
   slider.value=initH; slider.dispatchEvent(new Event('input'));
   const cityScroll=document.getElementById('cityScroll');
-CITIES.forEach(city=>{const chip=document.createElement('div');chip.className='city-chip'+(city.id==='bordeaux'?' active':'');chip.dataset.id=city.id;chip.textContent=city.flag+' '+city.nom;chip.addEventListener('click',()=>{currentCity=city;document.querySelectorAll('.city-chip').forEach(c=>c.classList.toggle('active',c.dataset.id===city.id));Object.keys(markerEntities).forEach(k=>{viewer.entities.remove(markerEntities[k]);delete markerEntities[k];});terrasses=[];sunStates={};viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(city.lng,city.lat,500),orientation:{heading:0,pitch:Cesium.Math.toRadians(-50),roll:0},duration:1.8});loadTerrasses();});cityScroll.appendChild(chip);});
+CITIES.forEach(city=>{const chip=document.createElement('div');chip.className='city-chip'+(city.id==='bordeaux'?' active':'');chip.dataset.id=city.id;chip.textContent=city.nom;chip.addEventListener('click',()=>{currentCity=city;document.querySelectorAll('.city-chip').forEach(c=>c.classList.toggle('active',c.dataset.id===city.id));Object.keys(markerEntities).forEach(k=>{viewer.entities.remove(markerEntities[k]);delete markerEntities[k];});terrasses=[];sunStates={};viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(city.lng,city.lat,500),orientation:{heading:0,pitch:Cesium.Math.toRadians(-50),roll:0},duration:1.8});loadTerrasses();});cityScroll.appendChild(chip);});
   loadTerrasses();
 }
 init();
