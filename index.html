@@ -79,7 +79,6 @@
 #btnGeo.locating { animation: geo-pulse 1s ease-in-out infinite; }
 @keyframes geo-pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
-/* ══ BOUTON VILLE ══ */
 #btnVille {
   flex-shrink: 0; height: 50px; padding: 0 14px;
   background: var(--glass); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
@@ -92,7 +91,6 @@
 }
 #btnVille:active { transform: scale(0.94); background: rgba(255,255,255,0.98); }
 
-/* ══ MENU VILLES ══ */
 #cityMenu {
   position: fixed;
   top: calc(env(safe-area-inset-top, 44px) + 70px);
@@ -263,12 +261,14 @@
   <div class="list" id="terrasseList" style="display:none;"></div>
   <div class="drawer-footer">
     <div class="live-dot"></div>
-    <span class="footer-text" id="footerText">Ombres 3D · OpenStreetMap</span>
+    <!-- ✅ CHANGÉ : mention Google 3D Tiles -->
+    <span class="footer-text" id="footerText">Ombres 3D · Google Maps</span>
     <a class="privacy-link" href="https://soleil-bordeaux.vercel.app/privacy.html" target="_blank">Confidentialité</a>
   </div>
 </div>
 
 <script>
+// ══ GPS CACHE ══
 (function() {
   const _orig = navigator.geolocation.getCurrentPosition.bind(navigator.geolocation);
   let _pos = null;
@@ -278,6 +278,7 @@
   };
 })();
 
+// ══ VILLES ══
 const CITIES = [
   {id:'bordeaux',   nom:'Bordeaux',    lat:44.837789, lng:-0.57918 },
   {id:'paris',      nom:'Paris',       lat:48.856613, lng:2.352222 },
@@ -293,7 +294,6 @@ const CITIES = [
 ];
 let currentCity = CITIES[0];
 
-// Remplir le menu
 const cityMenuEl = document.getElementById('cityMenu');
 CITIES.forEach(city => {
   const item = document.createElement('div');
@@ -316,6 +316,7 @@ CITIES.forEach(city => {
 function toggleCityMenu() { cityMenuEl.classList.toggle('open'); }
 document.addEventListener('click', e => { if (!e.target.closest('#btnVille') && !e.target.closest('#cityMenu')) cityMenuEl.classList.remove('open'); });
 
+// ══ DRAWER ══
 const drawer = document.getElementById('drawer');
 function openDrawer()  { drawer.classList.add('open'); }
 function closeDrawer() { drawer.classList.remove('open'); }
@@ -324,6 +325,7 @@ let ty0 = 0;
 dhandle.addEventListener('touchstart', e => { ty0 = e.touches[0].clientY; }, { passive:true });
 dhandle.addEventListener('touchend',   e => { if (e.changedTouches[0].clientY - ty0 > 50) closeDrawer(); }, { passive:true });
 
+// ══ SPLASH ══
 const progressBar = document.getElementById('progressBar');
 let splashDone = false, loadProgress = 0;
 function setProgress(pct, label) {
@@ -335,48 +337,88 @@ function completeSplash() {
   if (splashDone) return; splashDone = true; setProgress(100, 'Prêt !');
   setTimeout(() => { document.getElementById('splash').classList.add('out'); setTimeout(() => { document.getElementById('splash').style.display = 'none'; }, 650); }, 300);
 }
-setTimeout(completeSplash, 8000);
+setTimeout(completeSplash, 10000);
 
+// ══ CESIUM ══
 Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIwM2M0Njk1Yi1iYzI1LTQ3MzAtOGU1MS1iNzU4MTRiNWVkY2QiLCJpZCI6Mzk5MDg5LCJpYXQiOjE3NzI3ODI3NTh9.aGJt8zcDKPwk-pJsAcp0egE1wgJ5Vg41y_yQKNfUtYw';
 
+// ✅ CHANGÉ : plus de terrainProvider (Google 3D Tiles inclut le terrain)
 const viewer = new Cesium.Viewer('cesiumContainer', {
-  terrainProvider: Cesium.createWorldTerrain(), skyBox: false, skyAtmosphere: false,
+  terrainProvider: new Cesium.EllipsoidTerrainProvider(),
+  skyBox: false, skyAtmosphere: false,
   baseLayerPicker: false, homeButton: false, infoBox: false, selectionIndicator: false,
   navigationHelpButton: false, sceneModePicker: false, animation: false, timeline: false,
   fullscreenButton: false, geocoder: false, scene3DOnly: true,
 });
-viewer.scene.globe.maximumScreenSpaceError = 1;
-viewer.scene.globe.tileCacheSize = 500;
-viewer.scene.globe.preloadAncestors = true;
+
+viewer.scene.globe.maximumScreenSpaceError = 2;
+viewer.scene.globe.tileCacheSize = 100;
+viewer.scene.globe.preloadAncestors = false;
 viewer.scene.globe.preloadSiblings = false;
-viewer.scene.globe.enableLighting = true;
+viewer.scene.globe.enableLighting = false;   // ✅ Google tiles gèrent leur propre éclairage
 viewer.scene.fog.enabled = false;
-viewer.shadows = true;
+viewer.shadows = true;                        // ✅ Ombres activées pour le ray casting
 viewer.resolutionScale = window.devicePixelRatio || 1;
 viewer.scene.globe.showWaterEffect = false;
 viewer.scene.postProcessStages.fxaa.enabled = false;
 viewer.scene.screenSpaceCameraController.inertiaSpin = 0.9;
 viewer.scene.screenSpaceCameraController.inertiaTranslate = 0.9;
 viewer.scene.screenSpaceCameraController.inertiaZoom = 0.8;
-viewer.camera.setView({ destination: Cesium.Cartesian3.fromDegrees(-0.57918, 44.837789, 450), orientation: { heading: 0, pitch: Cesium.Math.toRadians(-50), roll: 0 } });
 
+// ✅ Cacher le globe car Google 3D Tiles couvrent tout
+viewer.scene.globe.show = false;
+
+viewer.camera.setView({
+  destination: Cesium.Cartesian3.fromDegrees(-0.57918, 44.837789, 450),
+  orientation: { heading: 0, pitch: Cesium.Math.toRadians(-50), roll: 0 }
+});
+
+// ══ GOOGLE PHOTOREALISTIC 3D TILES ══
+// ✅ REMPLACE createOsmBuildings() — hauteurs réelles par photogrammétrie satellite
 setProgress(10, 'Chargement…');
-const osmBuildings = viewer.scene.primitives.add(Cesium.createOsmBuildings());
-osmBuildings.maximumScreenSpaceError = 2;
-viewer.scene.globe.tileLoadProgressEvent.addEventListener(remaining => {
-  setProgress(Math.min(60, 10 + (1 - Math.min(remaining, 50) / 50) * 50), remaining === 0 ? 'Bâtiments…' : 'Chargement…');
-});
-let globeOk = false, buildingsOk = false;
-function tryOpen() {
-  if (!globeOk || !buildingsOk) return;
-  let f = 0;
-  viewer.scene.postRender.addEventListener(function waitRender() { if (++f >= 6) { viewer.scene.postRender.removeEventListener(waitRender); completeSplash(); } });
-}
-viewer.scene.postRender.addEventListener(function watchGlobe() {
-  if (viewer.scene.globe.tilesLoaded && !globeOk) { globeOk = true; setProgress(70, 'Bâtiments…'); viewer.scene.postRender.removeEventListener(watchGlobe); tryOpen(); }
-});
-osmBuildings.readyPromise.then(() => { buildingsOk = true; setProgress(85, 'Finalisation…'); tryOpen(); }).catch(() => { buildingsOk = true; tryOpen(); });
+let googleTileset = null;
+let buildingsOk = false;
+let globeOk = true; // Plus de globe à attendre
 
+async function initGoogleTiles() {
+  try {
+    googleTileset = await Cesium.createGooglePhotorealistic3DTileset(
+      'AIzaSyC4nbhNNAGI6kQlCheAEN6jZkQM1xyZOVI'
+    );
+    viewer.scene.primitives.add(googleTileset);
+    googleTileset.maximumScreenSpaceError = 8; // Équilibre qualité/perf
+    setProgress(85, 'Finalisation…');
+    buildingsOk = true;
+    tryOpen();
+  } catch(e) {
+    console.warn('Google 3D Tiles erreur, fallback OSM…', e);
+    // Fallback OSM si Google échoue
+    const osm = viewer.scene.primitives.add(Cesium.createOsmBuildings());
+    viewer.scene.globe.show = true;
+    osm.readyPromise.then(() => { buildingsOk = true; tryOpen(); }).catch(() => { buildingsOk = true; tryOpen(); });
+  }
+}
+
+function tryOpen() {
+  if (!buildingsOk) return;
+  let f = 0;
+  viewer.scene.postRender.addEventListener(function waitRender() {
+    if (++f >= 8) { viewer.scene.postRender.removeEventListener(waitRender); completeSplash(); }
+  });
+}
+
+// Suivi progression chargement tuiles
+viewer.scene.postRender.addEventListener(function watchProgress() {
+  const stats = viewer.scene.stats;
+  if (stats) {
+    const pct = Math.min(80, 10 + (stats.commandsExecuted / Math.max(stats.commandsInFrustum, 1)) * 70);
+    setProgress(pct);
+  }
+});
+
+initGoogleTiles();
+
+// ══ GÉOLOC ══
 let userDot = null;
 function makeUserDot() {
   const c = document.createElement('canvas'); c.width = 20; c.height = 20; const ctx = c.getContext('2d');
@@ -387,11 +429,11 @@ function makeUserDot() {
 }
 function placeUserDot(lng, lat) {
   if (userDot) viewer.entities.remove(userDot);
-  userDot = viewer.entities.add({ position: Cesium.Cartesian3.fromDegrees(lng, lat, 3), billboard: { image:makeUserDot(), verticalOrigin:Cesium.VerticalOrigin.CENTER, heightReference:Cesium.HeightReference.RELATIVE_TO_GROUND, width:20, height:20, disableDepthTestDistance:Number.POSITIVE_INFINITY } });
+  userDot = viewer.entities.add({
+    position: Cesium.Cartesian3.fromDegrees(lng, lat, 3),
+    billboard: { image:makeUserDot(), verticalOrigin:Cesium.VerticalOrigin.CENTER, heightReference:Cesium.HeightReference.RELATIVE_TO_GROUND, width:20, height:20, disableDepthTestDistance:Number.POSITIVE_INFINITY }
+  });
 }
-const _origGPS = navigator.geolocation.getCurrentPosition.bind(navigator.geolocation);
-let _cachedPos = null;
-navigator.geolocation.getCurrentPosition = function(ok, err, opt) { if (_cachedPos) { ok(_cachedPos); return; } _origGPS(p => { _cachedPos = p; ok(p); }, err, opt); };
 function geolocate() {
   if (!navigator.geolocation) return;
   const btn = document.getElementById('btnGeo'); btn.classList.add('locating');
@@ -403,12 +445,14 @@ function geolocate() {
   }, ()=>btn.classList.remove('locating'), { enableHighAccuracy:true, timeout:8000 });
 }
 
+// ══ STATE ══
 let terrasses=[], sunStates={}, searchQuery='', currentHeure=14, currentDate=new Date();
 const markerEntities={};
 
+// ══ OVERPASS / DATA ══
 function typeLabel(a){return{bar:'Bar',cafe:'Café',restaurant:'Restaurant',pub:'Pub',biergarten:'Brasserie'}[a]||'Terrasse';}
-
 const OVERPASS=['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter'];
+
 async function fetchTerrasses(){
   if(currentCity.id==='bordeaux'){
     const res=await fetch('/data/terrasses.json'); const data=await res.json(); const seen=new Set();
@@ -417,47 +461,76 @@ async function fetchTerrasses(){
   }
   const bbox=`${currentCity.lat-0.04},${currentCity.lng-0.06},${currentCity.lat+0.04},${currentCity.lng+0.06}`;
   const q=`[out:json][timeout:25];(node["amenity"~"bar|cafe|restaurant|pub|biergarten"](${bbox}););out body;`;
-  for(const url of OVERPASS){try{const r=await fetch(url,{method:'POST',body:'data='+encodeURIComponent(q)});if(!r.ok)throw new Error();const d=await r.json();const seen=new Set();return(d.elements||[]).filter(el=>el.lat&&el.lon&&el.tags?.name&&!seen.has(el.tags.name)&&seen.add(el.tags.name)).map(el=>({id:el.id,nom:el.tags.name,adresse:el.tags['addr:street']?((el.tags['addr:housenumber']||'')+' '+el.tags['addr:street']).trim():'',type:typeLabel(el.tags.amenity),lng:el.lon,lat:el.lat}));}catch(e){}}
+  for(const url of OVERPASS){
+    try{
+      const r=await fetch(url,{method:'POST',body:'data='+encodeURIComponent(q)});
+      if(!r.ok)throw new Error();
+      const d=await r.json(); const seen=new Set();
+      return(d.elements||[]).filter(el=>el.lat&&el.lon&&el.tags?.name&&!seen.has(el.tags.name)&&seen.add(el.tags.name))
+        .map(el=>({id:el.id,nom:el.tags.name,adresse:el.tags['addr:street']?((el.tags['addr:housenumber']||'')+' '+el.tags['addr:street']).trim():'',type:typeLabel(el.tags.amenity),lng:el.lon,lat:el.lat}));
+    }catch(e){}
+  }
   return[];
 }
 
+// ══ RAY CASTING (identique, fonctionne mieux avec Google 3D Tiles) ══
 function getSunDir(jd){
   const s=Cesium.Simon1994PlanetaryPositions.computeSunPositionInEarthInertialFrame(jd);
   const m=Cesium.Transforms.computeIcrfToFixedMatrix(jd); if(!m) return null;
   const d=new Cesium.Cartesian3(); Cesium.Matrix3.multiplyByVector(m,s,d); return Cesium.Cartesian3.normalize(d,d);
 }
-function checkSunny(t,sunDir){
+function checkSunny(t, sunDir){
   if(!sunDir) return false;
-  const pos=Cesium.Cartesian3.fromDegrees(t.lng,t.lat,1.0); const up=Cesium.Cartesian3.normalize(pos,new Cesium.Cartesian3());
-  if(Cesium.Cartesian3.dot(sunDir,up)<=0.0) return false;
-  return !viewer.scene.pickFromRay(new Cesium.Ray(pos,sunDir),Object.values(markerEntities));
+  const pos=Cesium.Cartesian3.fromDegrees(t.lng, t.lat, 1.0);
+  const up=Cesium.Cartesian3.normalize(pos, new Cesium.Cartesian3());
+  if(Cesium.Cartesian3.dot(sunDir, up) <= 0.0) return false;
+  // ✅ pickFromRay intercepte maintenant les vrais meshes Google 3D
+  const hit = viewer.scene.pickFromRay(new Cesium.Ray(pos, sunDir), Object.values(markerEntities));
+  return !hit;
 }
 
 let cameraMoving=false;
-viewer.camera.moveStart.addEventListener(()=>{cameraMoving=true;});
-viewer.camera.moveEnd.addEventListener(()=>{cameraMoving=false;});
+viewer.camera.moveStart.addEventListener(()=>{ cameraMoving=true; });
+viewer.camera.moveEnd.addEventListener(()=>{ cameraMoving=false; });
 
-let shadowDebounce=null,computing=false,shadowVersion=0;
+let shadowDebounce=null, computing=false, shadowVersion=0;
 function scheduleShadow(){
   clearTimeout(shadowDebounce);
   shadowDebounce=setTimeout(()=>{
     if(cameraMoving) return;
-    const waitTiles=()=>{ if(viewer.scene.globe.tilesLoaded){runShadow();}else{const unsub=viewer.scene.postRender.addEventListener(()=>{if(viewer.scene.globe.tilesLoaded){unsub();runShadow();}});} };
+    const waitTiles=()=>{
+      // ✅ Attendre que les tuiles Google soient chargées avant le ray casting
+      const ready = googleTileset
+        ? !googleTileset._loader || googleTileset._loader._statsInFlight === 0
+        : viewer.scene.globe.tilesLoaded;
+      if(ready){ runShadow(); }
+      else {
+        const unsub=viewer.scene.postRender.addEventListener(()=>{
+          const r2 = googleTileset
+            ? !googleTileset._loader || googleTileset._loader._statsInFlight === 0
+            : viewer.scene.globe.tilesLoaded;
+          if(r2){ unsub(); runShadow(); }
+        });
+      }
+    };
     waitTiles();
-  },500);
+  }, 600);
 }
+
 async function runShadow(){
   if(computing) return; computing=true; const version=++shadowVersion;
   const jd=viewer.clock.currentTime; const sunDir=getSunDir(jd);
-  for(let i=0;i<terrasses.length;i+=10){
-    if(version!==shadowVersion||cameraMoving){computing=false;return;}
-    for(const t of terrasses.slice(i,i+10)) sunStates[t.id]=checkSunny(t,sunDir);
-    syncDots(); renderList(currentHeure,searchQuery);
+  for(let i=0; i<terrasses.length; i+=10){
+    if(version!==shadowVersion || cameraMoving){ computing=false; return; }
+    viewer.scene.render(jd);
+    for(const t of terrasses.slice(i,i+10)) sunStates[t.id]=checkSunny(t, sunDir);
+    syncDots(); renderList(currentHeure, searchQuery);
     await new Promise(r=>setTimeout(r,0));
   }
   computing=false;
 }
 
+// ══ DOTS ══
 function makeSunIcon(sunny){
   const c=document.createElement('canvas'); c.width=20; c.height=20; const ctx=c.getContext('2d');
   if(sunny){
@@ -471,20 +544,31 @@ function makeSunIcon(sunny){
   }
   return c.toDataURL();
 }
-const DOT_SUN=makeSunIcon(true),DOT_SHADE=makeSunIcon(false);
+const DOT_SUN=makeSunIcon(true), DOT_SHADE=makeSunIcon(false);
 
 function syncDots(){
   terrasses.forEach(t=>{
+    const s=sunStates[t.id]===true;
     if(!markerEntities[t.id]){
-      markerEntities[t.id]=viewer.entities.add({position:Cesium.Cartesian3.fromDegrees(t.lng,t.lat,2),billboard:{image:DOT_SUN,verticalOrigin:Cesium.VerticalOrigin.CENTER,heightReference:Cesium.HeightReference.RELATIVE_TO_GROUND,width:20,height:20,disableDepthTestDistance:Number.POSITIVE_INFINITY},properties:{id:t.id}});
-    }else{ markerEntities[t.id].show=true; }
+      markerEntities[t.id]=viewer.entities.add({
+        position:Cesium.Cartesian3.fromDegrees(t.lng,t.lat,2),
+        billboard:{image:s?DOT_SUN:DOT_SHADE,verticalOrigin:Cesium.VerticalOrigin.CENTER,heightReference:Cesium.HeightReference.RELATIVE_TO_GROUND,width:20,height:20,disableDepthTestDistance:Number.POSITIVE_INFINITY},
+        properties:{id:t.id}
+      });
+    }else{
+      markerEntities[t.id].billboard.image = s ? DOT_SUN : DOT_SHADE;
+      markerEntities[t.id].show = true;
+    }
   });
 }
 
+// ══ TOOLTIP ══
 const tooltip=document.getElementById('tooltip'); let ttTimeout=null;
 function showTooltip(t,x,y){
   document.getElementById('ttName').textContent=t.nom;
   document.getElementById('ttType').textContent=t.type+(t.adresse?' · '+t.adresse:'');
+  const s=sunStates[t.id]===true;
+  const el=document.getElementById('ttSun'); el.textContent=s?'☀ Au soleil':'🌥 À l\'ombre'; el.className='tt-sun '+(s?'sun':'shade');
   const w=260; tooltip.style.left=Math.min(Math.max(x-w/2,10),window.innerWidth-w-10)+'px'; tooltip.style.top=Math.max(y-130,10)+'px';
   tooltip.classList.add('visible'); if(navigator.vibrate) navigator.vibrate(10);
   const ml=document.getElementById('ttMaps'); if(ml) ml.href=`https://maps.apple.com/?q=${encodeURIComponent(t.nom+', '+currentCity.nom)}&ll=${t.lat},${t.lng}`;
@@ -492,9 +576,11 @@ function showTooltip(t,x,y){
 }
 function hideTooltip(){clearTimeout(ttTimeout);tooltip.classList.remove('visible');}
 
+// ══ HELPERS ══
 function normalize(s){return(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
 function highlight(text,q){if(!q)return text;return text.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi'),'<mark style="background:#FFFBE0;color:#9A7E00;border-radius:3px;padding:0 2px">$1</mark>');}
 
+// ══ LISTE ══
 function renderList(h,query){
   const list=document.getElementById('terrasseList');
   const q=normalize(query||'');
@@ -505,16 +591,21 @@ function renderList(h,query){
   sorted.forEach(t=>{
     const card=document.createElement('div'); card.className='card'; card.dataset.id=t.id;
     card.innerHTML=`<div class="card-icon sun">☀️</div><div class="card-body"><div class="card-name">${highlight(t.nom,query)}</div><div class="card-sub">${t.type}${t.adresse?' · '+t.adresse:''}</div></div>`;
-    card.addEventListener('click',()=>{ document.querySelectorAll('.card').forEach(c=>c.classList.remove('active')); card.classList.add('active'); closeDrawer(); viewer.camera.flyToBoundingSphere(new Cesium.BoundingSphere(Cesium.Cartesian3.fromDegrees(t.lng,t.lat,0),120),{offset:new Cesium.HeadingPitchRange(0,Cesium.Math.toRadians(-65),220),duration:1.4}); });
+    card.addEventListener('click',()=>{
+      document.querySelectorAll('.card').forEach(c=>c.classList.remove('active')); card.classList.add('active'); closeDrawer();
+      viewer.camera.flyToBoundingSphere(new Cesium.BoundingSphere(Cesium.Cartesian3.fromDegrees(t.lng,t.lat,0),120),{offset:new Cesium.HeadingPitchRange(0,Cesium.Math.toRadians(-65),220),duration:1.4});
+    });
     list.appendChild(card);
   });
 }
 
-const searchInput=document.getElementById('searchInput'),searchClear=document.getElementById('searchClear');
+// ══ SEARCH ══
+const searchInput=document.getElementById('searchInput'), searchClear=document.getElementById('searchClear');
 searchInput.addEventListener('input',e=>{searchQuery=e.target.value;document.getElementById('drawerSearch').value=searchQuery;searchClear.classList.toggle('visible',searchQuery.length>0);renderList(currentHeure,searchQuery);if(searchQuery.length>0)openDrawer();});
 searchClear.addEventListener('click',()=>{searchInput.value='';searchQuery='';document.getElementById('drawerSearch').value='';searchClear.classList.remove('visible');renderList(currentHeure,'');});
 document.getElementById('drawerSearch').addEventListener('input',e=>{searchQuery=e.target.value;searchInput.value=searchQuery;searchClear.classList.toggle('visible',searchQuery.length>0);renderList(currentHeure,searchQuery);});
 
+// ══ SLIDER ══
 const slider=document.getElementById('timeSlider');
 slider.addEventListener('input',e=>{
   const val=parseFloat(e.target.value),h=Math.floor(val),m=Math.round((val-h)*60);
@@ -523,8 +614,9 @@ slider.addEventListener('input',e=>{
   currentDate=new Date(); currentDate.setHours(h-2,m,0,0);
   viewer.clock.currentTime=Cesium.JulianDate.fromDate(currentDate); currentHeure=val;
 });
-slider.addEventListener('change',e=>{if(terrasses.length>0)scheduleShadow();});
+slider.addEventListener('change',()=>{ if(terrasses.length>0) scheduleShadow(); });
 
+// ══ CLICK ══
 const handler=new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
 handler.setInputAction(click=>{
   const picked=viewer.scene.pick(click.position);
@@ -532,18 +624,19 @@ handler.setInputAction(click=>{
   hideTooltip();
 },Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
+// ══ BOOT ══
 async function loadTerrasses(){
   document.getElementById('loadingState').style.display='flex';
   document.getElementById('terrasseList').style.display='none';
-  try {
+  try{
     const data=await fetchTerrasses();
     document.getElementById('loadingState').style.display='none';
     document.getElementById('terrasseList').style.display='block';
     terrasses=data; terrasses.forEach(t=>{sunStates[t.id]=true;});
     document.getElementById('footerText').textContent=`${terrasses.length} terrasses · ${currentCity.nom}`;
     renderList(currentHeure,'');
-    const launch=()=>{viewer.scene.postRender.addEventListener(function once(){viewer.scene.postRender.removeEventListener(once);runShadow();});};
-    if(splashDone) launch(); else{const w=setInterval(()=>{if(splashDone){clearInterval(w);launch();}},100);}
+    const launch=()=>{ viewer.scene.postRender.addEventListener(function once(){ viewer.scene.postRender.removeEventListener(once); runShadow(); }); };
+    if(splashDone) launch(); else { const w=setInterval(()=>{ if(splashDone){ clearInterval(w); launch(); } },100); }
   }catch(e){
     document.getElementById('loadingState').style.display='none';
     document.getElementById('terrasseList').style.display='block';
@@ -560,11 +653,6 @@ init();
 
 </body>
 </html>
-
-
-
-
-
 
 
 
