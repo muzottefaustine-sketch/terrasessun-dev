@@ -1,9 +1,10 @@
-il<!DOCTYPE html><html lang="fr">
+<!DOCTYPE html><html lang="fr">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -23,33 +24,12 @@ il<!DOCTYPE html><html lang="fr">
       --glass: rgba(255,255,255,0.85);
       --white: #FFFFFF; --bg: #F2F2F7;
     }
+    .panel-map input[type=range] { touch-action: pan-x; }
+    #cesiumContainer { touch-action: none; }
+    html, body { height: 100%; width: 100%; overflow: hidden; font-family: Arial, sans-serif; background: #000; position: fixed; inset: 0; }
 
-.panel-map input[type=range] {
-  touch-action: pan-x;
-}
-
-#cesiumContainer {
-  touch-action: none;
-}
-
-
-html, body {
-  height: 100%; width: 100%;
-  overflow: hidden;
-  font-family: Arial, sans-serif;
-  background: #000;
-  position: fixed;
-  inset: 0;
-}
-
-/* ══ SPLASH ══ */
-#splash {
-  position: fixed; inset: 0; z-index: 1000;
-  background: #fff;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  transition: opacity 0.6s ease;
-}
+```
+#splash { position: fixed; inset: 0; z-index: 1000; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.6s ease; }
 #splash.out { opacity: 0; pointer-events: none; }
 .splash-sun { width: 90px; height: 90px; margin-bottom: 24px; animation: splash-pulse 2.5s ease-in-out infinite; }
 @keyframes splash-pulse { 0%,100%{transform:scale(1) rotate(0deg);} 50%{transform:scale(1.07) rotate(6deg);} }
@@ -63,37 +43,20 @@ html, body {
 .splash-progress-bar { height: 100%; border-radius: 2px; background: var(--yellow); width: 0%; transition: width 0.25s ease; }
 .splash-status { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); font-size: 10px; color: var(--text-3); white-space: nowrap; }
 
-/* ══ MAP — prend tout l'écran ══ */
-#cesiumContainer {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  width: 100%;
-height: 100%;
-}
+#cesiumContainer { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; }
 .cesium-widget canvas { outline: none !important; }
 .cesium-selection-wrapper, .cesium-infoBox { display: none !important; }
 .cesium-widget-credits { display: none !important; }
 
-/* ══ BARRE HAUT — sous la safe area ══ */
 #topBar {
-  position: fixed;
-  top: calc(env(safe-area-inset-top, 44px) + 12px);
-  left: 50%;
-  transform: translate3d(-50%, 0, 0);
-  -webkit-transform: translate3d(-50%, 0, 0);
-  will-change: transform;
-  isolation: isolate;
-  z-index: 30;
-  width: calc(100% - 32px);
-  max-width: 480px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  position: fixed; top: calc(env(safe-area-inset-top, 44px) + 12px); left: 50%;
+  transform: translate3d(-50%, 0, 0); -webkit-transform: translate3d(-50%, 0, 0);
+  will-change: transform; isolation: isolate; z-index: 30;
+  width: calc(100% - 32px); max-width: 480px; display: flex; align-items: center; gap: 10px;
 }
 .search-glass {
   flex: 1; display: flex; align-items: center; gap: 8px;
-  background: var(--glass);
-  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  background: var(--glass); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
   border-radius: 16px; padding: 0 14px; height: 50px;
   box-shadow: 0 4px 24px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.8);
   border: 1px solid rgba(255,255,255,0.6);
@@ -103,174 +66,136 @@ height: 100%;
 #searchInput::placeholder { color: var(--text-3); }
 .search-clear-btn { background: none; border: none; cursor: pointer; color: var(--text-3); font-size: 16px; padding: 0; display: none; align-items: center; justify-content: center; width: 20px; height: 20px; }
 .search-clear-btn.visible { display: flex; }
-
 .icon-btn {
-  flex-shrink: 0; width: 50px; height: 50px;
-  background: var(--glass);
+  flex-shrink: 0; width: 50px; height: 50px; background: var(--glass);
   backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
   border: 1px solid rgba(255,255,255,0.6); border-radius: 15px;
   box-shadow: 0 4px 24px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.8);
   cursor: pointer; display: flex; align-items: center; justify-content: center;
-  transition: transform 0.1s, background 0.15s;
-  -webkit-transform: translate3d(0, 0, 0);
-will-change: transform;
-isolation: isolate;
+  transition: transform 0.1s, background 0.15s; -webkit-transform: translate3d(0, 0, 0);
+  will-change: transform; isolation: isolate;
 }
 .icon-btn:active { transform: scale(0.94); background: rgba(255,255,255,0.98); }
 #btnGeo.locating { animation: geo-pulse 1s ease-in-out infinite; }
 @keyframes geo-pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
-/* ══ CURSEUR BAS — au-dessus de la safe area ══ */
-.panel-map {
+/* ══ BOUTON VILLE ══ */
+#btnVille {
+  flex-shrink: 0; height: 50px; padding: 0 14px;
+  background: var(--glass); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.6); border-radius: 15px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.8);
+  cursor: pointer; display: flex; align-items: center; gap: 5px;
+  font-family: Arial, sans-serif; font-size: 13px; font-weight: 600; color: var(--text);
+  white-space: nowrap; transition: transform 0.1s, background 0.15s;
+  -webkit-transform: translate3d(0, 0, 0); will-change: transform; isolation: isolate;
+}
+#btnVille:active { transform: scale(0.94); background: rgba(255,255,255,0.98); }
+
+/* ══ MENU VILLES ══ */
+#cityMenu {
   position: fixed;
- bottom: calc(env(safe-area-inset-bottom, 34px) + 16px);
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--glass);
+  top: calc(env(safe-area-inset-top, 44px) + 70px);
+  right: 16px;
+  background: var(--white);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  z-index: 100;
+  display: none;
+  min-width: 160px;
+  overflow: hidden;
+  border: 1px solid var(--divider);
+}
+#cityMenu.open { display: block; }
+.city-item {
+  padding: 13px 16px;
+  font-size: 14px; font-weight: 600; color: var(--text);
+  cursor: pointer; border-bottom: 1px solid var(--divider);
+  font-family: Arial, sans-serif;
+  transition: background 0.1s;
+}
+.city-item:last-child { border-bottom: none; }
+.city-item.active { color: var(--yellow); background: var(--yellow-bg); }
+.city-item:active { background: var(--bg); }
+
+.panel-map {
+  position: fixed; bottom: calc(env(safe-area-inset-bottom, 34px) + 16px); left: 50%;
+  transform: translateX(-50%); background: var(--glass);
   backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255,255,255,0.6);
-  padding: 16px 24px 14px; border-radius: 24px;
+  border: 1px solid rgba(255,255,255,0.6); padding: 16px 24px 14px; border-radius: 24px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.8);
   text-align: center; z-index: 30; width: 82%; max-width: 400px;
 }
-.panel-map h3 {
-  margin: 0 0 12px 0; font-size: 15px; font-weight: 600; color: var(--text);
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-}
+.panel-map h3 { margin: 0 0 12px 0; font-size: 15px; font-weight: 600; color: var(--text); display: flex; align-items: center; justify-content: center; gap: 8px; }
 .panel-map h3 .heure { font-size: 18px; font-weight: 700; color: var(--text); font-family: Arial, sans-serif; }
-.panel-map input[type=range] {
-  width: 100%; cursor: pointer; -webkit-appearance: none; height: 4px; border-radius: 2px;
-  background: linear-gradient(to right, var(--yellow) var(--pct,46%), rgba(0,0,0,0.1) var(--pct,46%));
-  outline: none;
-}
-.panel-map input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%;
-  background: white; border: 3px solid var(--yellow);
-  box-shadow: 0 2px 10px rgba(0,0,0,0.15); cursor: pointer;
-}
-.panel-labels {
-  display: flex; justify-content: space-between;
-  margin-top: 6px; font-size: 10px; color: var(--text-3); font-weight: 500;
-}
+.panel-map input[type=range] { width: 100%; cursor: pointer; -webkit-appearance: none; height: 4px; border-radius: 2px; background: linear-gradient(to right, var(--yellow) var(--pct,46%), rgba(0,0,0,0.1) var(--pct,46%)); outline: none; }
+.panel-map input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%; background: white; border: 3px solid var(--yellow); box-shadow: 0 2px 10px rgba(0,0,0,0.15); cursor: pointer; }
+.panel-labels { display: flex; justify-content: space-between; margin-top: 6px; font-size: 10px; color: var(--text-3); font-weight: 500; }
 
-/* ══ TOOLTIP ══ */
-#tooltip {
-  position: fixed; z-index: 50;
-  background: rgba(20,20,22,0.93); color: white;
-  padding: 12px 18px; border-radius: 16px; font-size: 15px; font-weight: 600;
-  pointer-events: none; opacity: 0; transform: translateY(6px);
-  transition: opacity 0.18s, transform 0.18s;
-  backdrop-filter: blur(12px); max-width: 260px; text-align: center;
-  border: 1px solid rgba(255,255,255,0.08);
-}
+#tooltip { position: fixed; z-index: 50; background: rgba(20,20,22,0.93); color: white; padding: 12px 18px; border-radius: 16px; font-size: 15px; font-weight: 600; pointer-events: none; opacity: 0; transform: translateY(6px); transition: opacity 0.18s, transform 0.18s; backdrop-filter: blur(12px); max-width: 260px; text-align: center; border: 1px solid rgba(255,255,255,0.08); }
 #tooltip.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
 #tooltip .tt-type { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 3px; font-weight: 400; font-family: Arial, sans-serif; }
 #tooltip .tt-sun { font-size: 13px; font-weight: 600; margin-top: 6px; font-family: Arial, sans-serif; }
 #tooltip .tt-sun.sun { color: var(--yellow); }
 #tooltip .tt-sun.shade { color: #90CAF9; }
 
-/* ══ DRAWER ══ */
-#drawer {
-  position: fixed; z-index: 40; background: var(--white);
-  display: flex; flex-direction: column;
-  transition: transform 0.38s cubic-bezier(0.32,0.72,0,1);
-}
-@media (min-width: 641px) {
-  #drawer { top:0; right:0; width:var(--panel-w); height:100vh; border-left:1px solid var(--divider); transform:translateX(110%); }
-  #drawer.open { transform:translateX(0); }
-}
-@media (max-width: 640px) {
-  #drawer { left:0; bottom:0; width:100%; height:80vh; border-radius:20px 20px 0 0; border-top:1px solid var(--divider); box-shadow:0 -8px 40px rgba(0,0,0,0.12); transform:translateY(110%); }
-  #drawer.open { transform:translateY(0); }
-}
+#drawer { position: fixed; z-index: 40; background: var(--white); display: flex; flex-direction: column; transition: transform 0.38s cubic-bezier(0.32,0.72,0,1); }
+@media (min-width: 641px) { #drawer { top:0; right:0; width:var(--panel-w); height:100vh; border-left:1px solid var(--divider); transform:translateX(110%); } #drawer.open { transform:translateX(0); } }
+@media (max-width: 640px) { #drawer { left:0; bottom:0; width:100%; height:80vh; border-radius:20px 20px 0 0; border-top:1px solid var(--divider); box-shadow:0 -8px 40px rgba(0,0,0,0.12); transform:translateY(110%); } #drawer.open { transform:translateY(0); } }
 .drawer-handle { display:none; justify-content:center; padding:12px 0 4px; flex-shrink:0; cursor:pointer; }
 .drawer-bar { width:40px; height:4px; background:#E0E0E5; border-radius:2px; }
 @media (max-width:640px) { .drawer-handle { display:flex; } }
-
 .drawer-header { padding:20px 20px 0; flex-shrink:0; }
 .drawer-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
 .drawer-title { font-size: 22px; font-weight: 700; color: var(--text); letter-spacing:-0.3px; }
 .drawer-title em { font-family: Arial, sans-serif; font-style: italic; font-weight: 700; }
 .drawer-title span { font-family: Arial, sans-serif; font-style: normal; color: var(--yellow); font-weight: 700; }
-#btnClose {
-  background: var(--bg); border: none; border-radius: 50%;
-  width: 32px; height: 32px; font-size: 14px; cursor: pointer;
-  display: flex; align-items: center; justify-content: center; color: var(--text-2);
-  transition: background 0.15s;
-}
+#btnClose { background: var(--bg); border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-2); transition: background 0.15s; }
 #btnClose:active { background: #E5E5EA; }
-
-.drawer-search {
-  display: flex; align-items: center; gap: 8px;
-  background: var(--bg); border-radius: 12px; padding: 0 12px; height: 40px;
-  margin-bottom: 12px;
-}
+.drawer-search { display: flex; align-items: center; gap: 8px; background: var(--bg); border-radius: 12px; padding: 0 12px; height: 40px; margin-bottom: 12px; }
 .drawer-search svg { flex-shrink: 0; opacity: 0.3; }
 #drawerSearch { flex: 1; border: none; background: transparent; font-family: Arial, sans-serif; font-size: 15px; color: var(--text); outline: none; }
 #drawerSearch::placeholder { color: var(--text-3); }
-
 .section-title { padding:4px 20px 8px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
 .section-label { font-size:11px; font-weight:600; color:var(--text-3); text-transform:uppercase; letter-spacing:0.8px; }
 .count-pill { font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; background:var(--yellow); color:#7A6000; }
-
 #loadingState { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; color:var(--text-3); font-size:13px; }
 .spinner { width:24px; height:24px; border:2.5px solid var(--divider); border-top-color:var(--yellow); border-radius:50%; animation:spin 0.8s linear infinite; }
 @keyframes spin { to { transform:rotate(360deg); } }
-
 .list { flex:1; overflow-y:auto; padding:0 12px 32px; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
 .list::-webkit-scrollbar { display:none; }
-
-.card {
-  display:flex; align-items:center; gap:12px; padding:12px 8px;
-  border-radius:var(--radius-md); cursor:pointer;
-  transition: background 0.15s;
-  border-bottom:1px solid var(--divider);
-}
+.card { display:flex; align-items:center; gap:12px; padding:12px 8px; border-radius:var(--radius-md); cursor:pointer; transition: background 0.15s; border-bottom:1px solid var(--divider); }
 .card:last-child { border-bottom:none; }
 .card:active, .card.active { background:var(--bg); border-color:transparent; }
-.card-icon {
-  width:38px; height:38px; border-radius:var(--radius-sm);
-  display:flex; align-items:center; justify-content:center;
-  font-size:17px; flex-shrink:0;
-}
+.card-icon { width:38px; height:38px; border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center; font-size:17px; flex-shrink:0; }
 .card-icon.sun { background:var(--yellow-bg); }
-.card-icon.shade { background:var(--shade-bg); }
 .card-body { flex:1; min-width:0; }
 .card-name { font-size:15px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:2px; font-family: Arial, sans-serif; }
 .card-sub { font-size:12px; color:var(--text-3); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-family: Arial, sans-serif; }
-.card-badge { flex-shrink:0; font-size:11px; font-weight:600; padding:4px 10px; border-radius:20px; }
-.card-badge.sun { background:var(--yellow-bg); color:#7A6000; }
-.card-badge.shade { background:var(--shade-bg); color:var(--shade); }
 .no-results { padding:40px 20px; text-align:center; color:var(--text-3); font-size:13px; line-height:1.7; }
-
-.drawer-footer {
-  padding:12px 20px; border-top:1px solid var(--divider);
-  display:flex; align-items:center; gap:6px; flex-shrink:0;
-}
+.drawer-footer { padding:12px 20px; border-top:1px solid var(--divider); display:flex; align-items:center; gap:6px; flex-shrink:0; }
 .footer-text { font-size:10px; color:var(--text-3); }
 .live-dot { width:6px; height:6px; border-radius:50%; background:#30D158; animation:blink 2s ease-in-out infinite; flex-shrink:0; }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 .privacy-link { margin-left:auto; font-size:10px; color:var(--text-3); cursor:pointer; text-decoration:none; }
+```
 
-.city-scroll { display:flex; flex-direction:column; gap:4px; padding:0 0 12px 0; overflow-y:auto; max-height:160px; scrollbar-width:none; }
-.city-scroll::-webkit-scrollbar { display:none; }
-.city-chip { background:var(--bg); border:2px solid transparent; border-radius:10px; padding:8px 12px; font-size:13px; font-weight:600; color:var(--text); cursor:pointer; font-family:Arial,sans-serif; }
-.city-chip.active { background:var(--yellow-bg); border-color:var(--yellow); }
-    
-</style>
+  </style>
 </head>
-<body><!-- SPLASH --><div id="splash">
+<body>
+
+<div id="splash">
   <div class="splash-sun">
     <svg viewBox="0 0 100 100" width="90" height="90" xmlns="http://www.w3.org/2000/svg">
       <g fill="#FFD600">
-        <ellipse cx="50" cy="11" rx="3.2" ry="7"   transform="rotate(0 50 50)"/>
+        <ellipse cx="50" cy="11" rx="3.2" ry="7" transform="rotate(0 50 50)"/>
         <ellipse cx="50" cy="11" rx="2.8" ry="6.5" transform="rotate(40 50 50)"/>
         <ellipse cx="50" cy="11" rx="3.4" ry="7.5" transform="rotate(75 50 50)"/>
-        <ellipse cx="50" cy="11" rx="3"   ry="6.8" transform="rotate(110 50 50)"/>
+        <ellipse cx="50" cy="11" rx="3" ry="6.8" transform="rotate(110 50 50)"/>
         <ellipse cx="50" cy="11" rx="2.8" ry="6.2" transform="rotate(145 50 50)"/>
         <ellipse cx="50" cy="11" rx="3.3" ry="7.2" transform="rotate(180 50 50)"/>
         <ellipse cx="50" cy="11" rx="2.9" ry="6.5" transform="rotate(215 50 50)"/>
-        <ellipse cx="50" cy="11" rx="3.5" ry="7"   transform="rotate(250 50 50)"/>
+        <ellipse cx="50" cy="11" rx="3.5" ry="7" transform="rotate(250 50 50)"/>
         <ellipse cx="50" cy="11" rx="2.8" ry="6.3" transform="rotate(285 50 50)"/>
         <ellipse cx="50" cy="11" rx="3.1" ry="7.2" transform="rotate(320 50 50)"/>
       </g>
@@ -282,62 +207,58 @@ isolation: isolate;
   <div class="splash-name"><em>Soleil</em><span>enterrasse</span></div>
   <div class="splash-tagline">Trouvez vos <strong>terrasses au soleil</strong><br>maintenant.</div>
   <div class="splash-progress-wrap">
-    <div class="splash-progress-track">
-      <div class="splash-progress-bar" id="progressBar"></div>
-    </div>
+    <div class="splash-progress-track"><div class="splash-progress-bar" id="progressBar"></div></div>
   </div>
   <div class="splash-status" id="splashStatus">Chargement…</div>
-</div><!-- MAP --><div id="cesiumContainer"></div><!-- BARRE HAUT --><div id="topBar">
+</div>
+
+<div id="cesiumContainer"></div>
+
+<div id="topBar">
   <div class="search-glass">
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <circle cx="6.5" cy="6.5" r="5" stroke="#1C1C1E" stroke-width="1.5"/>
-      <path d="M10.5 10.5L14 14" stroke="#1C1C1E" stroke-width="1.5" stroke-linecap="round"/>
-    </svg>
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="#1C1C1E" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="#1C1C1E" stroke-width="1.5" stroke-linecap="round"/></svg>
     <input type="text" id="searchInput" placeholder="Cherche ta terrasse au soleil…">
     <button class="search-clear-btn" id="searchClear">✕</button>
   </div>
   <button class="icon-btn" id="btnListe" onclick="openDrawer()" title="Liste">
-    <svg width="18" height="14" viewBox="0 0 18 14" fill="none">
-      <rect width="18" height="2" rx="1" fill="#1C1C1E"/>
-      <rect y="6" width="18" height="2" rx="1" fill="#1C1C1E"/>
-      <rect y="12" width="18" height="2" rx="1" fill="#1C1C1E"/>
-    </svg>
+    <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><rect width="18" height="2" rx="1" fill="#1C1C1E"/><rect y="6" width="18" height="2" rx="1" fill="#1C1C1E"/><rect y="12" width="18" height="2" rx="1" fill="#1C1C1E"/></svg>
+  </button>
+  <button id="btnVille" onclick="toggleCityMenu()">
+    <span id="villeLabel">Bordeaux</span> ▾
   </button>
   <button class="icon-btn" id="btnGeo" onclick="geolocate()" title="Ma position">
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-      <circle cx="10" cy="10" r="3.5" fill="#007AFF"/>
-      <circle cx="10" cy="10" r="6" stroke="#007AFF" stroke-width="1.2" fill="none" opacity="0.35"/>
-      <path d="M10 2V4.5M10 15.5V18M2 10H4.5M15.5 10H18" stroke="#007AFF" stroke-width="1.5" stroke-linecap="round"/>
-    </svg>
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="3.5" fill="#007AFF"/><circle cx="10" cy="10" r="6" stroke="#007AFF" stroke-width="1.2" fill="none" opacity="0.35"/><path d="M10 2V4.5M10 15.5V18M2 10H4.5M15.5 10H18" stroke="#007AFF" stroke-width="1.5" stroke-linecap="round"/></svg>
   </button>
-</div><!-- CURSEUR BAS --><div class="panel-map">
+</div>
+
+<div id="cityMenu"></div>
+
+<div class="panel-map">
   <h3>☀️ <span class="heure" id="heureAffichee">14h00</span></h3>
   <input type="range" id="timeSlider" min="8" max="21" value="14" step="0.25">
-<div class="panel-labels"><span>8h</span><span>20h</span></div>
-</div><!-- TOOLTIP --><div id="tooltip">
+  <div class="panel-labels"><span>8h</span><span>20h</span></div>
+</div>
+
+<div id="tooltip">
   <div id="ttName"></div>
   <div class="tt-type" id="ttType"></div>
   <div class="tt-sun" id="ttSun"></div>
   <a id="ttMaps" href="#" target="_blank" style="display:block;margin-top:8px;background:rgba(255,255,255,0.15);color:white;padding:6px 14px;border-radius:10px;font-size:12px;text-align:center;text-decoration:none;width:100%;box-sizing:border-box;">🗺 Ouvrir dans Plans</a>
-</div><!-- DRAWER --><div id="drawer">
+</div>
+
+<div id="drawer">
   <div class="drawer-handle" id="drawerHandle"><div class="drawer-bar"></div></div>
   <div class="drawer-header">
     <div class="drawer-top">
       <div class="drawer-title"><em>Soleil</em><span>enterrasse</span></div>
       <button id="btnClose" onclick="closeDrawer()">✕</button>
     </div>
-    <div class="city-scroll" id="cityScroll"></div>
     <div class="drawer-search">
-      <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-        <circle cx="6.5" cy="6.5" r="5" stroke="#1C1C1E" stroke-width="1.5"/>
-        <path d="M10.5 10.5L14 14" stroke="#1C1C1E" stroke-width="1.5" stroke-linecap="round"/>
-      </svg>
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="#1C1C1E" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="#1C1C1E" stroke-width="1.5" stroke-linecap="round"/></svg>
       <input type="text" id="drawerSearch" placeholder="Rechercher un établissement…">
     </div>
   </div>
-  <div class="section-title">
-    <span class="section-label">Résultats</span>
-  </div>
+  <div class="section-title"><span class="section-label">Résultats</span></div>
   <div id="loadingState"><div class="spinner"></div><span>Chargement…</span></div>
   <div class="list" id="terrasseList" style="display:none;"></div>
   <div class="drawer-footer">
@@ -345,8 +266,9 @@ isolation: isolate;
     <span class="footer-text" id="footerText">Ombres 3D · OpenStreetMap</span>
     <a class="privacy-link" href="https://soleil-bordeaux.vercel.app/privacy.html" target="_blank">Confidentialité</a>
   </div>
-</div><script>
-// Intercepter géoloc pour éviter double demande iOS WebView
+</div>
+
+<script>
 (function() {
   const _orig = navigator.geolocation.getCurrentPosition.bind(navigator.geolocation);
   let _pos = null;
@@ -355,8 +277,45 @@ isolation: isolate;
     _orig(p => { _pos = p; ok(p); }, err, { enableHighAccuracy: false, timeout: 6000, maximumAge: 300000 });
   };
 })();
-const CITIES=[{id:'bordeaux',nom:'Bordeaux',lat:44.837789,lng:-0.57918},{id:'paris',nom:'Paris',lat:48.856613,lng:2.352222},{id:'marseille',nom:'Marseille',lat:43.296482,lng:5.381118},{id:'lyon',nom:'Lyon',lat:45.764043,lng:4.835659},{id:'toulouse',nom:'Toulouse',lat:43.604652,lng:1.444209},{id:'nice',nom:'Nice',lat:43.710173,lng:7.262011},{id:'cannes',nom:'Cannes',lat:43.552847,lng:7.017369},{id:'nantes',nom:'Nantes',lat:47.218371,lng:-1.553621},{id:'strasbourg',nom:'Strasbourg',lat:48.573405,lng:7.752111},{id:'montpellier',nom:'Montpellier',lat:43.610769,lng:3.876716},{id:'lille',nom:'Lille',lat:50.629250,lng:3.057256}];
-let currentCity=CITIES[0];
+
+const CITIES = [
+  {id:'bordeaux',   nom:'Bordeaux',    lat:44.837789, lng:-0.57918 },
+  {id:'paris',      nom:'Paris',       lat:48.856613, lng:2.352222 },
+  {id:'marseille',  nom:'Marseille',   lat:43.296482, lng:5.381118 },
+  {id:'lyon',       nom:'Lyon',        lat:45.764043, lng:4.835659 },
+  {id:'toulouse',   nom:'Toulouse',    lat:43.604652, lng:1.444209 },
+  {id:'nice',       nom:'Nice',        lat:43.710173, lng:7.262011 },
+  {id:'cannes',     nom:'Cannes',      lat:43.552847, lng:7.017369 },
+  {id:'nantes',     nom:'Nantes',      lat:47.218371, lng:-1.553621},
+  {id:'strasbourg', nom:'Strasbourg',  lat:48.573405, lng:7.752111 },
+  {id:'montpellier',nom:'Montpellier', lat:43.610769, lng:3.876716 },
+  {id:'lille',      nom:'Lille',       lat:50.629250, lng:3.057256 },
+];
+let currentCity = CITIES[0];
+
+// Remplir le menu
+const cityMenuEl = document.getElementById('cityMenu');
+CITIES.forEach(city => {
+  const item = document.createElement('div');
+  item.className = 'city-item' + (city.id === 'bordeaux' ? ' active' : '');
+  item.dataset.id = city.id;
+  item.textContent = city.nom;
+  item.addEventListener('click', () => {
+    currentCity = city;
+    document.getElementById('villeLabel').textContent = city.nom;
+    document.querySelectorAll('.city-item').forEach(c => c.classList.toggle('active', c.dataset.id === city.id));
+    cityMenuEl.classList.remove('open');
+    Object.keys(markerEntities).forEach(k => { viewer.entities.remove(markerEntities[k]); delete markerEntities[k]; });
+    terrasses = []; sunStates = {};
+    viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(city.lng, city.lat, 500), orientation: { heading: 0, pitch: Cesium.Math.toRadians(-50), roll: 0 }, duration: 1.8 });
+    loadTerrasses();
+  });
+  cityMenuEl.appendChild(item);
+});
+
+function toggleCityMenu() { cityMenuEl.classList.toggle('open'); }
+document.addEventListener('click', e => { if (!e.target.closest('#btnVille') && !e.target.closest('#cityMenu')) cityMenuEl.classList.remove('open'); });
+
 const drawer = document.getElementById('drawer');
 function openDrawer()  { drawer.classList.add('open'); }
 function closeDrawer() { drawer.classList.remove('open'); }
@@ -373,29 +332,19 @@ function setProgress(pct, label) {
   if (label) document.getElementById('splashStatus').textContent = label;
 }
 function completeSplash() {
-  if (splashDone) return;
-  splashDone = true;
-  setProgress(100, 'Prêt !');
-  setTimeout(() => {
-    document.getElementById('splash').classList.add('out');
-    setTimeout(() => { document.getElementById('splash').style.display = 'none'; }, 650);
-  }, 300);
+  if (splashDone) return; splashDone = true; setProgress(100, 'Prêt !');
+  setTimeout(() => { document.getElementById('splash').classList.add('out'); setTimeout(() => { document.getElementById('splash').style.display = 'none'; }, 650); }, 300);
 }
 setTimeout(completeSplash, 8000);
 
 Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIwM2M0Njk1Yi1iYzI1LTQ3MzAtOGU1MS1iNzU4MTRiNWVkY2QiLCJpZCI6Mzk5MDg5LCJpYXQiOjE3NzI3ODI3NTh9.aGJt8zcDKPwk-pJsAcp0egE1wgJ5Vg41y_yQKNfUtYw';
 
 const viewer = new Cesium.Viewer('cesiumContainer', {
-  terrainProvider: Cesium.createWorldTerrain(),
-  skyBox: false, skyAtmosphere: false,
-  baseLayerPicker: false, homeButton: false,
-  infoBox: false, selectionIndicator: false,
-  navigationHelpButton: false, sceneModePicker: false,
-  animation: false, timeline: false,
-  fullscreenButton: false, geocoder: false,
-  scene3DOnly: true,
+  terrainProvider: Cesium.createWorldTerrain(), skyBox: false, skyAtmosphere: false,
+  baseLayerPicker: false, homeButton: false, infoBox: false, selectionIndicator: false,
+  navigationHelpButton: false, sceneModePicker: false, animation: false, timeline: false,
+  fullscreenButton: false, geocoder: false, scene3DOnly: true,
 });
-
 viewer.scene.globe.maximumScreenSpaceError = 1;
 viewer.scene.globe.tileCacheSize = 500;
 viewer.scene.globe.preloadAncestors = true;
@@ -409,47 +358,28 @@ viewer.scene.postProcessStages.fxaa.enabled = false;
 viewer.scene.screenSpaceCameraController.inertiaSpin = 0.9;
 viewer.scene.screenSpaceCameraController.inertiaTranslate = 0.9;
 viewer.scene.screenSpaceCameraController.inertiaZoom = 0.8;
-
-viewer.camera.setView({
-  destination: Cesium.Cartesian3.fromDegrees(-0.57918, 44.837789, 450),
-  orientation: { heading: 0, pitch: Cesium.Math.toRadians(-50), roll: 0 }
-});
+viewer.camera.setView({ destination: Cesium.Cartesian3.fromDegrees(-0.57918, 44.837789, 450), orientation: { heading: 0, pitch: Cesium.Math.toRadians(-50), roll: 0 } });
 
 setProgress(10, 'Chargement…');
 const osmBuildings = viewer.scene.primitives.add(Cesium.createOsmBuildings());
 osmBuildings.maximumScreenSpaceError = 2;
-
 viewer.scene.globe.tileLoadProgressEvent.addEventListener(remaining => {
-  const pct = Math.min(60, 10 + (1 - Math.min(remaining, 50) / 50) * 50);
-  setProgress(pct, remaining === 0 ? 'Bâtiments…' : 'Chargement…');
+  setProgress(Math.min(60, 10 + (1 - Math.min(remaining, 50) / 50) * 50), remaining === 0 ? 'Bâtiments…' : 'Chargement…');
 });
-
 let globeOk = false, buildingsOk = false;
 function tryOpen() {
   if (!globeOk || !buildingsOk) return;
   let f = 0;
-  viewer.scene.postRender.addEventListener(function waitRender() {
-    if (++f >= 6) {
-      viewer.scene.postRender.removeEventListener(waitRender);
-      completeSplash();
-    }
-  });
+  viewer.scene.postRender.addEventListener(function waitRender() { if (++f >= 6) { viewer.scene.postRender.removeEventListener(waitRender); completeSplash(); } });
 }
 viewer.scene.postRender.addEventListener(function watchGlobe() {
-  if (viewer.scene.globe.tilesLoaded && !globeOk) {
-    globeOk = true; setProgress(70, 'Bâtiments…');
-    viewer.scene.postRender.removeEventListener(watchGlobe);
-    tryOpen();
-  }
+  if (viewer.scene.globe.tilesLoaded && !globeOk) { globeOk = true; setProgress(70, 'Bâtiments…'); viewer.scene.postRender.removeEventListener(watchGlobe); tryOpen(); }
 });
-osmBuildings.readyPromise.then(() => {
-  buildingsOk = true; setProgress(85, 'Finalisation…'); tryOpen();
-}).catch(() => { buildingsOk = true; tryOpen(); });
+osmBuildings.readyPromise.then(() => { buildingsOk = true; setProgress(85, 'Finalisation…'); tryOpen(); }).catch(() => { buildingsOk = true; tryOpen(); });
 
 let userDot = null;
 function makeUserDot() {
-  const c = document.createElement('canvas'); c.width = 20; c.height = 20;
-  const ctx = c.getContext('2d');
+  const c = document.createElement('canvas'); c.width = 20; c.height = 20; const ctx = c.getContext('2d');
   ctx.beginPath(); ctx.arc(10,10,9,0,Math.PI*2); ctx.fillStyle='rgba(0,122,255,0.18)'; ctx.fill();
   ctx.beginPath(); ctx.arc(10,10,6,0,Math.PI*2); ctx.fillStyle='white'; ctx.fill();
   ctx.beginPath(); ctx.arc(10,10,4,0,Math.PI*2); ctx.fillStyle='#007AFF'; ctx.fill();
@@ -457,20 +387,11 @@ function makeUserDot() {
 }
 function placeUserDot(lng, lat) {
   if (userDot) viewer.entities.remove(userDot);
-  userDot = viewer.entities.add({
-    position: Cesium.Cartesian3.fromDegrees(lng, lat, 3),
-    billboard: { image:makeUserDot(), verticalOrigin:Cesium.VerticalOrigin.CENTER, heightReference:Cesium.HeightReference.RELATIVE_TO_GROUND, width:20, height:20, disableDepthTestDistance:Number.POSITIVE_INFINITY }
-  });
+  userDot = viewer.entities.add({ position: Cesium.Cartesian3.fromDegrees(lng, lat, 3), billboard: { image:makeUserDot(), verticalOrigin:Cesium.VerticalOrigin.CENTER, heightReference:Cesium.HeightReference.RELATIVE_TO_GROUND, width:20, height:20, disableDepthTestDistance:Number.POSITIVE_INFINITY } });
 }
-
-// Override géoloc WebView pour éviter double demande
-const _origGetCurrentPosition = navigator.geolocation.getCurrentPosition.bind(navigator.geolocation);
-let _cachedPosition = null;
-navigator.geolocation.getCurrentPosition = function(success, error, options) {
-  if (_cachedPosition) { success(_cachedPosition); return; }
-  _origGetCurrentPosition(pos => { _cachedPosition = pos; success(pos); }, error, options);
-};
-
+const _origGPS = navigator.geolocation.getCurrentPosition.bind(navigator.geolocation);
+let _cachedPos = null;
+navigator.geolocation.getCurrentPosition = function(ok, err, opt) { if (_cachedPos) { ok(_cachedPos); return; } _origGPS(p => { _cachedPos = p; ok(p); }, err, opt); };
 function geolocate() {
   if (!navigator.geolocation) return;
   const btn = document.getElementById('btnGeo'); btn.classList.add('locating');
@@ -482,67 +403,54 @@ function geolocate() {
   }, ()=>btn.classList.remove('locating'), { enableHighAccuracy:true, timeout:8000 });
 }
 
-let terrasses=[], sunStates={}, searchQuery='', currentHeure=14;
+let terrasses=[], sunStates={}, searchQuery='', currentHeure=14, currentDate=new Date();
 const markerEntities={};
 
 function typeLabel(a){return{bar:'Bar',cafe:'Café',restaurant:'Restaurant',pub:'Pub',biergarten:'Brasserie'}[a]||'Terrasse';}
 
 const OVERPASS=['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter'];
 async function fetchTerrasses(){
-  if(currentCity.id==='bordeaux'){
-    const res=await fetch('/data/terrasses.json');const data=await res.json();const seen=new Set();
-    return data.features.filter(f=>f.properties?.name&&!seen.has(f.properties.name)&&seen.add(f.properties.name)).map(f=>({id:f.properties.id||Math.random(),nom:f.properties.name,adresse:f.properties['addr:street']?((f.properties['addr:housenumber']||'')+' '+f.properties['addr:street']).trim():'',type:typeLabel(f.properties.amenity),lng:f.geometry.coordinates[0],lat:f.geometry.coordinates[1]}));
-  }
-  const bbox=`${currentCity.lat-0.04},${currentCity.lng-0.06},${currentCity.lat+0.04},${currentCity.lng+0.06}`;
-  const q=`[out:json][timeout:25];(node["amenity"~"bar|cafe|restaurant|pub|biergarten"](${bbox}););out body;`;
-  for(const url of OVERPASS){try{const r=await fetch(url,{method:'POST',body:'data='+encodeURIComponent(q)});if(!r.ok)throw new Error();const d=await r.json();const seen=new Set();return(d.elements||[]).filter(el=>el.lat&&el.lon&&el.tags?.name&&!seen.has(el.tags.name)&&seen.add(el.tags.name)).map(el=>({id:el.id,nom:el.tags.name,adresse:el.tags['addr:street']?((el.tags['addr:housenumber']||'')+' '+el.tags['addr:street']).trim():'',type:typeLabel(el.tags.amenity),lng:el.lon,lat:el.lat}));}catch(e){}}
-  return[];
+  if(currentCity.id==='bordeaux'){
+    const res=await fetch('/data/terrasses.json'); const data=await res.json(); const seen=new Set();
+    return data.features.filter(f=>f.properties?.name&&!seen.has(f.properties.name)&&seen.add(f.properties.name))
+      .map(f=>({id:f.properties.id||Math.random(),nom:f.properties.name,adresse:f.properties['addr:street']?((f.properties['addr:housenumber']||'')+' '+f.properties['addr:street']).trim():'',type:typeLabel(f.properties.amenity),lng:f.geometry.coordinates[0],lat:f.geometry.coordinates[1]}));
+  }
+  const bbox=`${currentCity.lat-0.04},${currentCity.lng-0.06},${currentCity.lat+0.04},${currentCity.lng+0.06}`;
+  const q=`[out:json][timeout:25];(node["amenity"~"bar|cafe|restaurant|pub|biergarten"](${bbox}););out body;`;
+  for(const url of OVERPASS){try{const r=await fetch(url,{method:'POST',body:'data='+encodeURIComponent(q)});if(!r.ok)throw new Error();const d=await r.json();const seen=new Set();return(d.elements||[]).filter(el=>el.lat&&el.lon&&el.tags?.name&&!seen.has(el.tags.name)&&seen.add(el.tags.name)).map(el=>({id:el.id,nom:el.tags.name,adresse:el.tags['addr:street']?((el.tags['addr:housenumber']||'')+' '+el.tags['addr:street']).trim():'',type:typeLabel(el.tags.amenity),lng:el.lon,lat:el.lat}));}catch(e){}}
+  return[];
 }
+
 function getSunDir(jd){
   const s=Cesium.Simon1994PlanetaryPositions.computeSunPositionInEarthInertialFrame(jd);
-  const m=Cesium.Transforms.computeIcrfToFixedMatrix(jd);
-  if(!m) return null;
-  const d=new Cesium.Cartesian3();
-  Cesium.Matrix3.multiplyByVector(m,s,d);
-  return Cesium.Cartesian3.normalize(d,d);
+  const m=Cesium.Transforms.computeIcrfToFixedMatrix(jd); if(!m) return null;
+  const d=new Cesium.Cartesian3(); Cesium.Matrix3.multiplyByVector(m,s,d); return Cesium.Cartesian3.normalize(d,d);
 }
-function checkSunny(t, sunDir){
+function checkSunny(t,sunDir){
   if(!sunDir) return false;
-  const pos=Cesium.Cartesian3.fromDegrees(t.lng,t.lat,1.0);
-  const up=Cesium.Cartesian3.normalize(pos,new Cesium.Cartesian3());
+  const pos=Cesium.Cartesian3.fromDegrees(t.lng,t.lat,1.0); const up=Cesium.Cartesian3.normalize(pos,new Cesium.Cartesian3());
   if(Cesium.Cartesian3.dot(sunDir,up)<=0.0) return false;
   return !viewer.scene.pickFromRay(new Cesium.Ray(pos,sunDir),Object.values(markerEntities));
 }
 
-let cameraMoving = false;
-viewer.camera.moveStart.addEventListener(()=>{ cameraMoving=true; });
-viewer.camera.moveEnd.addEventListener(()=>{ cameraMoving=false; });
+let cameraMoving=false;
+viewer.camera.moveStart.addEventListener(()=>{cameraMoving=true;});
+viewer.camera.moveEnd.addEventListener(()=>{cameraMoving=false;});
 
-let shadowDebounce=null, computing=false, shadowVersion=0;
+let shadowDebounce=null,computing=false,shadowVersion=0;
 function scheduleShadow(){
   clearTimeout(shadowDebounce);
- shadowDebounce=setTimeout(()=>{
-  if(cameraMoving) return;
-  const waitTiles=()=>{
-    if(viewer.scene.globe.tilesLoaded){
-      runShadow();
-    } else {
-      const unsub=viewer.scene.postRender.addEventListener(()=>{
-        if(viewer.scene.globe.tilesLoaded){ unsub(); runShadow(); }
-      });
-    }
-  };
-  waitTiles();
-}, 500);
+  shadowDebounce=setTimeout(()=>{
+    if(cameraMoving) return;
+    const waitTiles=()=>{ if(viewer.scene.globe.tilesLoaded){runShadow();}else{const unsub=viewer.scene.postRender.addEventListener(()=>{if(viewer.scene.globe.tilesLoaded){unsub();runShadow();}});} };
+    waitTiles();
+  },500);
 }
 async function runShadow(){
-  if(computing) return;
-  computing=true;
-  const version=++shadowVersion;
-  const jd=viewer.clock.currentTime;
-  const sunDir=getSunDir(jd);
+  if(computing) return; computing=true; const version=++shadowVersion;
+  const jd=viewer.clock.currentTime; const sunDir=getSunDir(jd);
   for(let i=0;i<terrasses.length;i+=10){
-    if(version!==shadowVersion || cameraMoving){ computing=false; return; }
+    if(version!==shadowVersion||cameraMoving){computing=false;return;}
     for(const t of terrasses.slice(i,i+10)) sunStates[t.id]=checkSunny(t,sunDir);
     syncDots(); renderList(currentHeure,searchQuery);
     await new Promise(r=>setTimeout(r,0));
@@ -551,131 +459,76 @@ async function runShadow(){
 }
 
 function makeSunIcon(sunny){
-  const c=document.createElement('canvas'); c.width=20; c.height=20;
-  const ctx=c.getContext('2d');
+  const c=document.createElement('canvas'); c.width=20; c.height=20; const ctx=c.getContext('2d');
   if(sunny){
     ctx.strokeStyle='#FFD600'; ctx.lineWidth=1.5; ctx.lineCap='round';
-    for(let i=0;i<8;i++){
-      const a=i*Math.PI/4;
-      ctx.beginPath();
-      ctx.moveTo(10+Math.cos(a)*6.5, 10+Math.sin(a)*6.5);
-      ctx.lineTo(10+Math.cos(a)*9,   10+Math.sin(a)*9);
-      ctx.stroke();
-    }
-    ctx.beginPath(); ctx.arc(10,10,4.5,0,Math.PI*2); ctx.fillStyle='#FFD600'; ctx.fill();
-    ctx.beginPath(); ctx.arc(10,10,4.5,0,Math.PI*2); ctx.strokeStyle='white'; ctx.lineWidth=1.5; ctx.stroke();
-  } else {
-    ctx.beginPath(); ctx.arc(10,10,5,0,Math.PI*2); ctx.fillStyle='#8E9BAD'; ctx.fill();
-    ctx.beginPath(); ctx.arc(10,10,5,0,Math.PI*2); ctx.strokeStyle='white'; ctx.lineWidth=1.5; ctx.stroke();
+    for(let i=0;i<8;i++){const a=i*Math.PI/4;ctx.beginPath();ctx.moveTo(10+Math.cos(a)*6.5,10+Math.sin(a)*6.5);ctx.lineTo(10+Math.cos(a)*9,10+Math.sin(a)*9);ctx.stroke();}
+    ctx.beginPath();ctx.arc(10,10,4.5,0,Math.PI*2);ctx.fillStyle='#FFD600';ctx.fill();
+    ctx.beginPath();ctx.arc(10,10,4.5,0,Math.PI*2);ctx.strokeStyle='white';ctx.lineWidth=1.5;ctx.stroke();
+  }else{
+    ctx.beginPath();ctx.arc(10,10,5,0,Math.PI*2);ctx.fillStyle='#8E9BAD';ctx.fill();
+    ctx.beginPath();ctx.arc(10,10,5,0,Math.PI*2);ctx.strokeStyle='white';ctx.lineWidth=1.5;ctx.stroke();
   }
   return c.toDataURL();
 }
-const DOT_SUN=makeSunIcon(true), DOT_SHADE=makeSunIcon(false);
+const DOT_SUN=makeSunIcon(true),DOT_SHADE=makeSunIcon(false);
 
 function syncDots(){
-  terrasses.forEach(t=>{
-    if(!markerEntities[t.id]){
-      markerEntities[t.id]=viewer.entities.add({
-        position:Cesium.Cartesian3.fromDegrees(t.lng,t.lat,2),
-        billboard:{image:DOT_SUN,verticalOrigin:Cesium.VerticalOrigin.CENTER,heightReference:Cesium.HeightReference.RELATIVE_TO_GROUND,width:20,height:20,disableDepthTestDistance:Number.POSITIVE_INFINITY},
-        properties:{id:t.id}
-      });
-    } else {
-      markerEntities[t.id].show=true;
-    }
-  });
+  terrasses.forEach(t=>{
+    if(!markerEntities[t.id]){
+      markerEntities[t.id]=viewer.entities.add({position:Cesium.Cartesian3.fromDegrees(t.lng,t.lat,2),billboard:{image:DOT_SUN,verticalOrigin:Cesium.VerticalOrigin.CENTER,heightReference:Cesium.HeightReference.RELATIVE_TO_GROUND,width:20,height:20,disableDepthTestDistance:Number.POSITIVE_INFINITY},properties:{id:t.id}});
+    }else{ markerEntities[t.id].show=true; }
+  });
 }
 
-const tooltip=document.getElementById('tooltip');
-let ttTimeout=null;
+const tooltip=document.getElementById('tooltip'); let ttTimeout=null;
 function showTooltip(t,x,y){
-  const s=sunStates[t.id]===true;
   document.getElementById('ttName').textContent=t.nom;
   document.getElementById('ttType').textContent=t.type+(t.adresse?' · '+t.adresse:'');
-  const el=document.getElementById('ttSun');
-  const w=260;
-  tooltip.style.left=Math.min(Math.max(x-w/2,10),window.innerWidth-w-10)+'px';
-  tooltip.style.top=Math.max(y-130,10)+'px';
-  tooltip.classList.add('visible');
-  if(navigator.vibrate) navigator.vibrate(10);
-  const mapsLink=document.getElementById('ttMaps');
-  if(mapsLink) mapsLink.href=`https://maps.apple.com/?q=${encodeURIComponent(t.nom+', Bordeaux')}&ll=${t.lat},${t.lng}`;
-  clearTimeout(ttTimeout);
-  ttTimeout=setTimeout(()=>tooltip.classList.remove('visible'),6000);
+  const w=260; tooltip.style.left=Math.min(Math.max(x-w/2,10),window.innerWidth-w-10)+'px'; tooltip.style.top=Math.max(y-130,10)+'px';
+  tooltip.classList.add('visible'); if(navigator.vibrate) navigator.vibrate(10);
+  const ml=document.getElementById('ttMaps'); if(ml) ml.href=`https://maps.apple.com/?q=${encodeURIComponent(t.nom+', '+currentCity.nom)}&ll=${t.lat},${t.lng}`;
+  clearTimeout(ttTimeout); ttTimeout=setTimeout(()=>tooltip.classList.remove('visible'),6000);
 }
 function hideTooltip(){clearTimeout(ttTimeout);tooltip.classList.remove('visible');}
 
 function normalize(s){return(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
-function highlight(text,q){
-  if(!q) return text;
-  return text.replace(new RegExp(`(${q.replace(/\[.\*+?^${}()|[\]\\]/g,'\\$&')})`,'gi'),'<mark style="background:#FFFBE0;color:#9A7E00;border-radius:3px;padding:0 2px">$1</mark>');
-}
+function highlight(text,q){if(!q)return text;return text.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi'),'<mark style="background:#FFFBE0;color:#9A7E00;border-radius:3px;padding:0 2px">$1</mark>');}
 
 function renderList(h,query){
-  const list=document.getElementById('terrasseList'), countEl=document.getElementById('sunCount');
+  const list=document.getElementById('terrasseList');
   const q=normalize(query||'');
-  let filtered=terrasses;
-  if(q) filtered=terrasses.filter(t=>normalize(t.nom).includes(q)||normalize(t.type).includes(q)||normalize(t.adresse).includes(q));
+  let filtered=terrasses; if(q) filtered=terrasses.filter(t=>normalize(t.nom).includes(q)||normalize(t.type).includes(q)||normalize(t.adresse).includes(q));
   const sorted=[...filtered].sort((a,b)=>(sunStates[b.id]?1:0)-(sunStates[a.id]?1:0));
   list.innerHTML='';
-  if(!sorted.length){list.innerHTML=`<div class="no-results">Aucun résultat pour<br><strong>"${query}"</strong></div>`;return;}
+  if(!sorted.length){list.innerHTML=`<div class="no-results">Aucun résultat${query?' pour <strong>"'+query+'"</strong>':''}</div>`;return;}
   sorted.forEach(t=>{
-    const s=sunStates[t.id]===true;
-const card=document.createElement('div'); card.className='card'; card.dataset.id=t.id;
-card.innerHTML=`<div class="card-icon sun">☀️</div><div class="card-body"><div class="card-name">${highlight(t.nom,query)}</div><div class="card-sub">${t.type}${t.adresse?' · '+t.adresse:''}</div></div>`;
-
-    card.addEventListener('click',()=>{
-      document.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));
-      card.classList.add('active'); closeDrawer();
-      const target=Cesium.Cartesian3.fromDegrees(t.lng,t.lat,0);
-      viewer.camera.flyToBoundingSphere(new Cesium.BoundingSphere(target,120),{offset:new Cesium.HeadingPitchRange(0,Cesium.Math.toRadians(-65),220),duration:1.4});
-    });
+    const card=document.createElement('div'); card.className='card'; card.dataset.id=t.id;
+    card.innerHTML=`<div class="card-icon sun">☀️</div><div class="card-body"><div class="card-name">${highlight(t.nom,query)}</div><div class="card-sub">${t.type}${t.adresse?' · '+t.adresse:''}</div></div>`;
+    card.addEventListener('click',()=>{ document.querySelectorAll('.card').forEach(c=>c.classList.remove('active')); card.classList.add('active'); closeDrawer(); viewer.camera.flyToBoundingSphere(new Cesium.BoundingSphere(Cesium.Cartesian3.fromDegrees(t.lng,t.lat,0),120),{offset:new Cesium.HeadingPitchRange(0,Cesium.Math.toRadians(-65),220),duration:1.4}); });
     list.appendChild(card);
   });
 }
 
-const searchInput=document.getElementById('searchInput'), searchClear=document.getElementById('searchClear');
-searchInput.addEventListener('input',e=>{
-  searchQuery=e.target.value;
-  document.getElementById('drawerSearch').value=searchQuery;
-  searchClear.classList.toggle('visible',searchQuery.length>0);
-  renderList(currentHeure,searchQuery);
-  if(searchQuery.length>0) openDrawer();
-});
-searchClear.addEventListener('click',()=>{
-  searchInput.value=''; searchQuery='';
-  document.getElementById('drawerSearch').value='';
-  searchClear.classList.remove('visible'); renderList(currentHeure,'');
-});
-
-document.getElementById('drawerSearch').addEventListener('input',e=>{
-  searchQuery=e.target.value;
-  searchInput.value=searchQuery;
-  searchClear.classList.toggle('visible',searchQuery.length>0);
-  renderList(currentHeure,searchQuery);
-});
+const searchInput=document.getElementById('searchInput'),searchClear=document.getElementById('searchClear');
+searchInput.addEventListener('input',e=>{searchQuery=e.target.value;document.getElementById('drawerSearch').value=searchQuery;searchClear.classList.toggle('visible',searchQuery.length>0);renderList(currentHeure,searchQuery);if(searchQuery.length>0)openDrawer();});
+searchClear.addEventListener('click',()=>{searchInput.value='';searchQuery='';document.getElementById('drawerSearch').value='';searchClear.classList.remove('visible');renderList(currentHeure,'');});
+document.getElementById('drawerSearch').addEventListener('input',e=>{searchQuery=e.target.value;searchInput.value=searchQuery;searchClear.classList.toggle('visible',searchQuery.length>0);renderList(currentHeure,searchQuery);});
 
 const slider=document.getElementById('timeSlider');
 slider.addEventListener('input',e=>{
-  const val=parseFloat(e.target.value), h=Math.floor(val), m=Math.round((val-h)*60);
+  const val=parseFloat(e.target.value),h=Math.floor(val),m=Math.round((val-h)*60);
   document.getElementById('heureAffichee').textContent=h+'h'+(m<10?'0'+m:m);
   slider.style.setProperty('--pct',((val-8)/13)*100+'%');
-  currentDate = new Date(); currentDate.setHours(h-2,m,0,0);
-  viewer.clock.currentTime=Cesium.JulianDate.fromDate(currentDate);
-  currentHeure=val;
+  currentDate=new Date(); currentDate.setHours(h-2,m,0,0);
+  viewer.clock.currentTime=Cesium.JulianDate.fromDate(currentDate); currentHeure=val;
 });
-slider.addEventListener('change',e=>{
-  if(terrasses.length>0) scheduleShadow();
-});
+slider.addEventListener('change',e=>{if(terrasses.length>0)scheduleShadow();});
 
 const handler=new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
 handler.setInputAction(click=>{
   const picked=viewer.scene.pick(click.position);
-  if(Cesium.defined(picked)&&picked.id){
-    const id=picked.id.properties?.id?.getValue();
-    const t=terrasses.find(x=>String(x.id)===String(id));
-    if(t){showTooltip(t,click.position.x,click.position.y);return;}
-  }
+  if(Cesium.defined(picked)&&picked.id){const id=picked.id.properties?.id?.getValue();const t=terrasses.find(x=>String(x.id)===String(id));if(t){showTooltip(t,click.position.x,click.position.y);return;}}
   hideTooltip();
 },Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
@@ -683,40 +536,30 @@ async function loadTerrasses(){
   document.getElementById('loadingState').style.display='flex';
   document.getElementById('terrasseList').style.display='none';
   try {
-    const data = await fetchTerrasses();
+    const data=await fetchTerrasses();
     document.getElementById('loadingState').style.display='none';
     document.getElementById('terrasseList').style.display='block';
     terrasses=data; terrasses.forEach(t=>{sunStates[t.id]=true;});
-    document.getElementById('footerText').textContent=`${terrasses.length} terrasses · OpenStreetMap`;
+    document.getElementById('footerText').textContent=`${terrasses.length} terrasses · ${currentCity.nom}`;
     renderList(currentHeure,'');
-    const launch=()=>{
-      viewer.scene.postRender.addEventListener(function once(){
-        viewer.scene.postRender.removeEventListener(once); runShadow();
-      });
-    };
-    if(splashDone) launch();
-    else { const w=setInterval(()=>{ if(splashDone){ clearInterval(w); launch(); } },100); }
-  } catch(e){
+    const launch=()=>{viewer.scene.postRender.addEventListener(function once(){viewer.scene.postRender.removeEventListener(once);runShadow();});};
+    if(splashDone) launch(); else{const w=setInterval(()=>{if(splashDone){clearInterval(w);launch();}},100);}
+  }catch(e){
     document.getElementById('loadingState').style.display='none';
     document.getElementById('terrasseList').style.display='block';
-    document.getElementById('terrasseList').innerHTML=`<div class="no-results">Impossible de charger les terrasses.<br>Vérifiez votre connexion.<br><br><button onclick="loadTerrasses()" style="margin-top:8px;background:#FFD600;border:none;padding:10px 20px;border-radius:12px;font-weight:600;cursor:pointer;font-size:14px;">🔄 Réessayer</button></div>`;
+    document.getElementById('terrasseList').innerHTML=`<div class="no-results">Impossible de charger les terrasses.<br><button onclick="loadTerrasses()" style="margin-top:8px;background:#FFD600;border:none;padding:10px 20px;border-radius:12px;font-weight:600;cursor:pointer;font-size:14px;">🔄 Réessayer</button></div>`;
   }
 }
 
 async function init(){
-  const now=new Date();
-  const initH=Math.min(21,Math.max(8,now.getHours()+(Math.round(now.getMinutes()/15)*15/60)));
-  slider.value=initH; slider.dispatchEvent(new Event('input'));
-  const cityScroll=document.getElementById('cityScroll');
-CITIES.forEach(city=>{const chip=document.createElement('div');chip.className='city-chip'+(city.id==='bordeaux'?' active':'');chip.dataset.id=city.id;chip.textContent=city.nom;chip.addEventListener('click',()=>{currentCity=city;document.querySelectorAll('.city-chip').forEach(c=>c.classList.toggle('active',c.dataset.id===city.id));Object.keys(markerEntities).forEach(k=>{viewer.entities.remove(markerEntities[k]);delete markerEntities[k];});terrasses=[];sunStates={};viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(city.lng,city.lat,500),orientation:{heading:0,pitch:Cesium.Math.toRadians(-50),roll:0},duration:1.8});loadTerrasses();});cityScroll.appendChild(chip);});
-  loadTerrasses();
+  const now=new Date(); const initH=Math.min(21,Math.max(8,now.getHours()+(Math.round(now.getMinutes()/15)*15/60)));
+  slider.value=initH; slider.dispatchEvent(new Event('input')); loadTerrasses();
 }
 init();
-</script></body>
+</script>
+
+</body>
 </html>
-
-
-
 
 
 
