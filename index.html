@@ -364,27 +364,16 @@ setProgress(10, 'Chargement…');
 viewer.scene.globe.depthTestAgainstTerrain = false;
 let googleTileset = null;
 
-async function initGoogle() {
-  try {
-    googleTileset = await Cesium.createGooglePhotorealistic3DTileset({
-      key: 'AIzaSyC4nbhNNAGI6kQlCheAEN6jZkQM1xyZOVI'
-    });
-    viewer.scene.primitives.add(googleTileset);
-    googleTileset.maximumScreenSpaceError = 16;
-    googleTileset.readyPromise.then(() => {
-      setProgress(85, 'Finalisation…');
-      completeSplash();
-    }).catch((e) => {
-      console.error('Google 3D erreur:', e);
-      completeSplash();
-    });
-  } catch(e) {
-    console.error('Google 3D erreur:', e);
-    setProgress(85, 'Finalisation…');
-    completeSplash();
-  }
-}
-initGoogle();
+Cesium.createGooglePhotorealistic3DTileset({
+  key: 'AIzaSyC4nbhNNAGI6kQlCheAEN6jZkQM1xyZOVI'
+}).then(tileset => {
+  viewer.scene.primitives.add(tileset);
+  tileset.maximumScreenSpaceError = 16;
+  completeSplash();
+}).catch(e => {
+  console.error('Google erreur:', e);
+  completeSplash();
+});
     
     // Gestion splash identique à avant
     let f = 0;
