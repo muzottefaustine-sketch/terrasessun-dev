@@ -382,7 +382,7 @@ Cesium.createGooglePhotorealistic3DTileset({
         viewer.scene.postRender.removeEventListener(waitRender); 
         setProgress(85, 'Finalisation…');
         completeSplash(); 
-  } catch(e) {  // ← ERREUR ICI
+  } catch(e) {  
     console.error('Google 3D erreur:', e);
     setProgress(85, 'Finalisation…');
     completeSplash();
