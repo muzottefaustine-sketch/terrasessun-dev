@@ -366,11 +366,30 @@ let googleTileset = null;
 
 async function initGoogle() {
   try {
+    console.log('🔥 DÉBUT GOOGLE');
     googleTileset = await Cesium.createGooglePhotorealistic3DTileset({
       key: 'AIzaSyC4nbhNNAGI6kQlCheAEN6jZkQM1xyZOVI'
     });
+    console.log('✅ TILESET CRÉÉ');
     viewer.scene.primitives.add(googleTileset);
     googleTileset.maximumScreenSpaceError = 16;
+    
+    // ATTENDRE que Google soit prêt avant de fermer le splash
+    googleTileset.readyPromise.then(() => {
+      console.log('✅ GOOGLE READY - 3D chargé');
+      setProgress(85, 'Finalisation…');
+      completeSplash();
+    }).catch((e) => {
+      console.error('❌ GOOGLE READY FAIL:', e);
+      completeSplash(); // Ferme quand même pour pas bloquer
+    });
+    
+  } catch(e) {
+    console.error('❌ GOOGLE CRASH:', e);
+    completeSplash();
+  }
+}
+initGoogle();
     
     // Gestion splash identique à avant
     let f = 0;
