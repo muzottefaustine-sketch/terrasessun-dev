@@ -360,19 +360,24 @@ viewer.scene.screenSpaceCameraController.inertiaTranslate = 0.9;
 viewer.scene.screenSpaceCameraController.inertiaZoom = 0.8;
 viewer.camera.setView({ destination: Cesium.Cartesian3.fromDegrees(-0.57918, 44.837789, 450), orientation: { heading: 0, pitch: Cesium.Math.toRadians(-50), roll: 0 } });
 
-setProgress(10, 'Chargement…');
-viewer.scene.globe.depthTestAgainstTerrain = false;
 let googleTileset = null;
 
 Cesium.createGooglePhotorealistic3DTileset({
-  key: '...'
+  key: 'AIzaSyC4nbhNNAGI6kQlCheAEN6jZkQM1xyZOVI'
 }).then(tileset => {
+  googleTileset = tileset;
   viewer.scene.primitives.add(tileset);
   tileset.maximumScreenSpaceError = 16;
+  setProgress(85, 'Finalisation…');
   completeSplash();
 }).catch(e => {
   console.error('Google erreur:', e);
+  setProgress(85, 'Finalisation…');
   completeSplash();
+});
+
+viewer.scene.globe.tileLoadProgressEvent.addEventListener(remaining => {
+  setProgress(Math.min(70, 10 + (1 - Math.min(remaining, 50) / 50) * 60), 'Chargement…');
 });
     
     // Gestion splash identique à avant
