@@ -365,7 +365,7 @@ viewer.scene.globe.depthTestAgainstTerrain = false;
 let googleTileset = null;
 
 Cesium.createGooglePhotorealistic3DTileset({
-  key: 'AIzaSyC4nbhNNAGI6kQlCheAEN6jZkQM1xyZOVI'
+  key: '...'
 }).then(tileset => {
   viewer.scene.primitives.add(tileset);
   tileset.maximumScreenSpaceError = 16;
@@ -382,14 +382,13 @@ Cesium.createGooglePhotorealistic3DTileset({
         viewer.scene.postRender.removeEventListener(waitRender); 
         setProgress(85, 'Finalisation…');
         completeSplash(); 
-  } catch(e) {
+  } catch(e) {  // ← ERREUR ICI
     console.error('Google 3D erreur:', e);
     setProgress(85, 'Finalisation…');
     completeSplash();
   }
 }
 initGoogle();
-
 viewer.scene.globe.tileLoadProgressEvent.addEventListener(remaining => {
   setProgress(Math.min(70, 10 + (1 - Math.min(remaining, 50) / 50) * 60), 'Chargement…');
 });
