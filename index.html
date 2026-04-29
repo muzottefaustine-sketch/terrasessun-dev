@@ -11,9 +11,8 @@
   <meta name="apple-mobile-web-app-title" content="Soleilenterrasse">
   <meta name="format-detection" content="telephone=no">
   <title>Soleilenterrasse</title>
-  <!-- ✅ MODIF 1 : 1.104 → 1.115 pour avoir createGooglePhotorealistic3DTileset -->
-  <script src="https://cesium.com/downloads/cesiumjs/releases/1.115/Build/Cesium/Cesium.js"></script>
-  <link href="https://cesium.com/downloads/cesiumjs/releases/1.115/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.104/Build/Cesium/Cesium.js"></script>
+  <link href="https://cesium.com/downloads/cesiumjs/releases/1.104/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -80,6 +79,7 @@
 #btnGeo.locating { animation: geo-pulse 1s ease-in-out infinite; }
 @keyframes geo-pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
+/* ══ BOUTON VILLE ══ */
 #btnVille {
   flex-shrink: 0; height: 50px; padding: 0 14px;
   background: var(--glass); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
@@ -92,6 +92,7 @@
 }
 #btnVille:active { transform: scale(0.94); background: rgba(255,255,255,0.98); }
 
+/* ══ MENU VILLES ══ */
 #cityMenu {
   position: fixed;
   top: calc(env(safe-area-inset-top, 44px) + 70px);
@@ -262,7 +263,7 @@
   <div class="list" id="terrasseList" style="display:none;"></div>
   <div class="drawer-footer">
     <div class="live-dot"></div>
-    <span class="footer-text" id="footerText">Ombres 3D · Google Maps</span>
+    <span class="footer-text" id="footerText">Ombres 3D · OpenStreetMap</span>
     <a class="privacy-link" href="https://soleil-bordeaux.vercel.app/privacy.html" target="_blank">Confidentialité</a>
   </div>
 </div>
@@ -292,6 +293,7 @@ const CITIES = [
 ];
 let currentCity = CITIES[0];
 
+// Remplir le menu
 const cityMenuEl = document.getElementById('cityMenu');
 CITIES.forEach(city => {
   const item = document.createElement('div');
@@ -333,53 +335,47 @@ function completeSplash() {
   if (splashDone) return; splashDone = true; setProgress(100, 'Prêt !');
   setTimeout(() => { document.getElementById('splash').classList.add('out'); setTimeout(() => { document.getElementById('splash').style.display = 'none'; }, 650); }, 300);
 }
-setTimeout(completeSplash, 10000);
+setTimeout(completeSplash, 8000);
 
 Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIwM2M0Njk1Yi1iYzI1LTQ3MzAtOGU1MS1iNzU4MTRiNWVkY2QiLCJpZCI6Mzk5MDg5LCJpYXQiOjE3NzI3ODI3NTh9.aGJt8zcDKPwk-pJsAcp0egE1wgJ5Vg41y_yQKNfUtYw';
 
-// ✅ MODIF 2 : pas de terrainProvider — Google 3D Tiles fournit son propre sol
 const viewer = new Cesium.Viewer('cesiumContainer', {
-  skyBox: false, skyAtmosphere: false,
+  terrainProvider: Cesium.createWorldTerrain(), skyBox: false, skyAtmosphere: false,
   baseLayerPicker: false, homeButton: false, infoBox: false, selectionIndicator: false,
   navigationHelpButton: false, sceneModePicker: false, animation: false, timeline: false,
   fullscreenButton: false, geocoder: false, scene3DOnly: true,
 });
-
-// ✅ MODIF 3 : globe caché — Google 3D Tiles remplace le globe Cesium
-viewer.scene.globe.show = false;
+viewer.scene.globe.maximumScreenSpaceError = 1;
+viewer.scene.globe.tileCacheSize = 500;
+viewer.scene.globe.preloadAncestors = true;
+viewer.scene.globe.preloadSiblings = false;
+viewer.scene.globe.enableLighting = true;
 viewer.scene.fog.enabled = false;
 viewer.shadows = true;
 viewer.resolutionScale = window.devicePixelRatio || 1;
+viewer.scene.globe.showWaterEffect = false;
 viewer.scene.postProcessStages.fxaa.enabled = false;
 viewer.scene.screenSpaceCameraController.inertiaSpin = 0.9;
 viewer.scene.screenSpaceCameraController.inertiaTranslate = 0.9;
 viewer.scene.screenSpaceCameraController.inertiaZoom = 0.8;
 viewer.camera.setView({ destination: Cesium.Cartesian3.fromDegrees(-0.57918, 44.837789, 450), orientation: { heading: 0, pitch: Cesium.Math.toRadians(-50), roll: 0 } });
 
-// ✅ MODIF 4 : Google 3D Tiles au lieu de createOsmBuildings
 setProgress(10, 'Chargement…');
-let buildingsOk = false;
-async function initBuildings() {
-  try {
-    const googleTileset = await Cesium.createGooglePhotorealistic3DTileset('AIzaSyC4nbhNNAGI6kQlCheAEN6jZkQM1xyZOVI');
-    viewer.scene.primitives.add(googleTileset);
-    googleTileset.maximumScreenSpaceError = 8;
-    buildingsOk = true;
-    setProgress(85, 'Finalisation…');
-    tryOpen();
-  } catch(e) {
-    console.warn('Google 3D Tiles erreur, fallback OSM…', e);
-    viewer.scene.globe.show = true;
-    const osm = viewer.scene.primitives.add(Cesium.createOsmBuildings());
-    osm.readyPromise.then(() => { buildingsOk = true; tryOpen(); }).catch(() => { buildingsOk = true; tryOpen(); });
-  }
-}
+const osmBuildings = viewer.scene.primitives.add(Cesium.createOsmBuildings());
+osmBuildings.maximumScreenSpaceError = 2;
+viewer.scene.globe.tileLoadProgressEvent.addEventListener(remaining => {
+  setProgress(Math.min(60, 10 + (1 - Math.min(remaining, 50) / 50) * 50), remaining === 0 ? 'Bâtiments…' : 'Chargement…');
+});
+let globeOk = false, buildingsOk = false;
 function tryOpen() {
-  if (!buildingsOk) return;
+  if (!globeOk || !buildingsOk) return;
   let f = 0;
-  viewer.scene.postRender.addEventListener(function waitRender() { if (++f >= 8) { viewer.scene.postRender.removeEventListener(waitRender); completeSplash(); } });
+  viewer.scene.postRender.addEventListener(function waitRender() { if (++f >= 6) { viewer.scene.postRender.removeEventListener(waitRender); completeSplash(); } });
 }
-initBuildings();
+viewer.scene.postRender.addEventListener(function watchGlobe() {
+  if (viewer.scene.globe.tilesLoaded && !globeOk) { globeOk = true; setProgress(70, 'Bâtiments…'); viewer.scene.postRender.removeEventListener(watchGlobe); tryOpen(); }
+});
+osmBuildings.readyPromise.then(() => { buildingsOk = true; setProgress(85, 'Finalisation…'); tryOpen(); }).catch(() => { buildingsOk = true; tryOpen(); });
 
 let userDot = null;
 function makeUserDot() {
