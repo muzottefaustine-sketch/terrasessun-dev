@@ -387,7 +387,6 @@ viewer.scene.globe.tileLoadProgressEvent.addEventListener(remaining => {
     setProgress(85, 'Finalisation…');
     completeSplash();
   }
-}
 initGoogle();
 viewer.scene.globe.tileLoadProgressEvent.addEventListener(remaining => {
   setProgress(Math.min(70, 10 + (1 - Math.min(remaining, 50) / 50) * 60), 'Chargement…');
