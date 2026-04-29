@@ -383,7 +383,6 @@ viewer.scene.globe.tileLoadProgressEvent.addEventListener(remaining => {
         viewer.scene.postRender.removeEventListener(waitRender); 
         setProgress(85, 'Finalisation…');
         completeSplash(); 
-  } catch(e) {  
     console.error('Google 3D erreur:', e);
     setProgress(85, 'Finalisation…');
     completeSplash();
