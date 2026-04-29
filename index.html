@@ -11,8 +11,8 @@
   <meta name="apple-mobile-web-app-title" content="Soleilenterrasse">
   <meta name="format-detection" content="telephone=no">
   <title>Soleilenterrasse</title>
-  <script src="https://cesium.com/downloads/cesiumjs/releases/1.115/Build/Cesium/Cesium.js"></script>
-  <link href="https://cesium.com/downloads/cesiumjs/releases/1.115/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.104/Build/Cesium/Cesium.js"></script>
+  <link href="https://cesium.com/downloads/cesiumjs/releases/1.104/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -340,7 +340,7 @@ setTimeout(completeSplash, 8000);
 Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIwM2M0Njk1Yi1iYzI1LTQ3MzAtOGU1MS1iNzU4MTRiNWVkY2QiLCJpZCI6Mzk5MDg5LCJpYXQiOjE3NzI3ODI3NTh9.aGJt8zcDKPwk-pJsAcp0egE1wgJ5Vg41y_yQKNfUtYw';
 
 const viewer = new Cesium.Viewer('cesiumContainer', {
-  terrainProvider: undefined, skyBox: false, skyAtmosphere: false,
+  terrainProvider: Cesium.createWorldTerrain(), skyBox: false, skyAtmosphere: false,
   baseLayerPicker: false, homeButton: false, infoBox: false, selectionIndicator: false,
   navigationHelpButton: false, sceneModePicker: false, animation: false, timeline: false,
   fullscreenButton: false, geocoder: false, scene3DOnly: true,
@@ -360,37 +360,23 @@ viewer.scene.screenSpaceCameraController.inertiaTranslate = 0.9;
 viewer.scene.screenSpaceCameraController.inertiaZoom = 0.8;
 viewer.camera.setView({ destination: Cesium.Cartesian3.fromDegrees(-0.57918, 44.837789, 450), orientation: { heading: 0, pitch: Cesium.Math.toRadians(-50), roll: 0 } });
 
-let googleTileset = null;
-
-Cesium.createGooglePhotorealistic3DTileset({
-  key: 'AIzaSyC4nbhNNAGI6kQlCheAEN6jZkQM1xyZOVI'
-}).then(tileset => {
-  googleTileset = tileset;
-  viewer.scene.primitives.add(tileset);
-  tileset.maximumScreenSpaceError = 16;
-  setProgress(85, 'Finalisation…');
-  completeSplash();
-});
-
+setProgress(10, 'Chargement…');
+const osmBuildings = viewer.scene.primitives.add(Cesium.createOsmBuildings());
+osmBuildings.maximumScreenSpaceError = 2;
 viewer.scene.globe.tileLoadProgressEvent.addEventListener(remaining => {
-  setProgress(Math.min(70, 10 + (1 - Math.min(remaining, 50) / 50) * 60), 'Chargement…');
+  setProgress(Math.min(60, 10 + (1 - Math.min(remaining, 50) / 50) * 50), remaining === 0 ? 'Bâtiments…' : 'Chargement…');
 });
-    
-    // Gestion splash identique à avant
-    let f = 0;
-    viewer.scene.postRender.addEventListener(function waitRender() { 
-      if (++f >= 6) { 
-        viewer.scene.postRender.removeEventListener(waitRender); 
-        setProgress(85, 'Finalisation…');
-        completeSplash(); 
-    console.error('Google 3D erreur:', e);
-    setProgress(85, 'Finalisation…');
-    completeSplash();
-  }
-initGoogle();
-viewer.scene.globe.tileLoadProgressEvent.addEventListener(remaining => {
-  setProgress(Math.min(70, 10 + (1 - Math.min(remaining, 50) / 50) * 60), 'Chargement…');
+let globeOk = false, buildingsOk = false;
+function tryOpen() {
+  if (!globeOk || !buildingsOk) return;
+  let f = 0;
+  viewer.scene.postRender.addEventListener(function waitRender() { if (++f >= 6) { viewer.scene.postRender.removeEventListener(waitRender); completeSplash(); } });
+}
+viewer.scene.postRender.addEventListener(function watchGlobe() {
+  if (viewer.scene.globe.tilesLoaded && !globeOk) { globeOk = true; setProgress(70, 'Bâtiments…'); viewer.scene.postRender.removeEventListener(watchGlobe); tryOpen(); }
 });
+osmBuildings.readyPromise.then(() => { buildingsOk = true; setProgress(85, 'Finalisation…'); tryOpen(); }).catch(() => { buildingsOk = true; tryOpen(); });
+
 let userDot = null;
 function makeUserDot() {
   const c = document.createElement('canvas'); c.width = 20; c.height = 20; const ctx = c.getContext('2d');
@@ -574,4 +560,3 @@ init();
 
 </body>
 </html>
-
