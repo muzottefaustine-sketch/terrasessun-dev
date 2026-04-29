@@ -371,9 +371,6 @@ Cesium.createGooglePhotorealistic3DTileset({
   setProgress(85, 'Finalisation…');
   completeSplash();
 }).catch(e => {
-  console.error('Google erreur:', e);
-  setProgress(85, 'Finalisation…');
-  completeSplash();
 });
 
 viewer.scene.globe.tileLoadProgressEvent.addEventListener(remaining => {
