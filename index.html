@@ -370,7 +370,7 @@ let globeOk = false, buildingsOk = false;
 function tryOpen() {
   if (!globeOk || !buildingsOk) return;
   let f = 0;
-  viewer.scene.postRender.addEventListener(function waitRender() { if (++f >= 6) { viewer.scene.postRender.removeEventListener(waitRender); completeSplash(); } });
+  viewer.scene.postRender.addEventListener(function waitRender() { if (++f >= 10) { viewer.scene.postRender.removeEventListener(waitRender); completeSplash(); } });
 }
 viewer.scene.postRender.addEventListener(function watchGlobe() {
   if (viewer.scene.globe.tilesLoaded && !globeOk) { globeOk = true; setProgress(70, 'Bâtiments…'); viewer.scene.postRender.removeEventListener(watchGlobe); tryOpen(); }
