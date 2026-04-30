@@ -1,32 +1,32 @@
 <!DOCTYPE html><html lang="fr">
 
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Soleilenterrasse">
-  <meta name="format-detection" content="telephone=no">
-  <title>Soleilenterrasse</title>
-  <script src="https://cesium.com/downloads/cesiumjs/releases/1.115/Build/Cesium/Cesium.js"></script>
-  <link href="https://cesium.com/downloads/cesiumjs/releases/1.115/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --yellow: #FFD600; --yellow-bg: #FFFBE0;
-      --shade: #8E9BAD; --shade-bg: #EEF1F5;
-      --text: #1C1C1E; --text-2: #6C6C70; --text-3: #AEAEB2;
-      --divider: #E5E5EA; --panel-w: 320px;
-      --radius-md: 14px; --radius-sm: 10px;
-      --glass: rgba(255,255,255,0.85);
-      --white: #FFFFFF; --bg: #F2F2F7;
-    }
-    .panel-map input[type=range] { touch-action: pan-x; }
-    #cesiumContainer { touch-action: none; }
-    html, body { height: 100%; width: 100%; overflow: hidden; font-family: Arial, sans-serif; background: #000; position: fixed; inset: 0; }
+  <meta charset="UTF-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Soleilenterrasse">
+  <meta name="format-detection" content="telephone=no">
+  <title>Soleilenterrasse</title>
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.115/Build/Cesium/Cesium.js"></script>
+  <link href="https://cesium.com/downloads/cesiumjs/releases/1.115/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --yellow: #FFD600; --yellow-bg: #FFFBE0;
+      --shade: #8E9BAD; --shade-bg: #EEF1F5;
+      --text: #1C1C1E; --text-2: #6C6C70; --text-3: #AEAEB2;
+      --divider: #E5E5EA; --panel-w: 320px;
+      --radius-md: 14px; --radius-sm: 10px;
+      --glass: rgba(255,255,255,0.85);
+      --white: #FFFFFF; --bg: #F2F2F7;
+    }
+    .panel-map input[type=range] { touch-action: pan-x; }
+    #cesiumContainer { touch-action: none; }
+    html, body { height: 100%; width: 100%; overflow: hidden; font-family: Arial, sans-serif; background: #000; position: fixed; inset: 0; }
 
 ```
 #splash { position: fixed; inset: 0; z-index: 1000; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.6s ease; }
@@ -49,17 +49,17 @@
 .cesium-widget-credits { display: none !important; }
 
 #topBar {
-  position: fixed; top: calc(env(safe-area-inset-top, 44px) + 12px); left: 50%;
-  transform: translate3d(-50%, 0, 0); -webkit-transform: translate3d(-50%, 0, 0);
-  will-change: transform; isolation: isolate; z-index: 30;
-  width: calc(100% - 32px); max-width: 480px; display: flex; align-items: center; gap: 10px;
+  position: fixed; top: calc(env(safe-area-inset-top, 44px) + 12px); left: 50%;
+  transform: translate3d(-50%, 0, 0); -webkit-transform: translate3d(-50%, 0, 0);
+  will-change: transform; isolation: isolate; z-index: 30;
+  width: calc(100% - 32px); max-width: 480px; display: flex; align-items: center; gap: 10px;
 }
 .search-glass {
-  flex: 1; display: flex; align-items: center; gap: 8px;
-  background: var(--glass); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-  border-radius: 16px; padding: 0 14px; height: 50px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.8);
-  border: 1px solid rgba(255,255,255,0.6);
+  flex: 1; display: flex; align-items: center; gap: 8px;
+  background: var(--glass); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  border-radius: 16px; padding: 0 14px; height: 50px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.8);
+  border: 1px solid rgba(255,255,255,0.6);
 }
 .search-glass svg { flex-shrink: 0; opacity: 0.35; }
 #searchInput { flex: 1; border: none; background: transparent; font-family: Arial, sans-serif; font-size: 15px; color: var(--text); outline: none; }
@@ -67,13 +67,13 @@
 .search-clear-btn { background: none; border: none; cursor: pointer; color: var(--text-3); font-size: 16px; padding: 0; display: none; align-items: center; justify-content: center; width: 20px; height: 20px; }
 .search-clear-btn.visible { display: flex; }
 .icon-btn {
-  flex-shrink: 0; width: 50px; height: 50px; background: var(--glass);
-  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255,255,255,0.6); border-radius: 15px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.8);
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  transition: transform 0.1s, background 0.15s; -webkit-transform: translate3d(0, 0, 0);
-  will-change: transform; isolation: isolate;
+  flex-shrink: 0; width: 50px; height: 50px; background: var(--glass);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.6); border-radius: 15px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.8);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: transform 0.1s, background 0.15s; -webkit-transform: translate3d(0, 0, 0);
+  will-change: transform; isolation: isolate;
 }
 .icon-btn:active { transform: scale(0.94); background: rgba(255,255,255,0.98); }
 #btnGeo.locating { animation: geo-pulse 1s ease-in-out infinite; }
@@ -81,50 +81,50 @@
 
 /* ══ BOUTON VILLE ══ */
 #btnVille {
-  flex-shrink: 0; height: 50px; padding: 0 14px;
-  background: var(--glass); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255,255,255,0.6); border-radius: 15px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.8);
-  cursor: pointer; display: flex; align-items: center; gap: 5px;
-  font-family: Arial, sans-serif; font-size: 13px; font-weight: 600; color: var(--text);
-  white-space: nowrap; transition: transform 0.1s, background 0.15s;
-  -webkit-transform: translate3d(0, 0, 0); will-change: transform; isolation: isolate;
+  flex-shrink: 0; height: 50px; padding: 0 14px;
+  background: var(--glass); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.6); border-radius: 15px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.8);
+  cursor: pointer; display: flex; align-items: center; gap: 5px;
+  font-family: Arial, sans-serif; font-size: 13px; font-weight: 600; color: var(--text);
+  white-space: nowrap; transition: transform 0.1s, background 0.15s;
+  -webkit-transform: translate3d(0, 0, 0); will-change: transform; isolation: isolate;
 }
 #btnVille:active { transform: scale(0.94); background: rgba(255,255,255,0.98); }
 
 /* ══ MENU VILLES ══ */
 #cityMenu {
-  position: fixed;
-  top: calc(env(safe-area-inset-top, 44px) + 70px);
-  right: 16px;
-  background: var(--white);
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-  z-index: 100;
-  display: none;
-  min-width: 160px;
-  overflow: hidden;
-  border: 1px solid var(--divider);
+  position: fixed;
+  top: calc(env(safe-area-inset-top, 44px) + 70px);
+  right: 16px;
+  background: var(--white);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  z-index: 100;
+  display: none;
+  min-width: 160px;
+  overflow: hidden;
+  border: 1px solid var(--divider);
 }
 #cityMenu.open { display: block; }
 .city-item {
-  padding: 13px 16px;
-  font-size: 14px; font-weight: 600; color: var(--text);
-  cursor: pointer; border-bottom: 1px solid var(--divider);
-  font-family: Arial, sans-serif;
-  transition: background 0.1s;
+  padding: 13px 16px;
+  font-size: 14px; font-weight: 600; color: var(--text);
+  cursor: pointer; border-bottom: 1px solid var(--divider);
+  font-family: Arial, sans-serif;
+  transition: background 0.1s;
 }
 .city-item:last-child { border-bottom: none; }
 .city-item.active { color: var(--yellow); background: var(--yellow-bg); }
 .city-item:active { background: var(--bg); }
 
 .panel-map {
-  position: fixed; bottom: calc(env(safe-area-inset-bottom, 34px) + 16px); left: 50%;
-  transform: translateX(-50%); background: var(--glass);
-  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255,255,255,0.6); padding: 16px 24px 14px; border-radius: 24px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.8);
-  text-align: center; z-index: 30; width: 82%; max-width: 400px;
+  position: fixed; bottom: calc(env(safe-area-inset-bottom, 34px) + 16px); left: 50%;
+  transform: translateX(-50%); background: var(--glass);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.6); padding: 16px 24px 14px; border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.8);
+  text-align: center; z-index: 30; width: 82%; max-width: 400px;
 }
 .panel-map h3 { margin: 0 0 12px 0; font-size: 15px; font-weight: 600; color: var(--text); display: flex; align-items: center; justify-content: center; gap: 8px; }
 .panel-map h3 .heure { font-size: 18px; font-weight: 700; color: var(--text); font-family: Arial, sans-serif; }
@@ -180,170 +180,170 @@
 .privacy-link { margin-left:auto; font-size:10px; color:var(--text-3); cursor:pointer; text-decoration:none; }
 ```
 
-  </style>
+  </style>
 </head>
 <body>
 
 <div id="splash">
-  <div class="splash-sun">
-    <svg viewBox="0 0 100 100" width="90" height="90" xmlns="http://www.w3.org/2000/svg">
-      <g fill="#FFD600">
-        <ellipse cx="50" cy="11" rx="3.2" ry="7" transform="rotate(0 50 50)"/>
-        <ellipse cx="50" cy="11" rx="2.8" ry="6.5" transform="rotate(40 50 50)"/>
-        <ellipse cx="50" cy="11" rx="3.4" ry="7.5" transform="rotate(75 50 50)"/>
-        <ellipse cx="50" cy="11" rx="3" ry="6.8" transform="rotate(110 50 50)"/>
-        <ellipse cx="50" cy="11" rx="2.8" ry="6.2" transform="rotate(145 50 50)"/>
-        <ellipse cx="50" cy="11" rx="3.3" ry="7.2" transform="rotate(180 50 50)"/>
-        <ellipse cx="50" cy="11" rx="2.9" ry="6.5" transform="rotate(215 50 50)"/>
-        <ellipse cx="50" cy="11" rx="3.5" ry="7" transform="rotate(250 50 50)"/>
-        <ellipse cx="50" cy="11" rx="2.8" ry="6.3" transform="rotate(285 50 50)"/>
-        <ellipse cx="50" cy="11" rx="3.1" ry="7.2" transform="rotate(320 50 50)"/>
-      </g>
-      <circle cx="50" cy="50" r="21" fill="#FFD600"/>
-      <circle cx="48" cy="48" r="17" fill="#FFE000" opacity="0.55"/>
-      <circle cx="52" cy="52" r="14" fill="#FFC400" opacity="0.25"/>
-    </svg>
-  </div>
-  <div class="splash-name"><em>Soleil</em><span>enterrasse</span></div>
-  <div class="splash-tagline">Trouvez vos <strong>terrasses au soleil</strong><br>maintenant.</div>
-  <div class="splash-progress-wrap">
-    <div class="splash-progress-track"><div class="splash-progress-bar" id="progressBar"></div></div>
-  </div>
-  <div class="splash-status" id="splashStatus">Chargement…</div>
+  <div class="splash-sun">
+    <svg viewBox="0 0 100 100" width="90" height="90" xmlns="http://www.w3.org/2000/svg">
+      <g fill="#FFD600">
+        <ellipse cx="50" cy="11" rx="3.2" ry="7" transform="rotate(0 50 50)"/>
+        <ellipse cx="50" cy="11" rx="2.8" ry="6.5" transform="rotate(40 50 50)"/>
+        <ellipse cx="50" cy="11" rx="3.4" ry="7.5" transform="rotate(75 50 50)"/>
+        <ellipse cx="50" cy="11" rx="3" ry="6.8" transform="rotate(110 50 50)"/>
+        <ellipse cx="50" cy="11" rx="2.8" ry="6.2" transform="rotate(145 50 50)"/>
+        <ellipse cx="50" cy="11" rx="3.3" ry="7.2" transform="rotate(180 50 50)"/>
+        <ellipse cx="50" cy="11" rx="2.9" ry="6.5" transform="rotate(215 50 50)"/>
+        <ellipse cx="50" cy="11" rx="3.5" ry="7" transform="rotate(250 50 50)"/>
+        <ellipse cx="50" cy="11" rx="2.8" ry="6.3" transform="rotate(285 50 50)"/>
+        <ellipse cx="50" cy="11" rx="3.1" ry="7.2" transform="rotate(320 50 50)"/>
+      </g>
+      <circle cx="50" cy="50" r="21" fill="#FFD600"/>
+      <circle cx="48" cy="48" r="17" fill="#FFE000" opacity="0.55"/>
+      <circle cx="52" cy="52" r="14" fill="#FFC400" opacity="0.25"/>
+    </svg>
+  </div>
+  <div class="splash-name"><em>Soleil</em><span>enterrasse</span></div>
+  <div class="splash-tagline">Trouvez vos <strong>terrasses au soleil</strong><br>maintenant.</div>
+  <div class="splash-progress-wrap">
+    <div class="splash-progress-track"><div class="splash-progress-bar" id="progressBar"></div></div>
+  </div>
+  <div class="splash-status" id="splashStatus">Chargement…</div>
 </div>
 
 <div id="cesiumContainer"></div>
 
 <div id="topBar">
-  <div class="search-glass">
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="#1C1C1E" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="#1C1C1E" stroke-width="1.5" stroke-linecap="round"/></svg>
-    <input type="text" id="searchInput" placeholder="Cherche ta terrasse au soleil…">
-    <button class="search-clear-btn" id="searchClear">✕</button>
-  </div>
-  <button class="icon-btn" id="btnListe" onclick="openDrawer()" title="Liste">
-    <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><rect width="18" height="2" rx="1" fill="#1C1C1E"/><rect y="6" width="18" height="2" rx="1" fill="#1C1C1E"/><rect y="12" width="18" height="2" rx="1" fill="#1C1C1E"/></svg>
-  </button>
-  <button id="btnVille" onclick="toggleCityMenu()">
-    <span id="villeLabel">Bordeaux</span> ▾
-  </button>
-  <button class="icon-btn" id="btnGeo" onclick="geolocate()" title="Ma position">
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="3.5" fill="#007AFF"/><circle cx="10" cy="10" r="6" stroke="#007AFF" stroke-width="1.2" fill="none" opacity="0.35"/><path d="M10 2V4.5M10 15.5V18M2 10H4.5M15.5 10H18" stroke="#007AFF" stroke-width="1.5" stroke-linecap="round"/></svg>
-  </button>
+  <div class="search-glass">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="#1C1C1E" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="#1C1C1E" stroke-width="1.5" stroke-linecap="round"/></svg>
+    <input type="text" id="searchInput" placeholder="Cherche ta terrasse au soleil…">
+    <button class="search-clear-btn" id="searchClear">✕</button>
+  </div>
+  <button class="icon-btn" id="btnListe" onclick="openDrawer()" title="Liste">
+    <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><rect width="18" height="2" rx="1" fill="#1C1C1E"/><rect y="6" width="18" height="2" rx="1" fill="#1C1C1E"/><rect y="12" width="18" height="2" rx="1" fill="#1C1C1E"/></svg>
+  </button>
+  <button id="btnVille" onclick="toggleCityMenu()">
+    <span id="villeLabel">Bordeaux</span> ▾
+  </button>
+  <button class="icon-btn" id="btnGeo" onclick="geolocate()" title="Ma position">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="3.5" fill="#007AFF"/><circle cx="10" cy="10" r="6" stroke="#007AFF" stroke-width="1.2" fill="none" opacity="0.35"/><path d="M10 2V4.5M10 15.5V18M2 10H4.5M15.5 10H18" stroke="#007AFF" stroke-width="1.5" stroke-linecap="round"/></svg>
+  </button>
 </div>
 
 <div id="cityMenu"></div>
 
 <div class="panel-map">
-  <h3>☀️ <span class="heure" id="heureAffichee">14h00</span></h3>
-  <input type="range" id="timeSlider" min="8" max="21" value="14" step="0.25">
-  <div class="panel-labels"><span>8h</span><span>20h</span></div>
+  <h3>☀️ <span class="heure" id="heureAffichee">14h00</span></h3>
+  <input type="range" id="timeSlider" min="8" max="21" value="14" step="0.25">
+  <div class="panel-labels"><span>8h</span><span>20h</span></div>
 </div>
 
 <div id="tooltip">
-  <div id="ttName"></div>
-  <div class="tt-type" id="ttType"></div>
-  <div class="tt-sun" id="ttSun"></div>
-  <a id="ttMaps" href="#" target="_blank" style="display:block;margin-top:8px;background:rgba(255,255,255,0.15);color:white;padding:6px 14px;border-radius:10px;font-size:12px;text-align:center;text-decoration:none;width:100%;box-sizing:border-box;">🗺 Ouvrir dans Plans</a>
+  <div id="ttName"></div>
+  <div class="tt-type" id="ttType"></div>
+  <div class="tt-sun" id="ttSun"></div>
+  <a id="ttMaps" href="#" target="_blank" style="display:block;margin-top:8px;background:rgba(255,255,255,0.15);color:white;padding:6px 14px;border-radius:10px;font-size:12px;text-align:center;text-decoration:none;width:100%;box-sizing:border-box;">🗺 Ouvrir dans Plans</a>
 </div>
 
 <div id="drawer">
-  <div class="drawer-handle" id="drawerHandle"><div class="drawer-bar"></div></div>
-  <div class="drawer-header">
-    <div class="drawer-top">
-      <div class="drawer-title"><em>Soleil</em><span>enterrasse</span></div>
-      <button id="btnClose" onclick="closeDrawer()">✕</button>
-    </div>
-    <div class="drawer-search">
-      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="#1C1C1E" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="#1C1C1E" stroke-width="1.5" stroke-linecap="round"/></svg>
-      <input type="text" id="drawerSearch" placeholder="Rechercher un établissement…">
-    </div>
-  </div>
-  <div class="section-title"><span class="section-label">Résultats</span></div>
-  <div id="loadingState"><div class="spinner"></div><span>Chargement…</span></div>
-  <div class="list" id="terrasseList" style="display:none;"></div>
-  <div class="drawer-footer">
-    <div class="live-dot"></div>
-    <span class="footer-text" id="footerText">Ombres 3D · OpenStreetMap</span>
-    <a class="privacy-link" href="https://soleil-bordeaux.vercel.app/privacy.html" target="_blank">Confidentialité</a>
-  </div>
+  <div class="drawer-handle" id="drawerHandle"><div class="drawer-bar"></div></div>
+  <div class="drawer-header">
+    <div class="drawer-top">
+      <div class="drawer-title"><em>Soleil</em><span>enterrasse</span></div>
+      <button id="btnClose" onclick="closeDrawer()">✕</button>
+    </div>
+    <div class="drawer-search">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="#1C1C1E" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="#1C1C1E" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input type="text" id="drawerSearch" placeholder="Rechercher un établissement…">
+    </div>
+  </div>
+  <div class="section-title"><span class="section-label">Résultats</span></div>
+  <div id="loadingState"><div class="spinner"></div><span>Chargement…</span></div>
+  <div class="list" id="terrasseList" style="display:none;"></div>
+  <div class="drawer-footer">
+    <div class="live-dot"></div>
+    <span class="footer-text" id="footerText">Ombres 3D · OpenStreetMap</span>
+    <a class="privacy-link" href="https://soleil-bordeaux.vercel.app/privacy.html" target="_blank">Confidentialité</a>
+  </div>
 </div>
 
 <script>
 (function() {
-  const _orig = navigator.geolocation.getCurrentPosition.bind(navigator.geolocation);
-  let _pos = null;
-  navigator.geolocation.getCurrentPosition = function(ok, err, opt) {
-    if (_pos) { ok(_pos); return; }
-    _orig(p => { _pos = p; ok(p); }, err, { enableHighAccuracy: false, timeout: 6000, maximumAge: 300000 });
-  };
+  const _orig = navigator.geolocation.getCurrentPosition.bind(navigator.geolocation);
+  let _pos = null;
+  navigator.geolocation.getCurrentPosition = function(ok, err, opt) {
+    if (_pos) { ok(_pos); return; }
+    _orig(p => { _pos = p; ok(p); }, err, { enableHighAccuracy: false, timeout: 6000, maximumAge: 300000 });
+  };
 })();
 
 const CITIES = [
-  {id:'bordeaux',   nom:'Bordeaux',    lat:44.837789, lng:-0.57918 },
-  {id:'paris',      nom:'Paris',       lat:48.856613, lng:2.352222 },
-  {id:'marseille',  nom:'Marseille',   lat:43.296482, lng:5.381118 },
-  {id:'lyon',       nom:'Lyon',        lat:45.764043, lng:4.835659 },
-  {id:'toulouse',   nom:'Toulouse',    lat:43.604652, lng:1.444209 },
-  {id:'nice',       nom:'Nice',        lat:43.710173, lng:7.262011 },
-  {id:'cannes',     nom:'Cannes',      lat:43.552847, lng:7.017369 },
-  {id:'nantes',     nom:'Nantes',      lat:47.218371, lng:-1.553621},
-  {id:'strasbourg', nom:'Strasbourg',  lat:48.573405, lng:7.752111 },
-  {id:'montpellier',nom:'Montpellier', lat:43.610769, lng:3.876716 },
-  {id:'lille',      nom:'Lille',       lat:50.629250, lng:3.057256 },
+  {id:'bordeaux',   nom:'Bordeaux',    lat:44.837789, lng:-0.57918 },
+  {id:'paris',      nom:'Paris',       lat:48.856613, lng:2.352222 },
+  {id:'marseille',  nom:'Marseille',   lat:43.296482, lng:5.381118 },
+  {id:'lyon',       nom:'Lyon',        lat:45.764043, lng:4.835659 },
+  {id:'toulouse',   nom:'Toulouse',    lat:43.604652, lng:1.444209 },
+  {id:'nice',       nom:'Nice',        lat:43.710173, lng:7.262011 },
+  {id:'cannes',     nom:'Cannes',      lat:43.552847, lng:7.017369 },
+  {id:'nantes',     nom:'Nantes',      lat:47.218371, lng:-1.553621},
+  {id:'strasbourg', nom:'Strasbourg',  lat:48.573405, lng:7.752111 },
+  {id:'montpellier',nom:'Montpellier', lat:43.610769, lng:3.876716 },
+  {id:'lille',      nom:'Lille',       lat:50.629250, lng:3.057256 },
 ];
 let currentCity = CITIES[0];
 
 // Remplir le menu
 const cityMenuEl = document.getElementById('cityMenu');
 CITIES.forEach(city => {
-  const item = document.createElement('div');
-  item.className = 'city-item' + (city.id === 'bordeaux' ? ' active' : '');
-  item.dataset.id = city.id;
-  item.textContent = city.nom;
-  item.addEventListener('click', () => {
-    currentCity = city;
-    document.getElementById('villeLabel').textContent = city.nom;
-    document.querySelectorAll('.city-item').forEach(c => c.classList.toggle('active', c.dataset.id === city.id));
-    cityMenuEl.classList.remove('open');
-    Object.keys(markerEntities).forEach(k => { viewer.entities.remove(markerEntities[k]); delete markerEntities[k]; });
-    terrasses = []; sunStates = {};
-    viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(city.lng, city.lat, 500), orientation: { heading: 0, pitch: Cesium.Math.toRadians(-50), roll: 0 }, duration: 1.8 });
-    loadTerrasses();
-  });
-  cityMenuEl.appendChild(item);
+  const item = document.createElement('div');
+  item.className = 'city-item' + (city.id === 'bordeaux' ? ' active' : '');
+  item.dataset.id = city.id;
+  item.textContent = city.nom;
+  item.addEventListener('click', () => {
+    currentCity = city;
+    document.getElementById('villeLabel').textContent = city.nom;
+    document.querySelectorAll('.city-item').forEach(c => c.classList.toggle('active', c.dataset.id === city.id));
+    cityMenuEl.classList.remove('open');
+    Object.keys(markerEntities).forEach(k => { viewer.entities.remove(markerEntities[k]); delete markerEntities[k]; });
+    terrasses = []; sunStates = {};
+    viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(city.lng, city.lat, 500), orientation: { heading: 0, pitch: Cesium.Math.toRadians(-50), roll: 0 }, duration: 1.8 });
+    loadTerrasses();
+  });
+  cityMenuEl.appendChild(item);
 });
 
 function toggleCityMenu() { cityMenuEl.classList.toggle('open'); }
 document.addEventListener('click', e => { if (!e.target.closest('#btnVille') && !e.target.closest('#cityMenu')) cityMenuEl.classList.remove('open'); });
 
 const drawer = document.getElementById('drawer');
-function openDrawer()  { drawer.classList.add('open'); }
+function openDrawer()  { drawer.classList.add('open'); }
 function closeDrawer() { drawer.classList.remove('open'); }
 const dhandle = document.getElementById('drawerHandle');
 let ty0 = 0;
 dhandle.addEventListener('touchstart', e => { ty0 = e.touches[0].clientY; }, { passive:true });
-dhandle.addEventListener('touchend',   e => { if (e.changedTouches[0].clientY - ty0 > 50) closeDrawer(); }, { passive:true });
+dhandle.addEventListener('touchend',   e => { if (e.changedTouches[0].clientY - ty0 > 50) closeDrawer(); }, { passive:true });
 
 const progressBar = document.getElementById('progressBar');
 let splashDone = false, loadProgress = 0;
 function setProgress(pct, label) {
-  loadProgress = Math.max(loadProgress, pct);
-  progressBar.style.width = loadProgress + '%';
-  if (label) document.getElementById('splashStatus').textContent = label;
+  loadProgress = Math.max(loadProgress, pct);
+  progressBar.style.width = loadProgress + '%';
+  if (label) document.getElementById('splashStatus').textContent = label;
 }
 function completeSplash() {
-  if (splashDone) return; splashDone = true; setProgress(100, 'Prêt !');
-  setTimeout(() => { document.getElementById('splash').classList.add('out'); setTimeout(() => { document.getElementById('splash').style.display = 'none'; }, 650); }, 300);
+  if (splashDone) return; splashDone = true; setProgress(100, 'Prêt !');
+  setTimeout(() => { document.getElementById('splash').classList.add('out'); setTimeout(() => { document.getElementById('splash').style.display = 'none'; }, 650); }, 300);
 }
 setTimeout(completeSplash, 8000);
 
 Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIwM2M0Njk1Yi1iYzI1LTQ3MzAtOGU1MS1iNzU4MTRiNWVkY2QiLCJpZCI6Mzk5MDg5LCJpYXQiOjE3NzI3ODI3NTh9.aGJt8zcDKPwk-pJsAcp0egE1wgJ5Vg41y_yQKNfUtYw';
 
 const viewer = new Cesium.Viewer('cesiumContainer', {
-  terrainProvider: undefined, skyBox: false, skyAtmosphere: false,
-  baseLayerPicker: false, homeButton: false, infoBox: false, selectionIndicator: false,
-  navigationHelpButton: false, sceneModePicker: false, animation: false, timeline: false,
-  fullscreenButton: false, geocoder: false, scene3DOnly: true,
+  terrainProvider: undefined, skyBox: false, skyAtmosphere: false,
+  baseLayerPicker: false, homeButton: false, infoBox: false, selectionIndicator: false,
+  navigationHelpButton: false, sceneModePicker: false, animation: false, timeline: false,
+  fullscreenButton: false, geocoder: false, scene3DOnly: true,
 });
 viewer.scene.globe.maximumScreenSpaceError = 1;
 viewer.scene.globe.tileCacheSize = 500;
@@ -365,58 +365,58 @@ viewer.scene.globe.depthTestAgainstTerrain = false;
 let googleTileset = null;
 
 Cesium.createGooglePhotorealistic3DTileset({
-  key: 'AIzaSyC4nbhNNAGI6kQlCheAEN6jZkQM1xyZOVI'
+  key: 'AIzaSyC4nbhNNAGI6kQlCheAEN6jZkQM1xyZOVI'
 }).then(tileset => {
-  viewer.scene.primitives.add(tileset);
-  tileset.maximumScreenSpaceError = 16;
-  completeSplash();
+  viewer.scene.primitives.add(tileset);
+  tileset.maximumScreenSpaceError = 16;
+  completeSplash();
 }).catch(e => {
-  console.error('Google erreur:', e);
-  completeSplash();
+  console.error('Google erreur:', e);
+  completeSplash();
 });
-    
-    // Gestion splash identique à avant
-    let f = 0;
-    viewer.scene.postRender.addEventListener(function waitRender() { 
-      if (++f >= 6) { 
-        viewer.scene.postRender.removeEventListener(waitRender); 
-        setProgress(85, 'Finalisation…');
-        completeSplash(); 
-  } catch(e) {
-    console.error('Google 3D erreur:', e);
-    setProgress(85, 'Finalisation…');
-    completeSplash();
-  }
+    
+    // Gestion splash identique à avant
+    let f = 0;
+    viewer.scene.postRender.addEventListener(function waitRender() { 
+      if (++f >= 6) { 
+        viewer.scene.postRender.removeEventListener(waitRender); 
+        setProgress(85, 'Finalisation…');
+        completeSplash(); 
+  } catch(e) {
+    console.error('Google 3D erreur:', e);
+    setProgress(85, 'Finalisation…');
+    completeSplash();
+  }
 }
 initGoogle();
 
 viewer.scene.globe.tileLoadProgressEvent.addEventListener(remaining => {
-  setProgress(Math.min(70, 10 + (1 - Math.min(remaining, 50) / 50) * 60), 'Chargement…');
+  setProgress(Math.min(70, 10 + (1 - Math.min(remaining, 50) / 50) * 60), 'Chargement…');
 });
 let userDot = null;
 function makeUserDot() {
-  const c = document.createElement('canvas'); c.width = 20; c.height = 20; const ctx = c.getContext('2d');
-  ctx.beginPath(); ctx.arc(10,10,9,0,Math.PI*2); ctx.fillStyle='rgba(0,122,255,0.18)'; ctx.fill();
-  ctx.beginPath(); ctx.arc(10,10,6,0,Math.PI*2); ctx.fillStyle='white'; ctx.fill();
-  ctx.beginPath(); ctx.arc(10,10,4,0,Math.PI*2); ctx.fillStyle='#007AFF'; ctx.fill();
-  return c.toDataURL();
+  const c = document.createElement('canvas'); c.width = 20; c.height = 20; const ctx = c.getContext('2d');
+  ctx.beginPath(); ctx.arc(10,10,9,0,Math.PI*2); ctx.fillStyle='rgba(0,122,255,0.18)'; ctx.fill();
+  ctx.beginPath(); ctx.arc(10,10,6,0,Math.PI*2); ctx.fillStyle='white'; ctx.fill();
+  ctx.beginPath(); ctx.arc(10,10,4,0,Math.PI*2); ctx.fillStyle='#007AFF'; ctx.fill();
+  return c.toDataURL();
 }
 function placeUserDot(lng, lat) {
-  if (userDot) viewer.entities.remove(userDot);
-  userDot = viewer.entities.add({ position: Cesium.Cartesian3.fromDegrees(lng, lat, 3), billboard: { image:makeUserDot(), verticalOrigin:Cesium.VerticalOrigin.CENTER, heightReference:Cesium.HeightReference.RELATIVE_TO_GROUND, width:20, height:20, disableDepthTestDistance:Number.POSITIVE_INFINITY } });
+  if (userDot) viewer.entities.remove(userDot);
+  userDot = viewer.entities.add({ position: Cesium.Cartesian3.fromDegrees(lng, lat, 3), billboard: { image:makeUserDot(), verticalOrigin:Cesium.VerticalOrigin.CENTER, heightReference:Cesium.HeightReference.RELATIVE_TO_GROUND, width:20, height:20, disableDepthTestDistance:Number.POSITIVE_INFINITY } });
 }
 const _origGPS = navigator.geolocation.getCurrentPosition.bind(navigator.geolocation);
 let _cachedPos = null;
 navigator.geolocation.getCurrentPosition = function(ok, err, opt) { if (_cachedPos) { ok(_cachedPos); return; } _origGPS(p => { _cachedPos = p; ok(p); }, err, opt); };
 function geolocate() {
-  if (!navigator.geolocation) return;
-  const btn = document.getElementById('btnGeo'); btn.classList.add('locating');
-  navigator.geolocation.getCurrentPosition(pos => {
-    btn.classList.remove('locating');
-    const { longitude:lng, latitude:lat } = pos.coords;
-    placeUserDot(lng, lat);
-    viewer.camera.flyTo({ destination:Cesium.Cartesian3.fromDegrees(lng,lat,400), orientation:{heading:0,pitch:Cesium.Math.toRadians(-50),roll:0}, duration:1.8 });
-  }, ()=>btn.classList.remove('locating'), { enableHighAccuracy:true, timeout:8000 });
+  if (!navigator.geolocation) return;
+  const btn = document.getElementById('btnGeo'); btn.classList.add('locating');
+  navigator.geolocation.getCurrentPosition(pos => {
+    btn.classList.remove('locating');
+    const { longitude:lng, latitude:lat } = pos.coords;
+    placeUserDot(lng, lat);
+    viewer.camera.flyTo({ destination:Cesium.Cartesian3.fromDegrees(lng,lat,400), orientation:{heading:0,pitch:Cesium.Math.toRadians(-50),roll:0}, duration:1.8 });
+  }, ()=>btn.classList.remove('locating'), { enableHighAccuracy:true, timeout:8000 });
 }
 
 let terrasses=[], sunStates={}, searchQuery='', currentHeure=14, currentDate=new Date();
@@ -426,27 +426,27 @@ function typeLabel(a){return{bar:'Bar',cafe:'Café',restaurant:'Restaurant',pub:
 
 const OVERPASS=['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter'];
 async function fetchTerrasses(){
-  if(currentCity.id==='bordeaux'){
-    const res=await fetch('/data/terrasses.json'); const data=await res.json(); const seen=new Set();
-    return data.features.filter(f=>f.properties?.name&&!seen.has(f.properties.name)&&seen.add(f.properties.name))
-      .map(f=>({id:f.properties.id||Math.random(),nom:f.properties.name,adresse:f.properties['addr:street']?((f.properties['addr:housenumber']||'')+' '+f.properties['addr:street']).trim():'',type:typeLabel(f.properties.amenity),lng:f.geometry.coordinates[0],lat:f.geometry.coordinates[1]}));
-  }
-  const bbox=`${currentCity.lat-0.04},${currentCity.lng-0.06},${currentCity.lat+0.04},${currentCity.lng+0.06}`;
-  const q=`[out:json][timeout:25];(node["amenity"~"bar|cafe|restaurant|pub|biergarten"](${bbox}););out body;`;
-  for(const url of OVERPASS){try{const r=await fetch(url,{method:'POST',body:'data='+encodeURIComponent(q)});if(!r.ok)throw new Error();const d=await r.json();const seen=new Set();return(d.elements||[]).filter(el=>el.lat&&el.lon&&el.tags?.name&&!seen.has(el.tags.name)&&seen.add(el.tags.name)).map(el=>({id:el.id,nom:el.tags.name,adresse:el.tags['addr:street']?((el.tags['addr:housenumber']||'')+' '+el.tags['addr:street']).trim():'',type:typeLabel(el.tags.amenity),lng:el.lon,lat:el.lat}));}catch(e){}}
-  return[];
+  if(currentCity.id==='bordeaux'){
+    const res=await fetch('/data/terrasses.json'); const data=await res.json(); const seen=new Set();
+    return data.features.filter(f=>f.properties?.name&&!seen.has(f.properties.name)&&seen.add(f.properties.name))
+      .map(f=>({id:f.properties.id||Math.random(),nom:f.properties.name,adresse:f.properties['addr:street']?((f.properties['addr:housenumber']||'')+' '+f.properties['addr:street']).trim():'',type:typeLabel(f.properties.amenity),lng:f.geometry.coordinates[0],lat:f.geometry.coordinates[1]}));
+  }
+  const bbox=`${currentCity.lat-0.04},${currentCity.lng-0.06},${currentCity.lat+0.04},${currentCity.lng+0.06}`;
+  const q=`[out:json][timeout:25];(node["amenity"~"bar|cafe|restaurant|pub|biergarten"](${bbox}););out body;`;
+  for(const url of OVERPASS){try{const r=await fetch(url,{method:'POST',body:'data='+encodeURIComponent(q)});if(!r.ok)throw new Error();const d=await r.json();const seen=new Set();return(d.elements||[]).filter(el=>el.lat&&el.lon&&el.tags?.name&&!seen.has(el.tags.name)&&seen.add(el.tags.name)).map(el=>({id:el.id,nom:el.tags.name,adresse:el.tags['addr:street']?((el.tags['addr:housenumber']||'')+' '+el.tags['addr:street']).trim():'',type:typeLabel(el.tags.amenity),lng:el.lon,lat:el.lat}));}catch(e){}}
+  return[];
 }
 
 function getSunDir(jd){
-  const s=Cesium.Simon1994PlanetaryPositions.computeSunPositionInEarthInertialFrame(jd);
-  const m=Cesium.Transforms.computeIcrfToFixedMatrix(jd); if(!m) return null;
-  const d=new Cesium.Cartesian3(); Cesium.Matrix3.multiplyByVector(m,s,d); return Cesium.Cartesian3.normalize(d,d);
+  const s=Cesium.Simon1994PlanetaryPositions.computeSunPositionInEarthInertialFrame(jd);
+  const m=Cesium.Transforms.computeIcrfToFixedMatrix(jd); if(!m) return null;
+  const d=new Cesium.Cartesian3(); Cesium.Matrix3.multiplyByVector(m,s,d); return Cesium.Cartesian3.normalize(d,d);
 }
 function checkSunny(t,sunDir){
-  if(!sunDir) return false;
-  const pos=Cesium.Cartesian3.fromDegrees(t.lng,t.lat,1.0); const up=Cesium.Cartesian3.normalize(pos,new Cesium.Cartesian3());
-  if(Cesium.Cartesian3.dot(sunDir,up)<=0.0) return false;
-  return !viewer.scene.pickFromRay(new Cesium.Ray(pos,sunDir),Object.values(markerEntities));
+  if(!sunDir) return false;
+  const pos=Cesium.Cartesian3.fromDegrees(t.lng,t.lat,1.0); const up=Cesium.Cartesian3.normalize(pos,new Cesium.Cartesian3());
+  if(Cesium.Cartesian3.dot(sunDir,up)<=0.0) return false;
+  return !viewer.scene.pickFromRay(new Cesium.Ray(pos,sunDir),Object.values(markerEntities));
 }
 
 let cameraMoving=false;
@@ -455,56 +455,56 @@ viewer.camera.moveEnd.addEventListener(()=>{cameraMoving=false;});
 
 let shadowDebounce=null,computing=false,shadowVersion=0;
 function scheduleShadow(){
-  clearTimeout(shadowDebounce);
-  shadowDebounce=setTimeout(()=>{
-    if(cameraMoving) return;
-    const waitTiles=()=>{ if(viewer.scene.globe.tilesLoaded){runShadow();}else{const unsub=viewer.scene.postRender.addEventListener(()=>{if(viewer.scene.globe.tilesLoaded){unsub();runShadow();}});} };
-    waitTiles();
-  },500);
+  clearTimeout(shadowDebounce);
+  shadowDebounce=setTimeout(()=>{
+    if(cameraMoving) return;
+    const waitTiles=()=>{ if(viewer.scene.globe.tilesLoaded){runShadow();}else{const unsub=viewer.scene.postRender.addEventListener(()=>{if(viewer.scene.globe.tilesLoaded){unsub();runShadow();}});} };
+    waitTiles();
+  },500);
 }
 async function runShadow(){
-  if(computing) return; computing=true; const version=++shadowVersion;
-  const jd=viewer.clock.currentTime; const sunDir=getSunDir(jd);
-  for(let i=0;i<terrasses.length;i+=10){
-    if(version!==shadowVersion||cameraMoving){computing=false;return;}
-    for(const t of terrasses.slice(i,i+10)) sunStates[t.id]=checkSunny(t,sunDir);
-    syncDots(); renderList(currentHeure,searchQuery);
-    await new Promise(r=>setTimeout(r,0));
-  }
-  computing=false;
+  if(computing) return; computing=true; const version=++shadowVersion;
+  const jd=viewer.clock.currentTime; const sunDir=getSunDir(jd);
+  for(let i=0;i<terrasses.length;i+=10){
+    if(version!==shadowVersion||cameraMoving){computing=false;return;}
+    for(const t of terrasses.slice(i,i+10)) sunStates[t.id]=checkSunny(t,sunDir);
+    syncDots(); renderList(currentHeure,searchQuery);
+    await new Promise(r=>setTimeout(r,0));
+  }
+  computing=false;
 }
 
 function makeSunIcon(sunny){
-  const c=document.createElement('canvas'); c.width=20; c.height=20; const ctx=c.getContext('2d');
-  if(sunny){
-    ctx.strokeStyle='#FFD600'; ctx.lineWidth=1.5; ctx.lineCap='round';
-    for(let i=0;i<8;i++){const a=i*Math.PI/4;ctx.beginPath();ctx.moveTo(10+Math.cos(a)*6.5,10+Math.sin(a)*6.5);ctx.lineTo(10+Math.cos(a)*9,10+Math.sin(a)*9);ctx.stroke();}
-    ctx.beginPath();ctx.arc(10,10,4.5,0,Math.PI*2);ctx.fillStyle='#FFD600';ctx.fill();
-    ctx.beginPath();ctx.arc(10,10,4.5,0,Math.PI*2);ctx.strokeStyle='white';ctx.lineWidth=1.5;ctx.stroke();
-  }else{
-    ctx.beginPath();ctx.arc(10,10,5,0,Math.PI*2);ctx.fillStyle='#8E9BAD';ctx.fill();
-    ctx.beginPath();ctx.arc(10,10,5,0,Math.PI*2);ctx.strokeStyle='white';ctx.lineWidth=1.5;ctx.stroke();
-  }
-  return c.toDataURL();
+  const c=document.createElement('canvas'); c.width=20; c.height=20; const ctx=c.getContext('2d');
+  if(sunny){
+    ctx.strokeStyle='#FFD600'; ctx.lineWidth=1.5; ctx.lineCap='round';
+    for(let i=0;i<8;i++){const a=i*Math.PI/4;ctx.beginPath();ctx.moveTo(10+Math.cos(a)*6.5,10+Math.sin(a)*6.5);ctx.lineTo(10+Math.cos(a)*9,10+Math.sin(a)*9);ctx.stroke();}
+    ctx.beginPath();ctx.arc(10,10,4.5,0,Math.PI*2);ctx.fillStyle='#FFD600';ctx.fill();
+    ctx.beginPath();ctx.arc(10,10,4.5,0,Math.PI*2);ctx.strokeStyle='white';ctx.lineWidth=1.5;ctx.stroke();
+  }else{
+    ctx.beginPath();ctx.arc(10,10,5,0,Math.PI*2);ctx.fillStyle='#8E9BAD';ctx.fill();
+    ctx.beginPath();ctx.arc(10,10,5,0,Math.PI*2);ctx.strokeStyle='white';ctx.lineWidth=1.5;ctx.stroke();
+  }
+  return c.toDataURL();
 }
 const DOT_SUN=makeSunIcon(true),DOT_SHADE=makeSunIcon(false);
 
 function syncDots(){
-  terrasses.forEach(t=>{
-    if(!markerEntities[t.id]){
-      markerEntities[t.id]=viewer.entities.add({position:Cesium.Cartesian3.fromDegrees(t.lng,t.lat,2),billboard:{image:DOT_SUN,verticalOrigin:Cesium.VerticalOrigin.CENTER,heightReference:Cesium.HeightReference.RELATIVE_TO_GROUND,width:20,height:20,disableDepthTestDistance:Number.POSITIVE_INFINITY},properties:{id:t.id}});
-    }else{ markerEntities[t.id].show=true; }
-  });
+  terrasses.forEach(t=>{
+    if(!markerEntities[t.id]){
+      markerEntities[t.id]=viewer.entities.add({position:Cesium.Cartesian3.fromDegrees(t.lng,t.lat,2),billboard:{image:DOT_SUN,verticalOrigin:Cesium.VerticalOrigin.CENTER,heightReference:Cesium.HeightReference.RELATIVE_TO_GROUND,width:20,height:20,disableDepthTestDistance:Number.POSITIVE_INFINITY},properties:{id:t.id}});
+    }else{ markerEntities[t.id].show=true; }
+  });
 }
 
 const tooltip=document.getElementById('tooltip'); let ttTimeout=null;
 function showTooltip(t,x,y){
-  document.getElementById('ttName').textContent=t.nom;
-  document.getElementById('ttType').textContent=t.type+(t.adresse?' · '+t.adresse:'');
-  const w=260; tooltip.style.left=Math.min(Math.max(x-w/2,10),window.innerWidth-w-10)+'px'; tooltip.style.top=Math.max(y-130,10)+'px';
-  tooltip.classList.add('visible'); if(navigator.vibrate) navigator.vibrate(10);
-  const ml=document.getElementById('ttMaps'); if(ml) ml.href=`https://maps.apple.com/?q=${encodeURIComponent(t.nom+', '+currentCity.nom)}&ll=${t.lat},${t.lng}`;
-  clearTimeout(ttTimeout); ttTimeout=setTimeout(()=>tooltip.classList.remove('visible'),6000);
+  document.getElementById('ttName').textContent=t.nom;
+  document.getElementById('ttType').textContent=t.type+(t.adresse?' · '+t.adresse:'');
+  const w=260; tooltip.style.left=Math.min(Math.max(x-w/2,10),window.innerWidth-w-10)+'px'; tooltip.style.top=Math.max(y-130,10)+'px';
+  tooltip.classList.add('visible'); if(navigator.vibrate) navigator.vibrate(10);
+  const ml=document.getElementById('ttMaps'); if(ml) ml.href=`https://maps.apple.com/?q=${encodeURIComponent(t.nom+', '+currentCity.nom)}&ll=${t.lat},${t.lng}`;
+  clearTimeout(ttTimeout); ttTimeout=setTimeout(()=>tooltip.classList.remove('visible'),6000);
 }
 function hideTooltip(){clearTimeout(ttTimeout);tooltip.classList.remove('visible');}
 
@@ -512,18 +512,18 @@ function normalize(s){return(s||'').toLowerCase().normalize('NFD').replace(/[\u0
 function highlight(text,q){if(!q)return text;return text.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi'),'<mark style="background:#FFFBE0;color:#9A7E00;border-radius:3px;padding:0 2px">$1</mark>');}
 
 function renderList(h,query){
-  const list=document.getElementById('terrasseList');
-  const q=normalize(query||'');
-  let filtered=terrasses; if(q) filtered=terrasses.filter(t=>normalize(t.nom).includes(q)||normalize(t.type).includes(q)||normalize(t.adresse).includes(q));
-  const sorted=[...filtered].sort((a,b)=>(sunStates[b.id]?1:0)-(sunStates[a.id]?1:0));
-  list.innerHTML='';
-  if(!sorted.length){list.innerHTML=`<div class="no-results">Aucun résultat${query?' pour <strong>"'+query+'"</strong>':''}</div>`;return;}
-  sorted.forEach(t=>{
-    const card=document.createElement('div'); card.className='card'; card.dataset.id=t.id;
-    card.innerHTML=`<div class="card-icon sun">☀️</div><div class="card-body"><div class="card-name">${highlight(t.nom,query)}</div><div class="card-sub">${t.type}${t.adresse?' · '+t.adresse:''}</div></div>`;
-    card.addEventListener('click',()=>{ document.querySelectorAll('.card').forEach(c=>c.classList.remove('active')); card.classList.add('active'); closeDrawer(); viewer.camera.flyToBoundingSphere(new Cesium.BoundingSphere(Cesium.Cartesian3.fromDegrees(t.lng,t.lat,0),120),{offset:new Cesium.HeadingPitchRange(0,Cesium.Math.toRadians(-65),220),duration:1.4}); });
-    list.appendChild(card);
-  });
+  const list=document.getElementById('terrasseList');
+  const q=normalize(query||'');
+  let filtered=terrasses; if(q) filtered=terrasses.filter(t=>normalize(t.nom).includes(q)||normalize(t.type).includes(q)||normalize(t.adresse).includes(q));
+  const sorted=[...filtered].sort((a,b)=>(sunStates[b.id]?1:0)-(sunStates[a.id]?1:0));
+  list.innerHTML='';
+  if(!sorted.length){list.innerHTML=`<div class="no-results">Aucun résultat${query?' pour <strong>"'+query+'"</strong>':''}</div>`;return;}
+  sorted.forEach(t=>{
+    const card=document.createElement('div'); card.className='card'; card.dataset.id=t.id;
+    card.innerHTML=`<div class="card-icon sun">☀️</div><div class="card-body"><div class="card-name">${highlight(t.nom,query)}</div><div class="card-sub">${t.type}${t.adresse?' · '+t.adresse:''}</div></div>`;
+    card.addEventListener('click',()=>{ document.querySelectorAll('.card').forEach(c=>c.classList.remove('active')); card.classList.add('active'); closeDrawer(); viewer.camera.flyToBoundingSphere(new Cesium.BoundingSphere(Cesium.Cartesian3.fromDegrees(t.lng,t.lat,0),120),{offset:new Cesium.HeadingPitchRange(0,Cesium.Math.toRadians(-65),220),duration:1.4}); });
+    list.appendChild(card);
+  });
 }
 
 const searchInput=document.getElementById('searchInput'),searchClear=document.getElementById('searchClear');
@@ -533,53 +533,49 @@ document.getElementById('drawerSearch').addEventListener('input',e=>{searchQuery
 
 const slider=document.getElementById('timeSlider');
 slider.addEventListener('input',e=>{
-  const val=parseFloat(e.target.value),h=Math.floor(val),m=Math.round((val-h)*60);
-  document.getElementById('heureAffichee').textContent=h+'h'+(m<10?'0'+m:m);
-  slider.style.setProperty('--pct',((val-8)/13)*100+'%');
-  currentDate=new Date(); currentDate.setHours(h-2,m,0,0);
-  viewer.clock.currentTime=Cesium.JulianDate.fromDate(currentDate); currentHeure=val;
+  const val=parseFloat(e.target.value),h=Math.floor(val),m=Math.round((val-h)*60);
+  document.getElementById('heureAffichee').textContent=h+'h'+(m<10?'0'+m:m);
+  slider.style.setProperty('--pct',((val-8)/13)*100+'%');
+  currentDate=new Date(); currentDate.setHours(h-2,m,0,0);
+  viewer.clock.currentTime=Cesium.JulianDate.fromDate(currentDate); currentHeure=val;
 });
 slider.addEventListener('change',e=>{if(terrasses.length>0)scheduleShadow();});
 
 const handler=new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
 handler.setInputAction(click=>{
-  const picked=viewer.scene.pick(click.position);
-  if(Cesium.defined(picked)&&picked.id){const id=picked.id.properties?.id?.getValue();const t=terrasses.find(x=>String(x.id)===String(id));if(t){showTooltip(t,click.position.x,click.position.y);return;}}
-  hideTooltip();
+  const picked=viewer.scene.pick(click.position);
+  if(Cesium.defined(picked)&&picked.id){const id=picked.id.properties?.id?.getValue();const t=terrasses.find(x=>String(x.id)===String(id));if(t){showTooltip(t,click.position.x,click.position.y);return;}}
+  hideTooltip();
 },Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
 async function loadTerrasses(){
-  document.getElementById('loadingState').style.display='flex';
-  document.getElementById('terrasseList').style.display='none';
-  try {
-    const data=await fetchTerrasses();
-    document.getElementById('loadingState').style.display='none';
-    document.getElementById('terrasseList').style.display='block';
-    terrasses=data; terrasses.forEach(t=>{sunStates[t.id]=true;});
-    document.getElementById('footerText').textContent=`${terrasses.length} terrasses · ${currentCity.nom}`;
-    renderList(currentHeure,'');
-    const launch=()=>{viewer.scene.postRender.addEventListener(function once(){viewer.scene.postRender.removeEventListener(once);runShadow();});};
-    if(splashDone) launch(); else{const w=setInterval(()=>{if(splashDone){clearInterval(w);launch();}},100);}
-  }catch(e){
-    document.getElementById('loadingState').style.display='none';
-    document.getElementById('terrasseList').style.display='block';
-    document.getElementById('terrasseList').innerHTML=`<div class="no-results">Impossible de charger les terrasses.<br><button onclick="loadTerrasses()" style="margin-top:8px;background:#FFD600;border:none;padding:10px 20px;border-radius:12px;font-weight:600;cursor:pointer;font-size:14px;">🔄 Réessayer</button></div>`;
-  }
+  document.getElementById('loadingState').style.display='flex';
+  document.getElementById('terrasseList').style.display='none';
+  try {
+    const data=await fetchTerrasses();
+    document.getElementById('loadingState').style.display='none';
+    document.getElementById('terrasseList').style.display='block';
+    terrasses=data; terrasses.forEach(t=>{sunStates[t.id]=true;});
+    document.getElementById('footerText').textContent=`${terrasses.length} terrasses · ${currentCity.nom}`;
+    renderList(currentHeure,'');
+    const launch=()=>{viewer.scene.postRender.addEventListener(function once(){viewer.scene.postRender.removeEventListener(once);runShadow();});};
+    if(splashDone) launch(); else{const w=setInterval(()=>{if(splashDone){clearInterval(w);launch();}},100);}
+  }catch(e){
+    document.getElementById('loadingState').style.display='none';
+    document.getElementById('terrasseList').style.display='block';
+    document.getElementById('terrasseList').innerHTML=`<div class="no-results">Impossible de charger les terrasses.<br><button onclick="loadTerrasses()" style="margin-top:8px;background:#FFD600;border:none;padding:10px 20px;border-radius:12px;font-weight:600;cursor:pointer;font-size:14px;">🔄 Réessayer</button></div>`;
+  }
 }
 
 async function init(){
-  const now=new Date(); const initH=Math.min(21,Math.max(8,now.getHours()+(Math.round(now.getMinutes()/15)*15/60)));
-  slider.value=initH; slider.dispatchEvent(new Event('input')); loadTerrasses();
+  const now=new Date(); const initH=Math.min(21,Math.max(8,now.getHours()+(Math.round(now.getMinutes()/15)*15/60)));
+  slider.value=initH; slider.dispatchEvent(new Event('input')); loadTerrasses();
 }
 init();
 </script>
 
 </body>
 </html>
-
-
-
-
 
 
 
