@@ -402,7 +402,12 @@ function makeUserDot() {
 }
 function placeUserDot(lng, lat) {
   if (userDot) viewer.entities.remove(userDot);
-  userDot = viewer.entities.add({ position: Cesium.Cartesian3.fromDegrees(lng, lat, 3), billboard: { image:makeUserDot(), verticalOrigin:Cesium.VerticalOrigin.CENTER, heightReference:Cesium.HeightReference.NONE } });
+  userDot = viewer.entities.add({ position: Cesium.Cartesian3.fromDegrees(lng, lat, 3), billboard: { image:makeUserDot(), verticalOrigin:Cesium.VerticalOrigin.CENTER, heightReference:Cesium.HeightReference.RELATIVE_TO_GROUND,
+width:20,
+height:20,
+disableDepthTestDistance:Number.POSITIVE_INFINITY,
+}
+    });
 }
 const _origGPS = navigator.geolocation.getCurrentPosition.bind(navigator.geolocation);
 let _cachedPos = null;
