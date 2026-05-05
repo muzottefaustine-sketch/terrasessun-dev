@@ -37556,6 +37556,25 @@
         ]
       },
       "id": "node/13704298902"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/100000001",
+        "amenity": "restaurant",
+        "name": "Grand Popo",
+        "addr:housenumber": "7",
+        "addr:street": "Rue Camille Sauvageau",
+        "addr:postcode": "33800",
+        "addr:city": "Bordeaux"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.5739,
+          44.8339
+        ]
+      },
+      "id": "node/100000001"
     }
   ]
-}
