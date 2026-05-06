@@ -37560,7 +37560,7 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/100000001",
+        "@id": "100000001",
         "amenity": "restaurant",
         "name": "Grand Popo",
         "addr:housenumber": "7",
@@ -37575,6 +37575,6 @@
           44.8339
         ]
       },
-      "id": "node/100000001"
+      "id": "100000001"
     }
   ]
