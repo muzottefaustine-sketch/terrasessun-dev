@@ -1,0 +1,6010 @@
+{
+  "type": "FeatureCollection",
+  "generator": "overpass-turbo",
+  "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
+  "timestamp": "2026-05-06T09:05:44Z",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/600879540",
+        "amenity": "restaurant",
+        "cuisine": "pizza;italian",
+        "name": "La Pizza Cresci",
+        "ref:FR:SIRET": "69572229800012"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0119138,
+          43.5504447
+        ]
+      },
+      "id": "node/600879540"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/614425773",
+        "amenity": "pub",
+        "brewery": "Guinness",
+        "name": "The Quay's"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0121959,
+          43.5491395
+        ]
+      },
+      "id": "node/614425773"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/648461258",
+        "amenity": "restaurant",
+        "cuisine": "asian",
+        "name": "Sushi Kan"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0235764,
+          43.552003
+        ]
+      },
+      "id": "node/648461258"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/765948920",
+        "amenity": "pub"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0052758,
+          43.5691848
+        ]
+      },
+      "id": "node/765948920"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/952751876",
+        "addr:city": "Cannes",
+        "addr:housenumber": "16",
+        "addr:postcode": "06400",
+        "addr:street": "Rue Saint-Dizier",
+        "amenity": "restaurant",
+        "cuisine": "georgian",
+        "name": "La Corne"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0088572,
+          43.5512811
+        ]
+      },
+      "id": "node/952751876"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/981397008",
+        "addr:city": "Cannes",
+        "addr:housenumber": "31",
+        "addr:postcode": "06400",
+        "addr:street": "Cours Félix Faure",
+        "amenity": "restaurant",
+        "name": "Bistrot à Huitres"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0134845,
+          43.5519921
+        ]
+      },
+      "id": "node/981397008"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/981397017",
+        "addr:city": "Cannes",
+        "addr:housenumber": "35",
+        "addr:postcode": "06400",
+        "addr:street": "Cours Félix Faure",
+        "amenity": "restaurant",
+        "check_date": "2023-12-09",
+        "indoor_seating": "yes",
+        "name": "Le Rendez-Vous",
+        "outdoor_seating": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0136105,
+          43.5520652
+        ]
+      },
+      "id": "node/981397017"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/981397019",
+        "amenity": "restaurant",
+        "check_date": "2024-09-28",
+        "cuisine": "seafood",
+        "indoor_seating": "yes",
+        "name": "Astoux et Brun",
+        "outdoor_seating": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0132711,
+          43.5519415
+        ]
+      },
+      "id": "node/981397019"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/981397021",
+        "amenity": "restaurant",
+        "cuisine": "french",
+        "name": "La toque d'or"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0127196,
+          43.552796
+        ]
+      },
+      "id": "node/981397021"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1177527891",
+        "addr:city": "Cannes",
+        "addr:housename": "La crèperie",
+        "addr:housenumber": "66",
+        "addr:postcode": "06400",
+        "addr:street": "Rue Meynadier",
+        "amenity": "restaurant",
+        "check_date": "2024-09-28",
+        "cuisine": "crepe",
+        "name": "La Crêperie Breiz",
+        "outdoor_seating": "yes",
+        "ref:FR:SIRET": "38824541700018",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0126062,
+          43.551845
+        ]
+      },
+      "id": "node/1177527891"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1551733871",
+        "addr:housenumber": "151",
+        "addr:street": "Rue d'Antibes",
+        "amenity": "restaurant",
+        "cuisine": "french",
+        "name": "Cave Croisette",
+        "phone": "+33 4 92 59 14 22",
+        "ref:FR:SIRET": "93251539800026",
+        "source": "cadastre-dgi-fr source : Direction Générale des Impôts - Cadastre. Mise à jour : 2011",
+        "wheelchair": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0296737,
+          43.5514238
+        ]
+      },
+      "id": "node/1551733871"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1555741809",
+        "amenity": "restaurant",
+        "brand": "Pizza Hut",
+        "brand:wikidata": "Q191615",
+        "brand:wikipedia": "fr:Pizza Hut",
+        "cuisine": "pizza",
+        "name": "Pizza Hut",
+        "opening_hours": "Mo-Sa 11:30-14:00,18:00-22:30; Su 11:30-14:30,18:00-22:30",
+        "phone": "+33 4 93 39 66 40",
+        "ref:FR:SIRET": "81796430700018",
+        "website": "https://www.pizzahut.fr/huts/fr-1/193-cannes/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0166434,
+          43.5582654
+        ]
+      },
+      "id": "node/1555741809"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1696057623",
+        "amenity": "pub",
+        "name": "Morrisons Irish Pub",
+        "opening_hours": "Mo-Su 17:00-02:00",
+        "ref:FR:SIRET": "49067539400012"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0232833,
+          43.5529039
+        ]
+      },
+      "id": "node/1696057623"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1870674947",
+        "amenity": "restaurant",
+        "diet:vegetarian": "yes",
+        "indoor_seating": "yes",
+        "name": "Au Mal Assis",
+        "outdoor_seating": "yes",
+        "ref:FR:SIRET": "52338053300019"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0121042,
+          43.5496472
+        ]
+      },
+      "id": "node/1870674947"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1870674950",
+        "amenity": "restaurant",
+        "name": "Le Melting Pot"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0118374,
+          43.5494864
+        ]
+      },
+      "id": "node/1870674950"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2004577187",
+        "amenity": "restaurant",
+        "cuisine": "mediterranean",
+        "name": "Les Trois Colonnes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0033667,
+          43.5701504
+        ]
+      },
+      "id": "node/2004577187"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2036190105",
+        "amenity": "restaurant",
+        "name": "Les 3 Colonnes",
+        "opening_hours": "Mo-Su 11:00-20:00"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0009174,
+          43.572004
+        ]
+      },
+      "id": "node/2036190105"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2181349769",
+        "amenity": "restaurant",
+        "cuisine": "asian",
+        "name": "Délices Yang",
+        "ref:FR:SIRET": "47958402100014",
+        "wheelchair": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0146354,
+          43.5525431
+        ]
+      },
+      "id": "node/2181349769"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2388520432",
+        "addr:city": "Cannes",
+        "addr:housenumber": "31",
+        "addr:postcode": "06400",
+        "addr:street": "Rue Hoche",
+        "amenity": "restaurant",
+        "check_date": "2025-03-08",
+        "cuisine": "italian;pizza;italian_pizza",
+        "name": "San Telmo",
+        "outdoor_seating": "yes",
+        "ref:FR:SIRET": "50986997000038",
+        "source": "survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0214647,
+          43.5531185
+        ]
+      },
+      "id": "node/2388520432"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2440865014",
+        "amenity": "pub",
+        "name": "Irish Pub Ma Nolan",
+        "outdoor_seating": "yes",
+        "source": "survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0182751,
+          43.5520876
+        ]
+      },
+      "id": "node/2440865014"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2440865015",
+        "amenity": "restaurant",
+        "name": "L'Ardoise",
+        "ref:FR:SIRET": "49797016000014"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0158188,
+          43.5524593
+        ]
+      },
+      "id": "node/2440865015"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2440865017",
+        "amenity": "restaurant",
+        "name": "Le Bistro Gourmand",
+        "phone": "+33 4 93 68 72 02"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0113008,
+          43.5522386
+        ]
+      },
+      "id": "node/2440865017"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2440865023",
+        "amenity": "cafe",
+        "cuisine": "ice_cream",
+        "indoor_seating": "yes",
+        "name": "Vilefeu",
+        "outdoor_seating": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0181382,
+          43.5519244
+        ]
+      },
+      "id": "node/2440865023"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2558517293",
+        "amenity": "bar",
+        "name": "L'Ange Bar"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0137523,
+          43.5732692
+        ]
+      },
+      "id": "node/2558517293"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2558517294",
+        "amenity": "restaurant",
+        "cuisine": "french",
+        "name": "La Villa Archange",
+        "stars": "2"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0135604,
+          43.5734408
+        ]
+      },
+      "id": "node/2558517294"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2558517295",
+        "amenity": "restaurant",
+        "name": "Le Bistro des Anges"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0136314,
+          43.573337
+        ]
+      },
+      "id": "node/2558517295"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2607932716",
+        "addr:housenumber": "13",
+        "addr:street": "Rue de Bône",
+        "amenity": "restaurant",
+        "cuisine": "sushi",
+        "name": "Sushi Bar Wazakura",
+        "phone": "+33 4 93 99 93 42",
+        "ref:FR:SIRET": "82125487700029"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.028689,
+          43.552286
+        ]
+      },
+      "id": "node/2607932716"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2619999661",
+        "addr:city": "Cannes",
+        "addr:housenumber": "7",
+        "addr:street": "Rue Teisseire",
+        "amenity": "bar",
+        "name": "Cave Riviera",
+        "phone": "+33 4 93 38 82 17",
+        "website": "https://www.cave-riviera.com/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0231033,
+          43.5528387
+        ]
+      },
+      "id": "node/2619999661"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2698193914",
+        "amenity": "restaurant",
+        "check_date": "2024-09-28",
+        "name": "Le Bistrot de l'ecailler"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.012562,
+          43.5518289
+        ]
+      },
+      "id": "node/2698193914"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2698193924",
+        "amenity": "restaurant",
+        "check_date": "2024-09-28",
+        "name": "La Belle Assiette",
+        "outdoor_seating": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0125056,
+          43.5518085
+        ]
+      },
+      "id": "node/2698193924"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3023509575",
+        "amenity": "restaurant",
+        "name": "Le Speakeasy"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0303062,
+          43.5485042
+        ]
+      },
+      "id": "node/3023509575"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3023509577",
+        "amenity": "restaurant",
+        "name": "Beau"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0303062,
+          43.54859
+        ]
+      },
+      "id": "node/3023509577"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3023509579",
+        "amenity": "restaurant",
+        "name": "Black Pearl"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0302818,
+          43.5483597
+        ]
+      },
+      "id": "node/3023509579"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3023509778",
+        "amenity": "cafe",
+        "name": "72 Croisette"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0301284,
+          43.5480703
+        ]
+      },
+      "id": "node/3023509778"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3037770502",
+        "amenity": "restaurant",
+        "check_date": "2026-03-30",
+        "indoor_seating": "yes",
+        "name": "Bella Storia",
+        "outdoor_seating": "yes",
+        "source": "survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0142345,
+          43.5521841
+        ]
+      },
+      "id": "node/3037770502"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3037770503",
+        "amenity": "pub",
+        "name": "The Duke's",
+        "ref:FR:SIRET": "89102253500019",
+        "source": "survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.014519,
+          43.5522265
+        ]
+      },
+      "id": "node/3037770503"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3037770504",
+        "addr:housenumber": "30",
+        "addr:street": "Rue Hoche",
+        "amenity": "cafe",
+        "name": "Brun",
+        "outdoor_seating": "yes",
+        "smoking:outside": "yes",
+        "start_date": "1987"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0217575,
+          43.5529623
+        ]
+      },
+      "id": "node/3037770504"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3037770505",
+        "amenity": "restaurant",
+        "check_date": "2023-12-09",
+        "indoor_seating": "yes",
+        "name": "Byron",
+        "outdoor_seating": "yes",
+        "source": "survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0141549,
+          43.5521785
+        ]
+      },
+      "id": "node/3037770505"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3037770510",
+        "addr:city": "Cannes",
+        "addr:housenumber": "2",
+        "addr:postcode": "06400",
+        "addr:street": "Cours Félix Faure",
+        "amenity": "restaurant",
+        "cuisine": "burger;steak_house",
+        "name": "Beef House",
+        "opening_hours": "Mo-Su 08:00-23:00",
+        "outdoor_seating": "yes",
+        "phone": "+33 4 93 99 93 10",
+        "website": "https://www.beefhouse.com"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0148154,
+          43.5518886
+        ]
+      },
+      "id": "node/3037770510"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3037770513",
+        "amenity": "restaurant",
+        "cuisine": "chinese",
+        "name": "Le Jardin de Bambou",
+        "source": "survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0218795,
+          43.5512991
+        ]
+      },
+      "id": "node/3037770513"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3037770515",
+        "amenity": "restaurant",
+        "cuisine": "pizza",
+        "name": "Pepperoni",
+        "outdoor_seating": "yes",
+        "smoking:outside": "yes",
+        "source": "survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0218589,
+          43.5529622
+        ]
+      },
+      "id": "node/3037770515"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3037784690",
+        "amenity": "restaurant",
+        "name": "La maison by Tripoli",
+        "outdoor_seating": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0147846,
+          43.5520019
+        ]
+      },
+      "id": "node/3037784690"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3037784698",
+        "addr:city": "Cannes",
+        "addr:housenumber": "61",
+        "addr:postcode": "06400",
+        "addr:street": "Cours Félix Faure",
+        "amenity": "restaurant",
+        "indoor_seating": "yes",
+        "name": "Marina Caffe",
+        "outdoor_seating": "yes",
+        "source": "survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0146974,
+          43.5522286
+        ]
+      },
+      "id": "node/3037784698"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3037784701",
+        "amenity": "restaurant",
+        "cuisine": "ramen",
+        "name": "Miki Ramen",
+        "source": "survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0194238,
+          43.5534459
+        ]
+      },
+      "id": "node/3037784701"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3037784705",
+        "amenity": "cafe",
+        "check_date": "2025-03-08",
+        "cuisine": "italian",
+        "name": "Casa di Nonna",
+        "outdoor_seating": "yes",
+        "smoking:outside": "yes",
+        "source": "survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0221595,
+          43.5530806
+        ]
+      },
+      "id": "node/3037784705"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3039119246",
+        "amenity": "restaurant",
+        "name": "Le Cirque",
+        "outdoor_seating": "yes",
+        "ref:FR:SIRET": "75124780000012",
+        "smoking:outside": "yes",
+        "source": "survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.02167,
+          43.5529613
+        ]
+      },
+      "id": "node/3039119246"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3039119251",
+        "amenity": "restaurant",
+        "cuisine": "sushi",
+        "name": "O'Sushi",
+        "outdoor_seating": "yes",
+        "smoking:outside": "yes",
+        "source": "survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0222408,
+          43.5530835
+        ]
+      },
+      "id": "node/3039119251"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3039119292",
+        "amenity": "restaurant",
+        "check_date": "2024-06-08",
+        "cuisine": "pizza",
+        "indoor_seating": "yes",
+        "name": "Le Casanova",
+        "outdoor_seating": "yes",
+        "smoking:outside": "yes",
+        "source": "survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0196611,
+          43.5529822
+        ]
+      },
+      "id": "node/3039119292"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3039119301",
+        "amenity": "restaurant",
+        "name": "Mado à Cannes",
+        "source": "survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0212284,
+          43.5529795
+        ]
+      },
+      "id": "node/3039119301"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3039572210",
+        "addr:city": "Cannes",
+        "addr:postcode": "06400",
+        "amenity": "cafe",
+        "name": "So Benedict",
+        "source": "survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0181563,
+          43.5518203
+        ]
+      },
+      "id": "node/3039572210"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3039572222",
+        "amenity": "cafe",
+        "check_date": "2024-09-28",
+        "indoor_seating": "yes",
+        "name": "Café Poët",
+        "outdoor_seating": "yes",
+        "wheelchair": "limited"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0123938,
+          43.5516173
+        ]
+      },
+      "id": "node/3039572222"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3039581938",
+        "amenity": "restaurant",
+        "outdoor_seating": "yes",
+        "source": "survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0173989,
+          43.5518845
+        ]
+      },
+      "id": "node/3039581938"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3039581947",
+        "addr:housenumber": "4",
+        "addr:street": "Rue Jean de Riouffre",
+        "amenity": "pub",
+        "name": "Le Crillon",
+        "outdoor_seating": "yes",
+        "ref:FR:SIRET": "69712016000018",
+        "source": "survey;streetlevel imagery"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0173857,
+          43.5520317
+        ]
+      },
+      "id": "node/3039581947"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3039581949",
+        "amenity": "cafe",
+        "smoking:outside": "yes",
+        "source": "survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0175794,
+          43.552041
+        ]
+      },
+      "id": "node/3039581949"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3040166045",
+        "amenity": "restaurant",
+        "check_date": "2024-09-28",
+        "name": "Aux Bons Enfants",
+        "outdoor_seating": "yes",
+        "ref:FR:SIRET": "42142592700017"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0119697,
+          43.5516225
+        ]
+      },
+      "id": "node/3040166045"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3040166049",
+        "amenity": "restaurant",
+        "check_date": "2025-03-08",
+        "name": "Café Hoche",
+        "ref:FR:SIRET": "84953612300029"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0217576,
+          43.5531055
+        ]
+      },
+      "id": "node/3040166049"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3040166059",
+        "amenity": "restaurant",
+        "check_date": "2024-09-28",
+        "name": "Caffè Roma",
+        "outdoor_seating": "yes",
+        "source": "survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0167832,
+          43.5517759
+        ]
+      },
+      "id": "node/3040166059"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3040166064",
+        "amenity": "restaurant",
+        "check_date": "2024-09-28",
+        "name": "Loka",
+        "outdoor_seating": "yes",
+        "ref:FR:SIRET": "80987640200029",
+        "source": "survey",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0116499,
+          43.5515181
+        ]
+      },
+      "id": "node/3040166064"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3040166068",
+        "amenity": "cafe",
+        "check_date": "2024-09-28",
+        "name": "Cristal",
+        "source": "survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0119549,
+          43.5514086
+        ]
+      },
+      "id": "node/3040166068"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3040166097",
+        "amenity": "restaurant",
+        "cuisine": "thai",
+        "name": "Jean Luc Pele",
+        "opening_hours": "Mo-Sa 18:00-23:00",
+        "shop": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0192565,
+          43.5528448
+        ]
+      },
+      "id": "node/3040166097"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3040166101",
+        "amenity": "restaurant",
+        "name": "L'epicurieux",
+        "outdoor_seating": "yes",
+        "ref:FR:SIRET": "80208549800011",
+        "smoking:outside": "yes",
+        "wheelchair": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0198825,
+          43.5528217
+        ]
+      },
+      "id": "node/3040166101"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3040166102",
+        "amenity": "restaurant",
+        "check_date": "2024-09-28",
+        "cuisine": "pasta;pizza",
+        "name": "La Piazza",
+        "outdoor_seating": "yes",
+        "source": "survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0117354,
+          43.5513842
+        ]
+      },
+      "id": "node/3040166102"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3040166103",
+        "amenity": "bar",
+        "check_date": "2024-09-28",
+        "name": "La Terrasse",
+        "ref:FR:SIRET": "84991799200018"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0120838,
+          43.5518523
+        ]
+      },
+      "id": "node/3040166103"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3040166109",
+        "amenity": "restaurant",
+        "name": "Lenôtre",
+        "opening_hours": "Mo-Sa 09:00-20:00; Su 09:00-13:00"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0216709,
+          43.5525979
+        ]
+      },
+      "id": "node/3040166109"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3040166336",
+        "amenity": "cafe",
+        "source": "survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.021904,
+          43.5509004
+        ]
+      },
+      "id": "node/3040166336"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3040166352",
+        "amenity": "bar",
+        "name": "Le P'tit Local"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0124366,
+          43.5516262
+        ]
+      },
+      "id": "node/3040166352"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3040166355",
+        "amenity": "restaurant",
+        "check_date": "2024-09-28",
+        "cuisine": "mexican",
+        "name": "Taqueria Lupita",
+        "outdoor_seating": "yes",
+        "ref:FR:SIRET": "90037271500012",
+        "source": "survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0123221,
+          43.5517644
+        ]
+      },
+      "id": "node/3040166355"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3040166356",
+        "amenity": "restaurant",
+        "check_date": "2024-09-28",
+        "name": "La Farigoulette",
+        "ref:FR:SIRET": "53339317900015",
+        "source": "survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.012431,
+          43.5517936
+        ]
+      },
+      "id": "node/3040166356"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3040166368",
+        "amenity": "restaurant",
+        "name": "La Cuisine d'aqui",
+        "ref:FR:SIRET": "92259718200018",
+        "source": "survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0131387,
+          43.5522734
+        ]
+      },
+      "id": "node/3040166368"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3040166375",
+        "amenity": "cafe",
+        "outdoor_seating": "yes",
+        "source": "survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0130801,
+          43.5524906
+        ]
+      },
+      "id": "node/3040166375"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3040166379",
+        "addr:city": "Cannes",
+        "addr:housenumber": "17",
+        "addr:postcode": "06400",
+        "addr:street": "Marché Forville",
+        "amenity": "restaurant",
+        "cuisine": "french",
+        "name": "Le Forville",
+        "opening_hours": "Tu-Su 08:30-17:00; Mo off",
+        "outdoor_seating": "yes",
+        "phone": "+33 4 93 39 67 58",
+        "ref:FR:SIRET": "82800973800018",
+        "website": "https://leforville.fr/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0126446,
+          43.5525608
+        ]
+      },
+      "id": "node/3040166379"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3040166388",
+        "amenity": "cafe",
+        "name": "Le grain de sel",
+        "ref:FR:SIRET": "82874303900012"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0209812,
+          43.5531288
+        ]
+      },
+      "id": "node/3040166388"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3040166431",
+        "amenity": "restaurant",
+        "check_date": "2024-09-28",
+        "cuisine": "italian",
+        "name": "Salsamenteria di Parma",
+        "outdoor_seating": "yes",
+        "ref:FR:SIRET": "80158385700017",
+        "source": "survey",
+        "website": "https://www.salsamenteriadiparma.com/france---cannes",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0118015,
+          43.5516115
+        ]
+      },
+      "id": "node/3040166431"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3040166457",
+        "amenity": "restaurant",
+        "check_date": "2024-09-28",
+        "name": "La Farigoule Bistrot",
+        "ref:FR:SIRET": "53339317900023",
+        "source": "survey",
+        "wheelchair": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0118999,
+          43.551486
+        ]
+      },
+      "id": "node/3040166457"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3050587070",
+        "amenity": "restaurant",
+        "cuisine": "italian",
+        "name": "Da Laura",
+        "ref:FR:SIRET": "69542057000027",
+        "source": "survey",
+        "start_date": "1992"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0194281,
+          43.5531696
+        ]
+      },
+      "id": "node/3050587070"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3050587085",
+        "amenity": "restaurant",
+        "check_date": "2024-11-01",
+        "cuisine": "regional",
+        "name": "La Meissounière",
+        "opening_hours:signed": "no",
+        "outdoor_seating": "yes",
+        "ref:FR:SIRET": "53433718300022",
+        "source": "survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0192503,
+          43.5534149
+        ]
+      },
+      "id": "node/3050587085"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3050587087",
+        "addr:floor": "0",
+        "amenity": "restaurant",
+        "check_date": "2025-03-05",
+        "cuisine": "pizza",
+        "delivery": "yes",
+        "level": "0",
+        "name": "Five Pizza",
+        "outdoor_seating": "yes",
+        "takeaway": "yes",
+        "website": "https://stores.fivepizzaoriginal.com/restaurant/five-pizza-original-cannes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.021489,
+          43.5535022
+        ]
+      },
+      "id": "node/3050587087"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3050587088",
+        "amenity": "restaurant",
+        "check_date": "2025-03-05",
+        "name": "Le Triomphe",
+        "opening_hours:signed": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0195698,
+          43.5535533
+        ]
+      },
+      "id": "node/3050587088"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3050587094",
+        "amenity": "cafe",
+        "name": "Warner"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0214579,
+          43.5527816
+        ]
+      },
+      "id": "node/3050587094"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3100507656",
+        "amenity": "restaurant",
+        "check_date:opening_hours": "2023-08-17",
+        "cuisine": "italian",
+        "name": "La Boussole Carrée",
+        "opening_hours:signed": "no",
+        "ref:FR:SIRET": "49521410800021",
+        "smoking": "outside"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0249612,
+          43.5520831
+        ]
+      },
+      "id": "node/3100507656"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3280880244",
+        "addr:city": "Le Cannet",
+        "addr:housenumber": "87",
+        "addr:postcode": "06110",
+        "addr:street": "Rue Saint-Sauveur",
+        "amenity": "restaurant",
+        "capacity": "30",
+        "cuisine": "bistro;french",
+        "name": "Bistrot Saint-Sauveur",
+        "phone": "+33493944203",
+        "ref:FR:SIRET": "83982467900022",
+        "website": "https://bistrotsaintsauveur.fr/",
+        "wheelchair": "limited"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0214119,
+          43.5761299
+        ]
+      },
+      "id": "node/3280880244"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3280880245",
+        "amenity": "restaurant",
+        "capacity": "20",
+        "cuisine": "japanese",
+        "name": "Kashiwa",
+        "opening_hours": "We-Su 12:00-14:00,19:30-22:30",
+        "outdoor_seating": "yes",
+        "ref:FR:SIRET": "53390416500016",
+        "website": "http://www.kashiwa.sitew.com/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0232876,
+          43.5747503
+        ]
+      },
+      "id": "node/3280880245"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3384494519",
+        "amenity": "cafe",
+        "check_date:opening_hours": "2026-03-31",
+        "cuisine": "italian;coffee_shop;tea",
+        "internet_access": "yes",
+        "internet_access:fee": "no",
+        "name": "Volupté Anytime",
+        "opening_hours:signed": "no",
+        "outdoor_seating": "yes",
+        "ref:FR:SIRET": "53095660600012",
+        "smoking": "outside",
+        "website": "https://www.volupte-anytime.com/fr?try=1"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0221898,
+          43.5529679
+        ]
+      },
+      "id": "node/3384494519"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3517145153",
+        "addr:housenumber": "19",
+        "addr:street": "Boulevard Sadi Carnot",
+        "amenity": "restaurant",
+        "cuisine": "sandwich",
+        "name": "Le Palet Fondant",
+        "outdoor_seating": "yes",
+        "phone": "+33981773857"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0202968,
+          43.5760054
+        ]
+      },
+      "id": "node/3517145153"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3517164423",
+        "amenity": "restaurant",
+        "name": "Le Tivoli",
+        "ref:FR:SIRET": "82044881900012"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0195056,
+          43.5761496
+        ]
+      },
+      "id": "node/3517164423"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3562910893",
+        "addr:city": "Le Cannet",
+        "addr:housenumber": "361",
+        "addr:postcode": "06110",
+        "addr:street": "Rue Saint-Sauveur",
+        "amenity": "restaurant",
+        "name": "Chouchou",
+        "ref:FR:SIRET": "80301923100023"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0189607,
+          43.5772292
+        ]
+      },
+      "id": "node/3562910893"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3562910895",
+        "addr:city": "Le Cannet",
+        "addr:postcode": "06110",
+        "addr:street": "Place Bellevue",
+        "amenity": "restaurant",
+        "cuisine": "french",
+        "name": "Le Coin Gourmet",
+        "ref:FR:SIRET": "48366841400012"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0194677,
+          43.577406
+        ]
+      },
+      "id": "node/3562910895"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3562910896",
+        "addr:city": "Le Cannet",
+        "addr:postcode": "06110",
+        "addr:street": "Place Bellevue",
+        "amenity": "restaurant",
+        "cuisine": "mediterranean",
+        "name": "La Maison Bellevue",
+        "ref:FR:SIRET": "95266737600026"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0193532,
+          43.5774678
+        ]
+      },
+      "id": "node/3562910896"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3565369296",
+        "amenity": "restaurant",
+        "contact:phone": "+33493465375",
+        "cuisine": "pizza",
+        "delivery": "yes",
+        "name": "Pizza Gourmet",
+        "opening_hours": "Tu-Sa 10:00-14:00; Tu-Su 19:00-22:00",
+        "outdoor_seating": "yes",
+        "takeaway": "yes",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0203595,
+          43.5771824
+        ]
+      },
+      "id": "node/3565369296"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3663850936",
+        "amenity": "bar",
+        "name": "Le jardin secret",
+        "opening_hours": "jusqu'à minuit"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.009802,
+          43.5516546
+        ]
+      },
+      "id": "node/3663850936"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3666307803",
+        "addr:city": "Cannes",
+        "addr:housename": "Le relais des semailles",
+        "addr:housenumber": "9",
+        "addr:postcode": "06400",
+        "addr:street": "Rue Saint-Antoine",
+        "amenity": "restaurant",
+        "cuisine": "french",
+        "name": "Le relais des semailles"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0112303,
+          43.5512998
+        ]
+      },
+      "id": "node/3666307803"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3667356405",
+        "amenity": "cafe",
+        "check_date:opening_hours": "2023-08-17",
+        "name": "The Lady Coffee",
+        "opening_hours:signed": "no",
+        "ref:FR:SIRET": "80926604200013"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0255086,
+          43.5521974
+        ]
+      },
+      "id": "node/3667356405"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3667405187",
+        "amenity": "restaurant",
+        "check_date": "2024-09-28",
+        "cuisine": "pizza",
+        "description": "Brasserie;Pizzeria",
+        "microbrewery": "yes",
+        "name": "La Californie",
+        "outdoor_seating": "yes",
+        "ref:FR:SIRET": "82007172800019"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0169835,
+          43.5517919
+        ]
+      },
+      "id": "node/3667405187"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3672404868",
+        "amenity": "restaurant",
+        "name": "Bâoli",
+        "opening_hours": "Sa,Su 20:00-24:00; Apr-Oct 20:00-24:00",
+        "phone": "+33 4 93 43 03 43",
+        "website": "https://lebaoli.com/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0341122,
+          43.5404985
+        ]
+      },
+      "id": "node/3672404868"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3716898174",
+        "amenity": "restaurant",
+        "check_date": "2026-03-30",
+        "indoor_seating": "yes",
+        "name": "Le Caveau 30",
+        "outdoor_seating": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0139669,
+          43.5521359
+        ]
+      },
+      "id": "node/3716898174"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3740052473",
+        "addr:city": "Cannes",
+        "addr:housenumber": "40",
+        "addr:postcode": "06400",
+        "addr:street": "Rue de Mimont",
+        "amenity": "restaurant",
+        "cuisine": "couscous",
+        "name": "Le Maghreb",
+        "ref:FR:SIRET": "48023141400016"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.023,
+          43.5555231
+        ]
+      },
+      "id": "node/3740052473"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3753289192",
+        "amenity": "cafe",
+        "check_date": "2026-03-30",
+        "cuisine": "ice_cream",
+        "internet_access": "no",
+        "name": "Gelateria Torino",
+        "smoking": "outside"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0165786,
+          43.5543385
+        ]
+      },
+      "id": "node/3753289192"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4040655962",
+        "amenity": "restaurant",
+        "name": "Bijou Plage",
+        "phone": "+33 4 93 43 70 55"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0342079,
+          43.539212
+        ]
+      },
+      "id": "node/4040655962"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4040655971",
+        "amenity": "restaurant",
+        "name": "Le Moure Rouge",
+        "phone": "+33 4 93 43 33 58",
+        "ref:FR:SIRET": "89935577000020"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0398146,
+          43.5415637
+        ]
+      },
+      "id": "node/4040655971"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4040655975",
+        "amenity": "restaurant",
+        "name": "Pomme D'api"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0383963,
+          43.5382156
+        ]
+      },
+      "id": "node/4040655975"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4294609489",
+        "addr:housenumber": "5",
+        "addr:street": "Rue Notre-Dame",
+        "amenity": "restaurant",
+        "cuisine": "italian",
+        "name": "Vita",
+        "ref:FR:SIRET": "52168413400013"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0196696,
+          43.5518428
+        ]
+      },
+      "id": "node/4294609489"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4296765989",
+        "addr:housenumber": "5",
+        "addr:street": "Rue la Fontaine",
+        "amenity": "restaurant",
+        "name": "L'Affable",
+        "ref:FR:SIRET": "48754045200017"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0249485,
+          43.5519916
+        ]
+      },
+      "id": "node/4296765989"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4344922289",
+        "addr:housenumber": "23",
+        "addr:postcode": "06400",
+        "addr:street": "Avenue du Maréchal Juin",
+        "amenity": "restaurant",
+        "name": "Papa Nino 2",
+        "opening_hours": "Tu-Su 10:00-15:30,17:30-23:45",
+        "phone": "+33493436282",
+        "website": "http://www.facebook.com/PapaNino2"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.034016,
+          43.5502279
+        ]
+      },
+      "id": "node/4344922289"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4348937189",
+        "addr:housenumber": "5",
+        "addr:street": "Rue Jean Daumas",
+        "amenity": "restaurant",
+        "name": "La Table Du Chef",
+        "ref:FR:SIRET": "50352672500018"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0252075,
+          43.5526527
+        ]
+      },
+      "id": "node/4348937189"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4350066706",
+        "addr:housenumber": "21",
+        "addr:street": "Rue Saint-Antoine",
+        "amenity": "restaurant",
+        "check_date": "2024-09-28",
+        "name": "Mantel"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0107269,
+          43.5516
+        ]
+      },
+      "id": "node/4350066706"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4364571589",
+        "addr:housenumber": "6",
+        "addr:street": "Rue Florian",
+        "amenity": "restaurant",
+        "name": "La Mome",
+        "name:en": "La Mome"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0234583,
+          43.5518739
+        ]
+      },
+      "id": "node/4364571589"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4387090551",
+        "addr:city": "Cannes",
+        "addr:housenumber": "20",
+        "addr:postcode": "06400",
+        "addr:street": "Rue Rouaze",
+        "amenity": "restaurant",
+        "cuisine": "lebanese",
+        "name": "Al Charq",
+        "outdoor_seating": "yes",
+        "smoking": "outside"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0300453,
+          43.5493103
+        ]
+      },
+      "id": "node/4387090551"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4401352789",
+        "addr:city": "Cannes",
+        "addr:housenumber": "2",
+        "addr:postcode": "06400",
+        "addr:street": "Place du Général de Gaulle",
+        "amenity": "restaurant",
+        "indoor_seating": "yes",
+        "name": "Zoa Sushi Bar",
+        "outdoor_seating": "yes",
+        "ref:FR:SIRET": "94958592100024"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0167641,
+          43.5520162
+        ]
+      },
+      "id": "node/4401352789"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4413553842",
+        "amenity": "restaurant",
+        "capacity": "20",
+        "cuisine": "italian",
+        "delivery": "no",
+        "name": "Noisette",
+        "outdoor_seating": "yes",
+        "ref:FR:SIRET": "85147064100016",
+        "smoking": "outside",
+        "takeaway": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0245237,
+          43.5519775
+        ]
+      },
+      "id": "node/4413553842"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4413553843",
+        "amenity": "restaurant",
+        "cuisine": "international",
+        "name": "Chez Bobo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0230332,
+          43.5512053
+        ]
+      },
+      "id": "node/4413553843"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4534849590",
+        "addr:housenumber": "23",
+        "addr:postcode": "06400",
+        "addr:street": "Rue du Suquet",
+        "amenity": "restaurant",
+        "internet_access": "wlan",
+        "name": "Mickaella",
+        "phone": "+33 4 93 39 68 95"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0098529,
+          43.5514533
+        ]
+      },
+      "id": "node/4534849590"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4569107454",
+        "amenity": "restaurant",
+        "cuisine": "sandwich",
+        "name": "Stan'Suiss",
+        "outdoor_seating": "terrace",
+        "takeaway": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0081318,
+          43.5530147
+        ]
+      },
+      "id": "node/4569107454"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4569107455",
+        "amenity": "restaurant",
+        "brand": "Memphis",
+        "brand:wikidata": "Q101641106",
+        "cuisine": "american",
+        "name": "Memphis",
+        "outdoor_seating": "terrace",
+        "takeaway": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0082083,
+          43.5523078
+        ]
+      },
+      "id": "node/4569107455"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4707713790",
+        "amenity": "restaurant",
+        "name": "L'Eponyme",
+        "name:fr": "L'Eponyme",
+        "opening_hours": "Tu-Sa 12:00-13:30,19:00-21:30",
+        "ref:FR:SIRET": "84972921500012"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0281328,
+          43.5522854
+        ]
+      },
+      "id": "node/4707713790"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4816309322",
+        "addr:housenumber": "10",
+        "addr:street": "Rue Saint-Antoine",
+        "amenity": "restaurant",
+        "check_date": "2024-09-28",
+        "cuisine": "french",
+        "indoor_seating": "yes",
+        "name": "Auberge Provençale da Bouttau",
+        "name:fr": "Auberge Provençale da Bouttau",
+        "outdoor_seating": "yes",
+        "phone": "+33 4 92 99 27 17",
+        "ref:FR:SIRET": "93372238100011"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0111252,
+          43.5514519
+        ]
+      },
+      "id": "node/4816309322"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4993217922",
+        "addr:housenumber": "6-7",
+        "addr:postcode": "06400",
+        "addr:street": "Quai Saint-Pierre",
+        "amenity": "restaurant",
+        "name": "La Paillote by Gaston & Gastounette",
+        "opening_hours": "Mo-Su 12:00-14:00, 19:00-22:30",
+        "phone": "+33 4 93 39 49 44",
+        "ref:FR:SIRET": "31194535600013",
+        "website": "https://gaston-gastounette.fr/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0119689,
+          43.5501895
+        ]
+      },
+      "id": "node/4993217922"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4994685121",
+        "addr:housenumber": "9",
+        "addr:postcode": "06400",
+        "addr:street": "Quai Saint-Pierre",
+        "amenity": "restaurant",
+        "name": "L'Assiette Provençale",
+        "phone": "+33 4 93 38 52 14",
+        "website": "http://assiette-provencale.fr"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0120186,
+          43.5500366
+        ]
+      },
+      "id": "node/4994685121"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5362334169",
+        "addr:city": "Cannes",
+        "addr:housenumber": "2",
+        "addr:postcode": "06400",
+        "addr:street": "Boulevard Carnot",
+        "amenity": "restaurant",
+        "cuisine": "chinese",
+        "indoor_seating": "yes",
+        "name": "China Town",
+        "outdoor_seating": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0172137,
+          43.5543971
+        ]
+      },
+      "id": "node/5362334169"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5362334170",
+        "addr:city": "Cannes",
+        "addr:housenumber": "4",
+        "addr:postcode": "06400",
+        "addr:street": "Boulevard Carnot",
+        "amenity": "pub",
+        "indoor_seating": "yes",
+        "name": "Civette Carnot",
+        "outdoor_seating": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0172272,
+          43.5545655
+        ]
+      },
+      "id": "node/5362334170"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5362334174",
+        "addr:city": "Cannes",
+        "addr:housenumber": "1",
+        "addr:postcode": "06400",
+        "addr:street": "Boulevard Carnot",
+        "amenity": "cafe",
+        "indoor_seating": "yes",
+        "name": "Copenhagen Coffee Lab",
+        "outdoor_seating": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0168393,
+          43.5542255
+        ]
+      },
+      "id": "node/5362334174"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5389564536",
+        "amenity": "bar",
+        "name": "Lucky You"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0120034,
+          43.5501032
+        ]
+      },
+      "id": "node/5389564536"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5389564538",
+        "amenity": "restaurant",
+        "name": "Cheer Mamma"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0120423,
+          43.5499107
+        ]
+      },
+      "id": "node/5389564538"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5389564542",
+        "amenity": "restaurant",
+        "cuisine": "pizza",
+        "name": "Amalfi"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0118277,
+          43.5494014
+        ]
+      },
+      "id": "node/5389564542"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5389564543",
+        "amenity": "restaurant",
+        "check_date": "2025-12-27",
+        "name": "Le Boston"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0121246,
+          43.5493725
+        ]
+      },
+      "id": "node/5389564543"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5389564545",
+        "amenity": "cafe",
+        "name": "Casa Italia"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0122488,
+          43.5488765
+        ]
+      },
+      "id": "node/5389564545"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5389564546",
+        "amenity": "cafe",
+        "name": "Café Maritime"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0122743,
+          43.5487482
+        ]
+      },
+      "id": "node/5389564546"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5389564548",
+        "addr:city": "Cannes",
+        "addr:housenumber": "12",
+        "addr:postcode": "06400",
+        "addr:street": "Boulevard Jean Hibert",
+        "amenity": "restaurant",
+        "cuisine": "pizza;french",
+        "name": "Bay Cafe",
+        "ref:FR:SIRET": "85357342600014"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0103551,
+          43.5483175
+        ]
+      },
+      "id": "node/5389564548"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5389564549",
+        "addr:city": "Cannes",
+        "addr:postcode": "06400",
+        "addr:street": "Boulevard Jean Hibert",
+        "amenity": "restaurant",
+        "cuisine": "fast_food",
+        "name": "Chez Arthur"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0107273,
+          43.5482774
+        ]
+      },
+      "id": "node/5389564549"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5389564550",
+        "addr:city": "Cannes",
+        "addr:housenumber": "13",
+        "addr:postcode": "06400",
+        "addr:street": "Boulevard Jean Hibert",
+        "amenity": "restaurant",
+        "name": "Su and Shi",
+        "ref:FR:SIRET": "82002452900027"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0099515,
+          43.5484231
+        ]
+      },
+      "id": "node/5389564550"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5389564551",
+        "amenity": "restaurant",
+        "name": "O'Key Beach"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0095411,
+          43.5482447
+        ]
+      },
+      "id": "node/5389564551"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5389564552",
+        "amenity": "restaurant",
+        "name": "Villa Azure"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0091282,
+          43.5486207
+        ]
+      },
+      "id": "node/5389564552"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5389564553",
+        "amenity": "restaurant",
+        "cuisine": "italian",
+        "indoor_seating": "yes",
+        "name": "Italian Caffe",
+        "outdoor_seating": "yes",
+        "ref:FR:SIRET": "79978286700011"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0079385,
+          43.5488469
+        ]
+      },
+      "id": "node/5389564553"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5389564554",
+        "amenity": "restaurant",
+        "name": "Riviera Beach"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0083918,
+          43.5485032
+        ]
+      },
+      "id": "node/5389564554"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5389564555",
+        "amenity": "restaurant",
+        "name": "Maema"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.007972,
+          43.5485859
+        ]
+      },
+      "id": "node/5389564555"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5389564556",
+        "air_conditioning": "yes",
+        "amenity": "bar",
+        "indoor_seating": "yes",
+        "outdoor_seating": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0086895,
+          43.548703
+        ]
+      },
+      "id": "node/5389564556"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5389564557",
+        "amenity": "restaurant",
+        "name": "Belle Plage"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0072907,
+          43.5486811
+        ]
+      },
+      "id": "node/5389564557"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5389564558",
+        "amenity": "restaurant",
+        "name": "L'Alba"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0070507,
+          43.5486967
+        ]
+      },
+      "id": "node/5389564558"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5389564566",
+        "amenity": "restaurant",
+        "name": "Plage Waikiki"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0048338,
+          43.5488357
+        ]
+      },
+      "id": "node/5389564566"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5389564567",
+        "amenity": "bar",
+        "name": "Elbey Pub",
+        "ref:FR:SIRET": "51370702600029"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0040211,
+          43.5491283
+        ]
+      },
+      "id": "node/5389564567"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5392712525",
+        "amenity": "restaurant",
+        "name": "Chez Vincent et Nicolas"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.011472,
+          43.5514028
+        ]
+      },
+      "id": "node/5392712525"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5392712526",
+        "amenity": "bar",
+        "name": "Le Diane"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.012113,
+          43.5514902
+        ]
+      },
+      "id": "node/5392712526"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5392712527",
+        "amenity": "cafe",
+        "name": "L'Atelier du Homard"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0117831,
+          43.5517556
+        ]
+      },
+      "id": "node/5392712527"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5392712528",
+        "amenity": "cafe",
+        "name": "Caffe Veneto",
+        "ref:FR:SIRET": "82406147700017"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0118515,
+          43.5517799
+        ]
+      },
+      "id": "node/5392712528"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5392724323",
+        "amenity": "bar",
+        "name": "Le Pantiéro"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0127233,
+          43.551742
+        ]
+      },
+      "id": "node/5392724323"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5395998415",
+        "addr:city": "Cannes",
+        "addr:housenumber": "43",
+        "addr:postcode": "06400",
+        "addr:street": "Cours Félix Faure",
+        "amenity": "restaurant",
+        "check_date": "2023-12-09",
+        "name": "Brasserie Frensh"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0138595,
+          43.5521207
+        ]
+      },
+      "id": "node/5395998415"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5396011629",
+        "addr:city": "Cannes",
+        "addr:housenumber": "53",
+        "addr:postcode": "06400",
+        "addr:street": "Cours Félix Faure",
+        "amenity": "restaurant",
+        "cuisine": "french",
+        "name": "Le Pistou"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.014316,
+          43.5521731
+        ]
+      },
+      "id": "node/5396011629"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5396011636",
+        "addr:city": "Cannes",
+        "addr:housenumber": "67",
+        "addr:postcode": "06400",
+        "addr:street": "Cours Félix Faure",
+        "amenity": "restaurant",
+        "name": "Chez Freddy"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0148833,
+          43.5522653
+        ]
+      },
+      "id": "node/5396011636"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5396060929",
+        "amenity": "restaurant",
+        "check_date": "2024-09-28",
+        "cuisine": "italian",
+        "name": "Saporedipane",
+        "outdoor_seating": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0152052,
+          43.5523023
+        ]
+      },
+      "id": "node/5396060929"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5396060930",
+        "addr:city": "Cannes",
+        "addr:housenumber": "83",
+        "addr:postcode": "06400",
+        "addr:street": "Cours Félix Faure",
+        "amenity": "restaurant",
+        "check_date": "2024-09-28",
+        "indoor_seating": "yes",
+        "name": "Green Sushi",
+        "outdoor_seating": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0156453,
+          43.5522795
+        ]
+      },
+      "id": "node/5396060930"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5396060933",
+        "amenity": "restaurant",
+        "check_date": "2024-09-28",
+        "indoor_seating": "yes",
+        "name": "New-York New-York",
+        "outdoor_seating": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0158891,
+          43.5519796
+        ]
+      },
+      "id": "node/5396060933"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5396060936",
+        "addr:city": "Cannes",
+        "addr:housenumber": "2",
+        "addr:postcode": "06400",
+        "addr:street": "Place du Général de Gaulle",
+        "amenity": "restaurant",
+        "brand:wikidata": "Q7605233",
+        "check_date": "2025-06-27",
+        "check_date:currency:XBT": "2025-06-27",
+        "cuisine": "burger",
+        "currency:XBT": "yes",
+        "indoor_seating": "yes",
+        "name": "Steak 'n Shake",
+        "opening_hours": "Mo-Su 10:00-02:30",
+        "outdoor_seating": "yes",
+        "payment:lightning": "yes",
+        "payment:lightning_contactless": "no",
+        "payment:onchain": "no",
+        "phone": "+33 4 93 38 39 46",
+        "website": "https://steaknshake.fr/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0162615,
+          43.5521817
+        ]
+      },
+      "id": "node/5396060936"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5396060939",
+        "amenity": "restaurant",
+        "name": "Brasserie du Casino"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0171704,
+          43.5517915
+        ]
+      },
+      "id": "node/5396060939"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5396060949",
+        "addr:city": "Cannes",
+        "addr:housenumber": "17",
+        "addr:postcode": "06400",
+        "addr:street": "Square Mérimée",
+        "amenity": "restaurant",
+        "name": "Côté Sushi"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.017958,
+          43.5518198
+        ]
+      },
+      "id": "node/5396060949"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5396060950",
+        "amenity": "restaurant",
+        "name": "La Potinière du Palais"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0177559,
+          43.5518141
+        ]
+      },
+      "id": "node/5396060950"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5396060951",
+        "amenity": "restaurant",
+        "name": "Le Croisette",
+        "ref:FR:SIRET": "51166601800011"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0179538,
+          43.5514904
+        ]
+      },
+      "id": "node/5396060951"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5398008834",
+        "amenity": "bar",
+        "name": "Giorgio Armani"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0232688,
+          43.5505631
+        ]
+      },
+      "id": "node/5398008834"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5398008837",
+        "amenity": "restaurant",
+        "name": "JW Grill"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0250672,
+          43.5500436
+        ]
+      },
+      "id": "node/5398008837"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5398008843",
+        "amenity": "restaurant",
+        "name": "Carlton Restaurant",
+        "website": "https://www.carlton-cannes.com/fr/gastronomie/carlton-restaurant/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0274866,
+          43.5493126
+        ]
+      },
+      "id": "node/5398008843"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5398008844",
+        "amenity": "cafe",
+        "name": "Le Voilier",
+        "ref:FR:SIRET": "94840609500018"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0277575,
+          43.5491143
+        ]
+      },
+      "id": "node/5398008844"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5599890745",
+        "amenity": "restaurant",
+        "name": "Comme à la Maison",
+        "ref:FR:SIRET": "89164607700018"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0219718,
+          43.5514953
+        ]
+      },
+      "id": "node/5599890745"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5599890753",
+        "amenity": "restaurant",
+        "name": "Juice Lab"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0222629,
+          43.5517257
+        ]
+      },
+      "id": "node/5599890753"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5599890762",
+        "amenity": "restaurant",
+        "name": "Chyrstie",
+        "ref:FR:SIRET": "81480955400011"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0217609,
+          43.5510115
+        ]
+      },
+      "id": "node/5599890762"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5627407621",
+        "amenity": "restaurant",
+        "name": "Bar du Marin"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0157728,
+          43.5527615
+        ]
+      },
+      "id": "node/5627407621"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5747700521",
+        "addr:housenumber": "4",
+        "addr:postcode": "06400",
+        "addr:street": "Petite Rue Saint-Antoine",
+        "amenity": "restaurant",
+        "cuisine": "french;mediterranean",
+        "internet_access": "wlan",
+        "name": "Le Manoir",
+        "ref:FR:SIRET": "41272938600034",
+        "website": "https://www.lemanoircannes.fr"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0109266,
+          43.5513108
+        ]
+      },
+      "id": "node/5747700521"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5764039761",
+        "amenity": "restaurant",
+        "cuisine": "italian",
+        "indoor_seating": "yes",
+        "name": "L'etabli",
+        "outdoor_seating": "yes",
+        "ref:FR:SIRET": "35383867500042"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0083907,
+          43.5487362
+        ]
+      },
+      "id": "node/5764039761"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5764039764",
+        "amenity": "restaurant",
+        "name": "La Canna Suisse"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.009783,
+          43.5518982
+        ]
+      },
+      "id": "node/5764039764"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5770357286",
+        "amenity": "restaurant",
+        "cuisine": "regional",
+        "name": "Lou Meidjou",
+        "ref:FR:SIRET": "79225885700012"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0223305,
+          43.5751135
+        ]
+      },
+      "id": "node/5770357286"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5773838753",
+        "addr:housenumber": "41",
+        "addr:postcode": "06110",
+        "addr:street": "Boulevard Sadi Carnot",
+        "amenity": "restaurant",
+        "cuisine": "pizza",
+        "name": "La Sarbacane"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0173003,
+          43.575638
+        ]
+      },
+      "id": "node/5773838753"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5859291199",
+        "amenity": "restaurant",
+        "contact:facebook": "https://www.facebook.com/californiasushistorecannet",
+        "contact:phone": "+33 4 92 18 14 14",
+        "contact:website": "http://california-sushistore.com/",
+        "cuisine": "sushi",
+        "delivery": "yes",
+        "name": "Sushistore",
+        "opening_hours": "Mo-Fr 11:00-14:00,18:00-22:00; Sa 18:00-22:00",
+        "organic": "yes",
+        "takeaway": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0201311,
+          43.5760471
+        ]
+      },
+      "id": "node/5859291199"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5895652751",
+        "addr:city": "Cannes",
+        "addr:housenumber": "83",
+        "addr:postcode": "06400",
+        "addr:street": "Avenue de Lérins",
+        "amenity": "restaurant",
+        "cuisine": "italian;pizza",
+        "name": "La Dolce Vita",
+        "ref:FR:SIRET": "90060097400019"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0380459,
+          43.5387337
+        ]
+      },
+      "id": "node/5895652751"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5916877787",
+        "addr:housenumber": "25",
+        "addr:street": "Rue Hoche",
+        "amenity": "restaurant",
+        "cuisine": "french",
+        "name": "Le grain de sel",
+        "ref:FR:SIRET": "82874303900012"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0209806,
+          43.5531171
+        ]
+      },
+      "id": "node/5916877787"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6029886412",
+        "amenity": "restaurant",
+        "contact:phone": "+33493456002",
+        "name": "Le Rond Point",
+        "opening_hours": "Mo-Sa 08:00-20:00",
+        "ref:FR:SIRET": "82125767200021",
+        "wheelchair": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0166995,
+          43.5726468
+        ]
+      },
+      "id": "node/6029886412"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6034946983",
+        "amenity": "restaurant",
+        "cuisine": "italian",
+        "level": "0",
+        "name": "Enjoy",
+        "operator": "Leclerc"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0006061,
+          43.5728549
+        ]
+      },
+      "id": "node/6034946983"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6106913028",
+        "amenity": "bar",
+        "name": "Medusa",
+        "opening_hours": "Jun-Aug",
+        "operator": "Palm Beach Events",
+        "outdoor_seating": "yes",
+        "smoking": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0369145,
+          43.5360357
+        ]
+      },
+      "id": "node/6106913028"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6147135213",
+        "amenity": "restaurant",
+        "contact:phone": "+33 4 92 59 08 74",
+        "cuisine": "italian;pizza",
+        "delivery": "yes",
+        "name": "Pizza Jean-Jean",
+        "opening_hours": "Mo-Su 18:00-22:00",
+        "takeaway": "only"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0386483,
+          43.5425446
+        ]
+      },
+      "id": "node/6147135213"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6285740792",
+        "amenity": "restaurant",
+        "name": "Le Bistro Du Cannetan",
+        "outdoor_seating": "yes",
+        "ref:FR:SIRET": "83433818800016"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0169257,
+          43.5748166
+        ]
+      },
+      "id": "node/6285740792"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6291109225",
+        "addr:housenumber": "12",
+        "addr:street": "Rue Jean Daumas",
+        "amenity": "restaurant",
+        "cuisine": "french",
+        "name": "Bistro les Canailles",
+        "outdoor_seating": "yes",
+        "phone": "+33493681210",
+        "ref:FR:SIRET": "52128834000016"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0254749,
+          43.5532026
+        ]
+      },
+      "id": "node/6291109225"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6297527199",
+        "amenity": "restaurant",
+        "cuisine": "italian",
+        "outdoor_seating": "yes",
+        "takeaway": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0168963,
+          43.5667568
+        ]
+      },
+      "id": "node/6297527199"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6445805585",
+        "amenity": "restaurant",
+        "name": "Meat",
+        "ref:FR:SIRET": "45188801000027"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0108539,
+          43.5515101
+        ]
+      },
+      "id": "node/6445805585"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6445805586",
+        "amenity": "restaurant",
+        "name": "Uva",
+        "ref:FR:SIRET": "84062382100013"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0248594,
+          43.5532077
+        ]
+      },
+      "id": "node/6445805586"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6445816986",
+        "amenity": "restaurant",
+        "name": "Le Pompon",
+        "ref:FR:SIRET": "83511942100013"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0146476,
+          43.5523425
+        ]
+      },
+      "id": "node/6445816986"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6558469485",
+        "amenity": "restaurant",
+        "cuisine": "french",
+        "name": "Le Pastis",
+        "name:fr": "Le Pastis",
+        "opening_hours": "Mo-Su 08:00-00:00",
+        "phone": "+33 4 92 98 95 40",
+        "website": "http://restaurantlepastis.com"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0228888,
+          43.5510643
+        ]
+      },
+      "id": "node/6558469485"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6696605903",
+        "amenity": "restaurant",
+        "cuisine": "italian",
+        "name": "Mim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0343721,
+          43.5457681
+        ]
+      },
+      "id": "node/6696605903"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6698502811",
+        "amenity": "restaurant",
+        "cuisine": "french",
+        "email": "leduplexcannes@gmail.com",
+        "name:en": "Le Duplex Cannes",
+        "opening_hours": "Mo-Su 09:00-15:30",
+        "phone": "+33483148369",
+        "website": "https://www.facebook.com/LeDuplexCannes/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0386769,
+          43.5385989
+        ]
+      },
+      "id": "node/6698502811"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6707415586",
+        "addr:street": "Rue Florian",
+        "amenity": "restaurant",
+        "name": "sardine"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0233349,
+          43.5521277
+        ]
+      },
+      "id": "node/6707415586"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6797222616",
+        "amenity": "restaurant",
+        "name": "Les Sérénades"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0030117,
+          43.5703476
+        ]
+      },
+      "id": "node/6797222616"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6936990724",
+        "addr:city": "Cannes",
+        "addr:postcode": "06400",
+        "addr:street": "Boulevard Jean Hibert",
+        "amenity": "restaurant",
+        "name": "Le Napoléon Bonaparte"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0106314,
+          43.5482822
+        ]
+      },
+      "id": "node/6936990724"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6936990725",
+        "addr:city": "Cannes",
+        "addr:postcode": "06400",
+        "addr:street": "Boulevard Jean Hibert",
+        "amenity": "restaurant",
+        "name": "Le Flamenco"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0104847,
+          43.5482878
+        ]
+      },
+      "id": "node/6936990725"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6944280984",
+        "amenity": "restaurant",
+        "name": "Mirabelle"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0105635,
+          43.5516449
+        ]
+      },
+      "id": "node/6944280984"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6961596850",
+        "amenity": "restaurant",
+        "cuisine": "french",
+        "name": "3.14",
+        "ref:FR:SIRET": "69672017600010"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0266531,
+          43.5501843
+        ]
+      },
+      "id": "node/6961596850"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7006868927",
+        "amenity": "restaurant",
+        "cuisine": "italian;pizza",
+        "name": "Le Petit Cannettan",
+        "opening_hours": "Mo-Th,Su 07:30-22:00; Fr-Sa 07:30-00:30",
+        "takeaway": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0165924,
+          43.5727667
+        ]
+      },
+      "id": "node/7006868927"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7009255085",
+        "amenity": "bar",
+        "name:en": "Charly's"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0103072,
+          43.5514986
+        ]
+      },
+      "id": "node/7009255085"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7023400082",
+        "amenity": "public_bookcase",
+        "check_date": "2026-03-03",
+        "public_bookcase:type": "wooden_cabinet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.007475,
+          43.54896
+        ]
+      },
+      "id": "node/7023400082"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7039266011",
+        "amenity": "restaurant",
+        "cuisine": "french",
+        "name": "L'angle des Saveurs",
+        "ref:FR:SIRET": "81989733100016"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0295682,
+          43.5512181
+        ]
+      },
+      "id": "node/7039266011"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7039266016",
+        "amenity": "restaurant",
+        "cuisine": "french;regional",
+        "name": "L'Antidote"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0298807,
+          43.5518937
+        ]
+      },
+      "id": "node/7039266016"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7291649135",
+        "amenity": "restaurant",
+        "bar": "yes",
+        "name": "Brasserie Le Square"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0167455,
+          43.5662845
+        ]
+      },
+      "id": "node/7291649135"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7357012672",
+        "amenity": "pub",
+        "name": "Habana Club",
+        "ref:FR:SIRET": "80142005000024"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0169812,
+          43.5753926
+        ]
+      },
+      "id": "node/7357012672"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7431553878",
+        "amenity": "restaurant",
+        "name": "Rest' Ô Jardin",
+        "ref:FR:SIRET": "83076564000024"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0186121,
+          43.5678153
+        ]
+      },
+      "id": "node/7431553878"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7462923331",
+        "addr:city": "Cannes",
+        "addr:housenumber": "81",
+        "addr:postcode": "06400",
+        "addr:street": "Avenue de Grasse",
+        "amenity": "restaurant",
+        "cuisine": "pizza;burger;french",
+        "name": "HappyFood",
+        "opening_hours": "Mo-Su 11:00-14:15; Mo-Su 18:00-22:30",
+        "phone": "+33 4 93 45 20 00",
+        "website": "http://www.happyfood06.fr/wordpress/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0119623,
+          43.5551846
+        ]
+      },
+      "id": "node/7462923331"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7516943075",
+        "addr:city": "Cannes",
+        "addr:housenumber": "10",
+        "addr:postcode": "06400",
+        "addr:street": "Rue Marceau",
+        "amenity": "restaurant",
+        "cuisine": "pizza;italian",
+        "email": "chezxavierpizza@gmail.com",
+        "name": "La Pizzaiola \"Chez Xavier\"",
+        "opening_hours": "Mo-Sa 12:00-14:00,19:00-23:00; Su 19:00-23:00",
+        "phone": "+33 4 93 99 57 99",
+        "ref:FR:SIRET": "69722061400013",
+        "website": "https://www.pizzaiolachezxavier.com/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0240442,
+          43.5529738
+        ]
+      },
+      "id": "node/7516943075"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7595873400",
+        "amenity": "restaurant",
+        "name": "Le Fouquet's"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0308612,
+          43.5477587
+        ]
+      },
+      "id": "node/7595873400"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8002414353",
+        "amenity": "restaurant",
+        "cuisine": "crepe;poffertjes",
+        "name": "Van Crepes Holland",
+        "opening_hours": "Mo-Fr 12:00-17:00",
+        "ref:FR:SIRET": "48024651100038",
+        "website": "https://van-crepes-holland.eatbu.com/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0170384,
+          43.5589152
+        ]
+      },
+      "id": "node/8002414353"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8079325212",
+        "amenity": "cafe",
+        "description": "Salon de Thé. Snack Chic. Pâtisserie.",
+        "name": "Fleur & Chloé",
+        "phone": "+33986314554",
+        "ref:FR:SIRET": "82175526100012",
+        "website": "https://www.fleuretchloe.fr/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0217823,
+          43.5646224
+        ]
+      },
+      "id": "node/8079325212"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8121049961",
+        "amenity": "restaurant",
+        "cuisine": "french",
+        "name": "Atelier Fine Bouche",
+        "reservation": "required",
+        "website": "https://www.maximekozlitine.com/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0170745,
+          43.5781622
+        ]
+      },
+      "id": "node/8121049961"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8599822844",
+        "amenity": "restaurant",
+        "cuisine": "pizza",
+        "name": "Fafa Pizza",
+        "ref:FR:SIRET": "84776399200017",
+        "wheelchair": "limited"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0234427,
+          43.5563527
+        ]
+      },
+      "id": "node/8599822844"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8939123117",
+        "addr:housenumber": "1",
+        "addr:street": "Rue Helene Vagliano",
+        "amenity": "cafe",
+        "name": "Greenland"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0214628,
+          43.552717
+        ]
+      },
+      "id": "node/8939123117"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8961264517",
+        "amenity": "bar",
+        "name:en": "Dandy"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0232288,
+          43.5513584
+        ]
+      },
+      "id": "node/8961264517"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8961264518",
+        "amenity": "restaurant",
+        "name": "La Libera",
+        "ref:FR:SIRET": "39139894800011"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0230619,
+          43.5513022
+        ]
+      },
+      "id": "node/8961264518"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9034227784",
+        "amenity": "restaurant",
+        "cuisine": "greek",
+        "name": "Parthenopi",
+        "ref:FR:SIRET": "89768861000012"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0144436,
+          43.5524644
+        ]
+      },
+      "id": "node/9034227784"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9049151133",
+        "amenity": "cafe",
+        "name": "Les 2 coupoles",
+        "ref:FR:SIRET": "45146566000012"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0232073,
+          43.5557198
+        ]
+      },
+      "id": "node/9049151133"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9049157997",
+        "amenity": "pub",
+        "name": "L'aperikif",
+        "ref:FR:SIRET": "44191518800011"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0234161,
+          43.5560694
+        ]
+      },
+      "id": "node/9049157997"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9164314907",
+        "amenity": "restaurant",
+        "name": "Ciro's Cannes",
+        "smoking": "outside",
+        "website": "https://www.hotelsbarriere.com/cannes/le-majestic/restaurants-et-bars/ciro-s-cannes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0195434,
+          43.5500135
+        ]
+      },
+      "id": "node/9164314907"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9208287958",
+        "amenity": "restaurant",
+        "name": "Le Fouquet's"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0198013,
+          43.5512606
+        ]
+      },
+      "id": "node/9208287958"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9208287959",
+        "amenity": "restaurant",
+        "cuisine": "steak_house",
+        "name": "Beefbar Cannes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.019558,
+          43.551215
+        ]
+      },
+      "id": "node/9208287959"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9899312789",
+        "amenity": "cafe",
+        "name": "Welcome to Key West",
+        "outdoor_seating": "yes",
+        "ref:FR:SIRET": "92232009800028",
+        "takeaway": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0181765,
+          43.5517219
+        ]
+      },
+      "id": "node/9899312789"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9956459895",
+        "amenity": "bar",
+        "name": "Le Petit Majestic"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0245217,
+          43.5517972
+        ]
+      },
+      "id": "node/9956459895"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9969580818",
+        "amenity": "restaurant",
+        "check_date": "2022-08-22",
+        "cuisine": "asian",
+        "name": "Oh my poke!"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0206223,
+          43.5534148
+        ]
+      },
+      "id": "node/9969580818"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9969580819",
+        "amenity": "restaurant",
+        "check_date": "2022-08-22",
+        "cuisine": "indian",
+        "indoor_seating": "yes",
+        "name": "Bollyfood",
+        "outdoor_seating": "yes",
+        "ref:FR:SIRET": "75340610700023"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0206207,
+          43.5533601
+        ]
+      },
+      "id": "node/9969580819"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9969580821",
+        "amenity": "restaurant",
+        "check_date": "2025-03-05",
+        "name": "Pitadine",
+        "ref:FR:SIRET": "81070005400010"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0216704,
+          43.5533282
+        ]
+      },
+      "id": "node/9969580821"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9970614775",
+        "addr:housenumber": "14",
+        "addr:street": "Rue de Constantine",
+        "amenity": "restaurant",
+        "brewery": "yes",
+        "check_date": "2022-08-22",
+        "cuisine": "italian",
+        "name": "Chez Franco",
+        "outdoor_seating": "yes",
+        "ref:FR:SIRET": "84931595700019"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0280385,
+          43.5525363
+        ]
+      },
+      "id": "node/9970614775"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10013315282",
+        "addr:housenumber": "6",
+        "addr:street": "Rue Lecerf",
+        "amenity": "restaurant",
+        "name": "La Cigale Bistrot",
+        "phone": "+33 4 93 38 89 94",
+        "ref:FR:SIRET": "38075258400025"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.025659,
+          43.5528188
+        ]
+      },
+      "id": "node/10013315282"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10130658214",
+        "amenity": "bar",
+        "contact:phone": "+33 9 86 59 49 40",
+        "name": "Rotonde Café",
+        "outdoor_seating": "yes",
+        "ref:FR:SIRET": "82151407200015"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0224711,
+          43.5567446
+        ]
+      },
+      "id": "node/10130658214"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10130662611",
+        "amenity": "restaurant",
+        "cuisine": "sushi",
+        "name": "Sushi by Nam",
+        "ref:FR:SIRET": "52218563600019"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0222358,
+          43.5582082
+        ]
+      },
+      "id": "node/10130662611"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10152424361",
+        "amenity": "restaurant",
+        "contact:facebook": "https://www.facebook.com/restaurantlejardincannes",
+        "contact:instagram": "https://www.instagram.com/le_jardin_cannes/",
+        "cuisine": "provencal",
+        "description": "Cuisine Provencal",
+        "name": "Le Jardin",
+        "opening_hours": "Mo-Su 12:00-23:00",
+        "phone": "+33 4 93 38 17 85",
+        "ref:FR:SIRET": "34880928600019",
+        "website": "https://lejardin-cannes.fr/fr"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0257635,
+          43.5563976
+        ]
+      },
+      "id": "node/10152424361"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10168778688",
+        "amenity": "restaurant",
+        "name": "Tredici",
+        "ref:FR:SIRET": "83002467500027"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0097275,
+          43.5503143
+        ]
+      },
+      "id": "node/10168778688"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10168778693",
+        "amenity": "bar",
+        "name": "Bleuet's Bar"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0095688,
+          43.5511743
+        ]
+      },
+      "id": "node/10168778693"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10168778694",
+        "amenity": "restaurant",
+        "name": "Grand Mère Poule"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0095673,
+          43.5512409
+        ]
+      },
+      "id": "node/10168778694"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10168778697",
+        "amenity": "restaurant",
+        "name": "Xuan Le Printemps",
+        "ref:FR:SIRET": "82761250800016"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0092799,
+          43.5513818
+        ]
+      },
+      "id": "node/10168778697"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10169043178",
+        "amenity": "restaurant",
+        "name": "Five Room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0081075,
+          43.5502788
+        ]
+      },
+      "id": "node/10169043178"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10169043179",
+        "amenity": "restaurant",
+        "name": "Vinh Phat",
+        "ref:FR:SIRET": "83353872100014"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0082491,
+          43.5500717
+        ]
+      },
+      "id": "node/10169043179"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10169043180",
+        "amenity": "restaurant",
+        "name": "Funny Food"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0080632,
+          43.549932
+        ]
+      },
+      "id": "node/10169043180"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10169043181",
+        "amenity": "restaurant",
+        "name": "Le African Villaige"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.008215,
+          43.549796
+        ]
+      },
+      "id": "node/10169043181"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10169043182",
+        "amenity": "restaurant",
+        "name": "Burger Way",
+        "ref:FR:SIRET": "84247781200015"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0083949,
+          43.5496083
+        ]
+      },
+      "id": "node/10169043182"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10169043185",
+        "amenity": "restaurant",
+        "name": "Black Sails",
+        "ref:FR:SIRET": "90005657300026"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0114456,
+          43.5491043
+        ]
+      },
+      "id": "node/10169043185"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10169043186",
+        "amenity": "restaurant",
+        "name": "Le Ksar",
+        "ref:FR:SIRET": "38904447000034"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0114775,
+          43.5493799
+        ]
+      },
+      "id": "node/10169043186"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10169043187",
+        "amenity": "bar",
+        "name": "Diamond",
+        "ref:FR:SIRET": "75085244400017"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0117084,
+          43.5496092
+        ]
+      },
+      "id": "node/10169043187"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10169043188",
+        "amenity": "restaurant",
+        "name": "Le Miam Miam",
+        "ref:FR:SIRET": "81906320700016"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0117926,
+          43.5498016
+        ]
+      },
+      "id": "node/10169043188"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10169043189",
+        "amenity": "restaurant",
+        "name": "Sushi Koya"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0113971,
+          43.5509186
+        ]
+      },
+      "id": "node/10169043189"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10172171968",
+        "amenity": "bar",
+        "name": "Le Football",
+        "ref:FR:SIRET": "37832045100016"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0211917,
+          43.5617214
+        ]
+      },
+      "id": "node/10172171968"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10180815564",
+        "addr:housenumber": "7",
+        "addr:street": "Rue du Pré",
+        "amenity": "restaurant",
+        "mobile": "+33 6 30 82 47 72",
+        "name": "Le Trèfle",
+        "opening_hours": "Tu-Su 10:30-20:00",
+        "website": "https://letreflecannes.eatbu.com"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0095651,
+          43.5510025
+        ]
+      },
+      "id": "node/10180815564"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10180820883",
+        "addr:housenumber": "11",
+        "addr:street": "Rue du Pré",
+        "amenity": "restaurant",
+        "name": "La Sousta",
+        "opening_hours": "Mo, We-Su 07:00-15:00, 19:00-23:00",
+        "phone": "+33 4 93 39 19 18",
+        "ref:FR:SIRET": "44166201200018",
+        "website": "https://www.la-sousta-restaurant-cannes.com/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0095327,
+          43.5507532
+        ]
+      },
+      "id": "node/10180820883"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10181262945",
+        "amenity": "restaurant",
+        "name": "Chez Margaux"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0095746,
+          43.5511702
+        ]
+      },
+      "id": "node/10181262945"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10181280010",
+        "amenity": "restaurant",
+        "name": "Le bistrot de grand-mère"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0095692,
+          43.5512331
+        ]
+      },
+      "id": "node/10181280010"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10181290561",
+        "amenity": "restaurant",
+        "name": "Le bénitier"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0092909,
+          43.548302
+        ]
+      },
+      "id": "node/10181290561"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10289408775",
+        "addr:city": "Cannes",
+        "addr:housenumber": "84",
+        "addr:postcode": "06400",
+        "addr:street": "Boulevard de la Croisette",
+        "amenity": "restaurant",
+        "bar": "yes",
+        "cuisine": "mediterranean",
+        "diet:kosher": "yes",
+        "name": "MÖYE",
+        "opening_hours": "Mo-Fr 10:00-17:00",
+        "phone": "+33 4 93 43 54 51",
+        "website": "https://www.moye-restaurant.com/menus-carte/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0342469,
+          43.5457891
+        ]
+      },
+      "id": "node/10289408775"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10816721857",
+        "amenity": "restaurant",
+        "name": "La Cocotte",
+        "opening_hours": "Tu 12:00-15:00,19:00-22:30, We 12:00-15:00,19:00-23:30, Th 13:00-16:00,19:00-23:30, Fr 12:00-15:00,19:00-00:30, Sa 12:00-15:00,19:00-00:30, Su 15:00-22:30"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0244095,
+          43.5535783
+        ]
+      },
+      "id": "node/10816721857"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10980139413",
+        "amenity": "cafe",
+        "diet:kosher": "no",
+        "diet:vegan": "yes",
+        "diet:vegetarian": "only",
+        "indoor_seating": "yes",
+        "name": "Bungalow Café",
+        "outdoor_seating": "yes",
+        "payment:credit_cards": "yes",
+        "payment:debit_cards": "yes",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0279974,
+          43.551633
+        ]
+      },
+      "id": "node/10980139413"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10980556569",
+        "amenity": "restaurant",
+        "name": "Fred l'écaillaier"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0377734,
+          43.5388205
+        ]
+      },
+      "id": "node/10980556569"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10980752294",
+        "amenity": "cafe",
+        "name": "Manaa",
+        "opening_hours": "Tu-Sa 10:00-18:00"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0169738,
+          43.5531407
+        ]
+      },
+      "id": "node/10980752294"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11049211548",
+        "amenity": "restaurant",
+        "name": "Le Dauphin"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0169256,
+          43.5520235
+        ]
+      },
+      "id": "node/11049211548"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11049278125",
+        "amenity": "restaurant",
+        "check_date": "2023-12-09",
+        "cuisine": "fish",
+        "name": "La Perle"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0138074,
+          43.5520965
+        ]
+      },
+      "id": "node/11049278125"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11252554755",
+        "amenity": "cafe",
+        "name": "Copenhagen coffee lab",
+        "ref:FR:SIRET": "84969425200065"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0117246,
+          43.5522458
+        ]
+      },
+      "id": "node/11252554755"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11252563516",
+        "amenity": "cafe",
+        "name": "Café des Halles",
+        "ref:FR:SIRET": "80987100700021"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0116683,
+          43.5522215
+        ]
+      },
+      "id": "node/11252563516"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11252567436",
+        "amenity": "cafe",
+        "name": "Café de l'horloge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0118936,
+          43.5522976
+        ]
+      },
+      "id": "node/11252567436"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11281757639",
+        "amenity": "restaurant",
+        "diet:kosher": "no",
+        "indoor_seating": "yes",
+        "name": "Carré d'as",
+        "outdoor_seating": "no",
+        "ref:FR:SIRET": "89861234600012"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0233562,
+          43.5554921
+        ]
+      },
+      "id": "node/11281757639"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11286450870",
+        "amenity": "restaurant",
+        "name": "Chez Wael"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0233281,
+          43.5562543
+        ]
+      },
+      "id": "node/11286450870"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11299680869",
+        "amenity": "restaurant",
+        "contact:city": "Cannes",
+        "contact:housenumber": "7",
+        "contact:phone": "+33 4 93 39 97 90",
+        "contact:postcode": "06400",
+        "contact:street": "Rue Des Gabres",
+        "name": "Le Bao (Bouche À Oreille)",
+        "opening_hours": "Tu-Sa 18:00-23:30",
+        "ref:FR:SIRET": "52757987400027",
+        "website": "https://www.lebouchaoreille.com/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.024572,
+          43.5526027
+        ]
+      },
+      "id": "node/11299680869"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11470519238",
+        "amenity": "restaurant",
+        "cuisine": "thai",
+        "diet:kosher": "no",
+        "diet:vegan": "yes",
+        "diet:vegetarian": "yes",
+        "indoor_seating": "yes",
+        "name": "Dolce Farniente",
+        "outdoor_seating": "yes",
+        "payment:credit_cards": "yes",
+        "payment:debit_cards": "yes",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.030554,
+          43.5498566
+        ]
+      },
+      "id": "node/11470519238"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11673099933",
+        "amenity": "restaurant",
+        "name": "Le Passage"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0056158,
+          43.5698884
+        ]
+      },
+      "id": "node/11673099933"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11684734359",
+        "access": "yes",
+        "amenity": "public_bookcase",
+        "description": "Devant l'entrée du théâtre",
+        "opening_hours": "24/7",
+        "public_bookcase:type": "wooden_cabinet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0369477,
+          43.5465452
+        ]
+      },
+      "id": "node/11684734359"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11684790905",
+        "amenity": "public_bookcase",
+        "public_bookcase:type": "wooden_cabinet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0235121,
+          43.5559404
+        ]
+      },
+      "id": "node/11684790905"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11883665369",
+        "amenity": "bar",
+        "contact:city": "Cannes",
+        "contact:housenumber": "4",
+        "contact:phone": "+33 9 74 64 03 53",
+        "contact:postcode": "06400",
+        "contact:street": "Petite Rue Saint-Antoine",
+        "name": "La Fée Verte Cannes",
+        "ref:FR:SIRET": "98039355700023"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0108569,
+          43.5513818
+        ]
+      },
+      "id": "node/11883665369"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11964448828",
+        "amenity": "restaurant",
+        "check_date": "2024-06-08",
+        "cuisine": "italian",
+        "name": "Pasta Andrea",
+        "opening_hours": "Mo,Su 08:00-13:00; Tu-Sa 07:30-20:00",
+        "outdoor_seating": "yes",
+        "takeaway": "yes",
+        "wheelchair": "limited"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0235403,
+          43.553011
+        ]
+      },
+      "id": "node/11964448828"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11964448835",
+        "amenity": "restaurant",
+        "check_date": "2024-06-08",
+        "name": "Barthélemy",
+        "ref:FR:SIRET": "81145155800068"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0194964,
+          43.553154
+        ]
+      },
+      "id": "node/11964448835"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12063891496",
+        "amenity": "pub",
+        "name": "Le déclic"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0095624,
+          43.5510822
+        ]
+      },
+      "id": "node/12063891496"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12207576386",
+        "amenity": "restaurant",
+        "check_date": "2024-09-28",
+        "cuisine": "crepe",
+        "name": "La Bigoudène",
+        "outdoor_seating": "yes",
+        "ref:FR:SIRET": "81064150600011"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.012861,
+          43.5519411
+        ]
+      },
+      "id": "node/12207576386"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12207576391",
+        "amenity": "cafe",
+        "check_date": "2024-09-28",
+        "name": "Caffè Agnelli",
+        "outdoor_seating": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0164326,
+          43.5521201
+        ]
+      },
+      "id": "node/12207576391"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12207576393",
+        "amenity": "restaurant",
+        "check_date": "2024-09-28",
+        "cuisine": "italian",
+        "name": "La Pizzeria 66",
+        "outdoor_seating": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0126552,
+          43.5518518
+        ]
+      },
+      "id": "node/12207576393"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12219079868",
+        "amenity": "cafe",
+        "brand": "Columbus Café & Co",
+        "brand:wikidata": "Q2984582",
+        "check_date": "2024-11-01",
+        "cuisine": "coffee_shop",
+        "indoor_seating": "yes",
+        "name": "Columbus Café & Co",
+        "outdoor_seating": "yes",
+        "ref:FR:SIRET": "84424732000014",
+        "takeaway": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0192327,
+          43.5531549
+        ]
+      },
+      "id": "node/12219079868"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12229324501",
+        "addr:housenumber": "74",
+        "addr:postcode": "06400",
+        "addr:street": "Rue Meynadier",
+        "alt_name": "AMAMO Speciality Coffee",
+        "amenity": "cafe",
+        "cuisine": "coffee_shop",
+        "name": "AMAMO Café",
+        "opening_hours": "Mo-Su 09:00-17:00",
+        "phone": "+33 7 75 78 78 88"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0122239,
+          43.5516955
+        ]
+      },
+      "id": "node/12229324501"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12386078982",
+        "addr:city": "Cannes",
+        "addr:housenumber": "10",
+        "addr:postcode": "06400",
+        "addr:street": "Rue du Suquet",
+        "amenity": "bar",
+        "name": "L'Endroit",
+        "ref:FR:SIRET": "82321915900022"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0103241,
+          43.5515955
+        ]
+      },
+      "id": "node/12386078982"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12386078983",
+        "addr:city": "Cannes",
+        "addr:housenumber": "12",
+        "addr:postcode": "06400",
+        "addr:street": "Rue du Suquet",
+        "amenity": "restaurant",
+        "name": "Le Cosi",
+        "ref:FR:SIRET": "51097563400021",
+        "website": "https://www.lecosi.fr/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.010209,
+          43.5515653
+        ]
+      },
+      "id": "node/12386078983"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12386078984",
+        "addr:city": "Cannes",
+        "addr:housenumber": "9",
+        "addr:postcode": "06400",
+        "addr:street": "Rue du Suquet",
+        "amenity": "restaurant",
+        "name": "Le Marais",
+        "website": "https://restaurantlemarais.fr/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0100151,
+          43.5515267
+        ]
+      },
+      "id": "node/12386078984"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12386078985",
+        "amenity": "bar",
+        "name": "L'Enoteca"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0099255,
+          43.551528
+        ]
+      },
+      "id": "node/12386078985"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12386078986",
+        "addr:city": "Cannes",
+        "addr:housenumber": "20",
+        "addr:postcode": "06400",
+        "addr:street": "Rue du Suquet",
+        "amenity": "restaurant",
+        "name": "Le Mariska",
+        "website": "https://www.facebook.com/p/Le-Mariska-100063559833226/?locale=fr_FR"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0098646,
+          43.5515257
+        ]
+      },
+      "id": "node/12386078986"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12386078987",
+        "addr:city": "Cannes",
+        "addr:housenumber": "19",
+        "addr:postcode": "06400",
+        "addr:street": "Rue du Suquet",
+        "amenity": "restaurant",
+        "name": "Le bistrot du suquet",
+        "ref:FR:SIRET": "53382786100022"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0098137,
+          43.5515235
+        ]
+      },
+      "id": "node/12386078987"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12386078989",
+        "addr:city": "Cannes",
+        "addr:housenumber": "2",
+        "addr:postcode": "06400",
+        "addr:street": "Rue du Suquet",
+        "amenity": "restaurant",
+        "name": "Le XXIV",
+        "website": "https://le24suquet.fr/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0096272,
+          43.5515101
+        ]
+      },
+      "id": "node/12386078989"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12461465540",
+        "amenity": "restaurant",
+        "cuisine": "pizza",
+        "name": "Tredici pizzeria Forville",
+        "ref:FR:SIRET": "75237649100029"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0116075,
+          43.5526935
+        ]
+      },
+      "id": "node/12461465540"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12638575553",
+        "amenity": "restaurant",
+        "check_date": "2025-03-05",
+        "cuisine": "vietnamese",
+        "name": "Madame Hien",
+        "outdoor_seating": "yes",
+        "ref:FR:SIRET": "95198512600014",
+        "website": "https://madamehiencannes.com/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.021674,
+          43.5533907
+        ]
+      },
+      "id": "node/12638575553"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12638575554",
+        "amenity": "cafe",
+        "check_date": "2025-03-05",
+        "diet:gluten_free": "yes",
+        "name": "Cafés Sauvage"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0216619,
+          43.5532269
+        ]
+      },
+      "id": "node/12638575554"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12638575562",
+        "amenity": "bar",
+        "check_date": "2025-03-05",
+        "name": "Roxy"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0201934,
+          43.5535417
+        ]
+      },
+      "id": "node/12638575562"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12645405759",
+        "amenity": "cafe",
+        "check_date": "2025-03-08",
+        "name": "Sartre Cannes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0216536,
+          43.5531849
+        ]
+      },
+      "id": "node/12645405759"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12645405760",
+        "amenity": "restaurant",
+        "check_date": "2025-03-08",
+        "name": "Da Tina 33",
+        "ref:FR:SIRET": "90019632000031"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0216558,
+          43.553118
+        ]
+      },
+      "id": "node/12645405760"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12645405761",
+        "amenity": "restaurant",
+        "check_date": "2025-03-08",
+        "name": "Yann's",
+        "ref:FR:SIRET": "84962031500010"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0213353,
+          43.5531105
+        ]
+      },
+      "id": "node/12645405761"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12771917701",
+        "addr:housenumber": "4",
+        "addr:postcode": "06400",
+        "addr:street": "Rue des Belges",
+        "amenity": "restaurant",
+        "cuisine": "mediterranean",
+        "name": "Jamîn",
+        "opening_hours": "Mo-Sa 08:00-19:00",
+        "ref:FR:SIRET": "89984160500012",
+        "website": "https://jamin-cannes.com/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0190812,
+          43.5519984
+        ]
+      },
+      "id": "node/12771917701"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13077944059",
+        "addr:city": "Le Cannet",
+        "addr:housenumber": "306",
+        "addr:postcode": "06110",
+        "addr:street": "Rue Saint-Sauveur",
+        "amenity": "restaurant",
+        "cuisine": "french",
+        "name": "L'Atelier Joseph",
+        "ref:FR:SIRET": "84165451000020"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0195889,
+          43.5773587
+        ]
+      },
+      "id": "node/13077944059"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13077944063",
+        "amenity": "restaurant",
+        "cuisine": "mediterranean",
+        "name": "A Casetta",
+        "ref:FR:SIRET": "81099295800019"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0191635,
+          43.5773919
+        ]
+      },
+      "id": "node/13077944063"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13077944065",
+        "addr:city": "Le Cannet",
+        "addr:housenumber": "474",
+        "addr:postcode": "06110",
+        "addr:street": "Rue Saint-Sauveur",
+        "amenity": "restaurant",
+        "name": "La Tomate Volante"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0175022,
+          43.5771023
+        ]
+      },
+      "id": "node/13077944065"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13132994998",
+        "addr:city": "Cannes",
+        "addr:housenumber": "5",
+        "addr:postcode": "06400",
+        "addr:street": "Rue Helene Vagliano",
+        "amenity": "restaurant",
+        "cuisine": "italian;latin_american;breakfast",
+        "name": "Federal",
+        "outdoor_seating": "yes",
+        "source": "survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0214698,
+          43.5529655
+        ]
+      },
+      "id": "node/13132994998"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13132994999",
+        "addr:city": "Cannes",
+        "addr:housenumber": "5",
+        "addr:postcode": "06400",
+        "addr:street": "Rue des Frères Casanova",
+        "amenity": "restaurant",
+        "cuisine": "steak_house;grill",
+        "name": "Fervor",
+        "outdoor_seating": "yes",
+        "source": "survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0196778,
+          43.5528393
+        ]
+      },
+      "id": "node/13132994999"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13132995000",
+        "addr:city": "Cannes",
+        "addr:housenumber": "3",
+        "addr:postcode": "06400",
+        "addr:street": "Rue des Frères Casanova",
+        "amenity": "restaurant",
+        "cuisine": "tex-mex;pizza;salad;argentinian",
+        "name": "Rebelion",
+        "outdoor_seating": "yes",
+        "source": "survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0196801,
+          43.5527313
+        ]
+      },
+      "id": "node/13132995000"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13179610401",
+        "amenity": "public_bookcase",
+        "check_date": "2025-09-24"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.01808,
+          43.56505
+        ]
+      },
+      "id": "node/13179610401"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13335960245",
+        "amenity": "cafe",
+        "cuisine": "tea",
+        "diet:gluten_free": "yes",
+        "name": "Charlotte Busset"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0211783,
+          43.5529827
+        ]
+      },
+      "id": "node/13335960245"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13543255222",
+        "amenity": "restaurant",
+        "contact:housenumber": "9",
+        "contact:street": "Boulevard de la République",
+        "cuisine": "bistro",
+        "description": "Bistrot chic installé dans une ancienne boucherie à 2 pas de la Croisette à Cannes.\nSpécialités de viandes, avec une carte de vins proposant des cuvées d’exceptions.",
+        "email": "contact@lacavecannes.com",
+        "name": "La Cave",
+        "opening_hours": "Mo-Su 12:00-14:00,19:00-22:00",
+        "operator": "SAS Ventilo",
+        "phone": "+33 4 93 99 79 87",
+        "ref:FR:SIRET": "35147441600010",
+        "website": "https://www.lacavecannes.com"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0247948,
+          43.5528582
+        ]
+      },
+      "id": "node/13543255222"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13587411973",
+        "amenity": "public_bookcase",
+        "check_date": "2026-02-16",
+        "public_bookcase:type": "wooden_cabinet",
+        "wikimedia_commons": "File:Cannes_-_Boulevard_Victor_Tuby_-_boîte_à_livres.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0105882,
+          43.552251
+        ]
+      },
+      "id": "node/13587411973"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13615118545",
+        "air_conditioning": "yes",
+        "amenity": "cafe",
+        "indoor_seating": "yes",
+        "outdoor_seating": "sidewalk",
+        "smoking": "outside"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0341191,
+          43.5459376
+        ]
+      },
+      "id": "node/13615118545"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13638749471",
+        "addr:housenumber": "12",
+        "amenity": "restaurant",
+        "name": "côté jardin"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0148222,
+          43.5567612
+        ]
+      },
+      "id": "node/13638749471"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13638769028",
+        "addr:housenumber": "53",
+        "amenity": "restaurant",
+        "cuisine": "thai",
+        "name": "su rice"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0166364,
+          43.5585242
+        ]
+      },
+      "id": "node/13638769028"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13685961829",
+        "amenity": "restaurant",
+        "name": "Broasted"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.028862,
+          43.5492333
+        ]
+      },
+      "id": "node/13685961829"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13685993040",
+        "amenity": "restaurant",
+        "cuisine": "lebanese",
+        "name": "Beryte"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0288427,
+          43.5491395
+        ]
+      },
+      "id": "node/13685993040"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13685994652",
+        "amenity": "restaurant",
+        "name": "Banana Blue"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0288689,
+          43.549322
+        ]
+      },
+      "id": "node/13685994652"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13685996524",
+        "amenity": "restaurant",
+        "cuisine": "vietnamese",
+        "name": "Le Jade"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0288648,
+          43.5492741
+        ]
+      },
+      "id": "node/13685996524"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13686002547",
+        "amenity": "bar",
+        "name": "Luigi"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0301942,
+          43.548184
+        ]
+      },
+      "id": "node/13686002547"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13691970550",
+        "amenity": "cafe",
+        "cuisine": "coffee_shop",
+        "name": "Café Nostra"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0170751,
+          43.5578406
+        ]
+      },
+      "id": "node/13691970550"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13694662299",
+        "amenity": "restaurant",
+        "name": "Bozen"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0305385,
+          43.5499438
+        ]
+      },
+      "id": "node/13694662299"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13694676290",
+        "amenity": "cafe",
+        "name": "Imbis café"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0303667,
+          43.5494079
+        ]
+      },
+      "id": "node/13694676290"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13694677381",
+        "amenity": "restaurant",
+        "cuisine": "thai",
+        "name": "Le Chaophraya"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0303315,
+          43.5495532
+        ]
+      },
+      "id": "node/13694677381"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13694679439",
+        "amenity": "restaurant",
+        "name": "Hop Sushi"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0305674,
+          43.5497796
+        ]
+      },
+      "id": "node/13694679439"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13695539269",
+        "amenity": "restaurant",
+        "name": "Bouillon des artistes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0119418,
+          43.5503197
+        ]
+      },
+      "id": "node/13695539269"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13695568092",
+        "amenity": "restaurant",
+        "name": "Ô Choubouloute"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0120751,
+          43.5497946
+        ]
+      },
+      "id": "node/13695568092"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13697621548",
+        "amenity": "bar",
+        "name": "Le Meynadier"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0160362,
+          43.5528621
+        ]
+      },
+      "id": "node/13697621548"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13697648527",
+        "amenity": "cafe",
+        "indoor_seating": "yes",
+        "name": "Itinéraire café",
+        "outdoor_seating": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0200888,
+          43.5530049
+        ]
+      },
+      "id": "node/13697648527"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13697656091",
+        "amenity": "cafe",
+        "name": "Good mate"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0214198,
+          43.5529725
+        ]
+      },
+      "id": "node/13697656091"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13697656092",
+        "amenity": "restaurant",
+        "name": "Love Café"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.02107,
+          43.5529845
+        ]
+      },
+      "id": "node/13697656092"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13697656470",
+        "amenity": "cafe",
+        "cuisine": "bubble_tea",
+        "name": "Motiko"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.016238,
+          43.5529165
+        ]
+      },
+      "id": "node/13697656470"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13697662418",
+        "amenity": "restaurant",
+        "cuisine": "asian",
+        "name": "Kabayan"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0167541,
+          43.553599
+        ]
+      },
+      "id": "node/13697662418"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13698116043",
+        "amenity": "restaurant",
+        "name": "Aux délices arméniens"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0233234,
+          43.5533391
+        ]
+      },
+      "id": "node/13698116043"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13698740401",
+        "addr:postcode": "06400",
+        "addr:street": "Place Franklin Roosevelt",
+        "amenity": "restaurant",
+        "cuisine": "japanese",
+        "name": "Zuma Cannes",
+        "website": "https://www.zumarestaurant.com/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.0376555,
+          43.5360743
+        ]
+      },
+      "id": "node/13698740401"
+    }
+  ]
+}
