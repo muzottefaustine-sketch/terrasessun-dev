@@ -306,7 +306,6 @@ CITIES.forEach(city => {
     terrasses = []; sunStates = {};
     viewer.camera.flyTo({ 
       destination: Cesium.Cartesian3.fromDegrees(c
-
 function toggleCityMenu() { cityMenuEl.classList.toggle('open'); }
 document.addEventListener('click', e => { if (!e.target.closest('#btnVille') && !e.target.closest('#cityMenu')) cityMenuEl.classList.remove('open'); });
 const drawer = document.getElementById('drawer');
