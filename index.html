@@ -445,6 +445,7 @@ function checkSunny(t,sunDir){
 
 let cameraMoving=false, firstRun=true;
 viewer.camera.moveStart.addEventListener(()=>{cameraMoving=true;});
+viewer.camera.moveEnd.addEventListener(()=>{cameraMoving=false;});
   
 let shadowDebounce=null,computing=false,shadowVersion=0;
 function scheduleShadow(){
@@ -555,14 +556,7 @@ async function loadTerrasses(){
     terrasses=data; terrasses.forEach(t=>{sunStates[t.id]=true;});
     document.getElementById('footerText').textContent=`${terrasses.length} terrasses · ${currentCity.nom}`;
     renderList(currentHeure,'');
-    const launch=()=>{
-  setTimeout(()=>{
-    viewer.scene.postRender.addEventListener(function once(){
-      viewer.scene.postRender.removeEventListener(once); 
-      runShadow();
-    });
-  }, 2000);
-};
+    const launch=()=>{viewer.scene.postRender.addEventListener(function once(){viewer.scene.postRender.removeEventListener(once);runShadow();});};
 if(splashDone) launch(); else{const w=setInterval(()=>{if(splashDone){clearInterval(w);launch();}},100);}
   }catch(e){
     document.getElementById('loadingState').style.display='none';
