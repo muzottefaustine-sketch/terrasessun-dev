@@ -304,7 +304,8 @@ CITIES.forEach(city => {
     cityMenuEl.classList.remove('open');
     Object.keys(markerEntities).forEach(k => { viewer.entities.remove(markerEntities[k]); delete markerEntities[k]; });
     terrasses = []; sunStates = {};
-viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(city.lng, city.lat, 500), orientation: { heading: 0, pitch: Cesium.Math.toRadians(-50), roll: 0 }, duration: 1.8, complete: function(){ loadTerrasses(); } }); 
+viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(city.lng, city.lat, 500), orientation: { heading: 0, pitch: Cesium.Math.toRadians(-50), roll: 0 }, duration: 1.8, complete: function(){ loadTerrasses(); } });    loadTerrasses();
+  });
   cityMenuEl.appendChild(item);
 });
 
