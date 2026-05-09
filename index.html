@@ -460,9 +460,10 @@ async function runShadow(){
   for(let i=0;i<terrasses.length;i+=10){
     if(version!==shadowVersion||cameraMoving){computing=false;return;}
     for(const t of terrasses.slice(i,i+10)) sunStates[t.id]=checkSunny(t,sunDir);
-    syncDots(); renderList(currentHeure,searchQuery);
     await new Promise(r=>setTimeout(r,0));
   }
+  syncDots();
+  renderList(currentHeure,searchQuery);
   computing=false;
 }
 
@@ -517,7 +518,7 @@ function renderList(h,query){
   sorted.forEach(t=>{
     const card=document.createElement('div'); card.className='card'; card.dataset.id=t.id;
     card.innerHTML=`<div class="card-icon sun">☀️</div><div class="card-body"><div class="card-name">${highlight(t.nom,query)}</div><div class="card-sub">${t.type}${t.adresse?' · '+t.adresse:''}</div></div>`;
-    card.addEventListener('click',()=>{ document.querySelectorAll('.card').forEach(c=>c.classList.remove('active')); card.classList.add('active'); closeDrawer(); viewer.camera.flyToBoundingSphere(new Cesium.BoundingSphere(Cesium.Cartesian3.fromDegrees(t.lng,t.lat,0),120),{offset:new Cesium.HeadingPitchRange(0,Cesium.Math.toRadians(-65),220),duration:1.4}); });
+    card.addEventListener('click',()=>{ document.querySelectorAll('.card').forEach(c=>c.classList.remove('active')); card.classList.add('active'); closeDrawer(); viewer.camera.flyToBoundingSphere(new Cesium.BoundingSphere(Cesium.Cartesian3.fromDegrees(t.lng,t.lat,0),300),{offset:new Cesium.HeadingPitchRange(0,Cesium.Math.toRadians(-65),220),duration:1.4}); });
     list.appendChild(card);
   });
 }
