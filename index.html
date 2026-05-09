@@ -534,7 +534,7 @@ slider.addEventListener('input',e=>{
   currentDate=new Date(); currentDate.setHours(h-2,m,0,0);
   viewer.clock.currentTime=Cesium.JulianDate.fromDate(currentDate); currentHeure=val;
 });
-slider.addEventListener('change',e=>{if(terrasses.length>0)scheduleShadow();});
+slider.addEventListener('touchend',e=>{if(terrasses.length>0)scheduleShadow();});
 
 const handler=new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
 handler.setInputAction(click=>{
