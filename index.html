@@ -293,7 +293,7 @@ CITIES.forEach(city => {
   item.className = 'city-item' + (city.id === 'bordeaux' ? ' active' : '');
   item.dataset.id = city.id;
   item.textContent = city.nom;
-  item.addEventListener('click', () => {
+  item.addEventListener('touchend', () => {
     currentCity = city;
     document.getElementById('villeLabel').textContent = city.nom;
     document.querySelectorAll('.city-item').forEach(c => c.classList.toggle('active', c.dataset.id === city.id));
@@ -307,7 +307,7 @@ CITIES.forEach(city => {
 });
 
 function toggleCityMenu() { cityMenuEl.classList.toggle('open'); }
-document.addEventListener('click', e => { if (!e.target.closest('#btnVille') && !e.target.closest('#cityMenu')) cityMenuEl.classList.remove('open'); });
+document.addEventListener('touchend', e => { if (!e.target.closest('#btnVille') && !e.target.closest('#cityMenu')) cityMenuEl.classList.remove('open'); });
 
 const drawer = document.getElementById('drawer');
 function openDrawer()  { drawer.classList.add('open'); }
