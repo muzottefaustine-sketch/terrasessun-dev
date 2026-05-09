@@ -1,3 +1,4 @@
+```
 <!DOCTYPE html><html lang="fr">
 
 <head>
@@ -544,7 +545,7 @@ handler.setInputAction(click=>{
   if(Cesium.defined(picked)&&picked.id){const id=picked.id.properties?.id?.getValue();const t=terrasses.find(x=>String(x.id)===String(id));if(t){showTooltip(t,click.position.x,click.position.y);return;}}
   hideTooltip();
 },Cesium.ScreenSpaceEventType.LEFT_CLICK);
-syncDots();
+
 async function loadTerrasses(){
   document.getElementById('loadingState').style.display='flex';
   document.getElementById('terrasseList').style.display='none';
@@ -553,6 +554,7 @@ async function loadTerrasses(){
     document.getElementById('loadingState').style.display='none';
     document.getElementById('terrasseList').style.display='block';
     terrasses=data; terrasses.forEach(t=>{sunStates[t.id]=true;});
+       syncDots();
     document.getElementById('footerText').textContent=`${terrasses.length} terrasses · ${currentCity.nom}`;
     renderList(currentHeure,'');
     const launch=()=>{viewer.scene.postRender.addEventListener(function once(){viewer.scene.postRender.removeEventListener(once);runShadow();});};
@@ -573,4 +575,3 @@ init();
 
 </body>
 </html>
-
