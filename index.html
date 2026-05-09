@@ -445,7 +445,6 @@ function checkSunny(t,sunDir){
 
 let cameraMoving=false, firstRun=true;
 viewer.camera.moveStart.addEventListener(()=>{cameraMoving=true;});
-viewer.camera.moveEnd.addEventListener(()=>{cameraMoving=false; scheduleShadow();});
   
 let shadowDebounce=null,computing=false,shadowVersion=0;
 function scheduleShadow(){
