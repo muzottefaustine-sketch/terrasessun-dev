@@ -552,6 +552,7 @@ async function loadTerrasses(){
     document.getElementById('loadingState').style.display='none';
     document.getElementById('terrasseList').style.display='block';
     terrasses=data; terrasses.forEach(t=>{sunStates[t.id]=true;});
+       syncDots();
     document.getElementById('footerText').textContent=`${terrasses.length} terrasses · ${currentCity.nom}`;
     renderList(currentHeure,'');
     const launch=()=>{viewer.scene.postRender.addEventListener(function once(){viewer.scene.postRender.removeEventListener(once);runShadow();});};
