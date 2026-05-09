@@ -443,10 +443,10 @@ function checkSunny(t,sunDir){
   return !viewer.scene.pickFromRay(new Cesium.Ray(pos,sunDir),Object.values(markerEntities));
 }
 
-let cameraMoving=false;
+let cameraMoving=false, firstRun=true;
 viewer.camera.moveStart.addEventListener(()=>{cameraMoving=true;});
-viewer.camera.moveEnd.addEventListener(()=>{cameraMoving=false;});
-
+viewer.camera.moveEnd.addEventListener(()=>{cameraMoving=false; scheduleShadow();});
+  
 let shadowDebounce=null,computing=false,shadowVersion=0;
 function scheduleShadow(){
   clearTimeout(shadowDebounce);
@@ -459,11 +459,12 @@ async function runShadow(){
   if(computing) return; computing=true; const version=++shadowVersion;
   const jd=viewer.clock.currentTime; const sunDir=getSunDir(jd);
   for(let i=0;i<terrasses.length;i+=10){
-    if(version!==shadowVersion||cameraMoving){computing=false;return;}
+    if(version!==shadowVersion||(cameraMoving&&!firstRun)){computing=false;return;}
     for(const t of terrasses.slice(i,i+10)) sunStates[t.id]=checkSunny(t,sunDir);
     syncDots(); renderList(currentHeure,searchQuery);
     await new Promise(r=>setTimeout(r,0));
   }
+  firstRun=false;
   computing=false;
 }
 
