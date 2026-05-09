@@ -443,7 +443,7 @@ function checkSunny(t,sunDir){
   return !viewer.scene.pickFromRay(new Cesium.Ray(pos,sunDir),Object.values(markerEntities));
 }
 
-let cameraMoving=false, firstRun=true;
+let cameraMoving=false;
 viewer.camera.moveStart.addEventListener(()=>{cameraMoving=true;});
 viewer.camera.moveEnd.addEventListener(()=>{cameraMoving=false;});
   
