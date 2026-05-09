@@ -544,7 +544,7 @@ handler.setInputAction(click=>{
   if(Cesium.defined(picked)&&picked.id){const id=picked.id.properties?.id?.getValue();const t=terrasses.find(x=>String(x.id)===String(id));if(t){showTooltip(t,click.position.x,click.position.y);return;}}
   hideTooltip();
 },Cesium.ScreenSpaceEventType.LEFT_CLICK);
-
+syncDots();
 async function loadTerrasses(){
   document.getElementById('loadingState').style.display='flex';
   document.getElementById('terrasseList').style.display='none';
