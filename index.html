@@ -463,8 +463,6 @@ async function runShadow(){
   }
   syncDots();
   renderList(currentHeure,searchQuery);
-  const launch=()=>{setTimeout(()=>{viewer.scene.postRender.addEventListener(function once(){viewer.scene.postRender.removeEventListener(once);runShadow();});},3000);};
-if(splashDone) launch(); else{const w=setInterval(()=>{if(splashDone){clearInterval(w);launch();}},100);}
   computing=false;
 }
 
@@ -557,6 +555,7 @@ async function loadTerrasses(){
        syncDots();
     document.getElementById('footerText').textContent=`${terrasses.length} terrasses · ${currentCity.nom}`;
     renderList(currentHeure,'');
+    const launch=()=>{viewer.scene.postRender.addEventListener(function once(){viewer.scene.postRender.removeEventListener(once);runShadow();});};
 if(splashDone) launch(); else{const w=setInterval(()=>{if(splashDone){clearInterval(w);launch();}},100);}
   }catch(e){
     document.getElementById('loadingState').style.display='none';
