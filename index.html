@@ -175,6 +175,63 @@
     .live-dot { width:6px; height:6px; border-radius:50%; background:#30D158; animation:blink 2s ease-in-out infinite; flex-shrink:0; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
     .privacy-link { margin-left:auto; font-size:10px; color:var(--text-3); cursor:pointer; text-decoration:none; }
+
+    /* ===== SECTION PARTENAIRES ===== */
+    .featured-section { flex-shrink:0; padding: 0 0 4px; border-bottom: 1px solid var(--divider); margin-bottom: 4px; }
+    .featured-section-header { padding: 10px 20px 10px; display: flex; align-items: center; gap: 6px; }
+    .featured-section-label { font-size: 11px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.8px; }
+    .featured-scroll { display: flex; gap: 12px; padding: 0 20px 12px; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .featured-scroll::-webkit-scrollbar { display: none; }
+    .featured-card { flex-shrink: 0; width: 150px; border-radius: 16px; overflow: hidden; background: var(--bg); cursor: pointer; box-shadow: 0 2px 12px rgba(0,0,0,0.08); transition: transform 0.15s; border: 1px solid rgba(0,0,0,0.05); }
+    .featured-card:active { transform: scale(0.97); }
+    .featured-photo { width: 100%; height: 96px; background: linear-gradient(135deg, #FFE082, #FFCC02); display: flex; align-items: center; justify-content: center; font-size: 36px; position: relative; overflow: hidden; }
+    .featured-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .featured-info { padding: 8px 10px 10px; }
+    .featured-badge { display: inline-flex; align-items: center; gap: 3px; background: var(--yellow); color: #7A6000; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 6px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.4px; }
+    .featured-name { font-size: 13px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
+    .featured-meta { font-size: 11px; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* ===== MODAL FICHE PARTENAIRE ===== */
+    #placeModal { position: fixed; inset: 0; z-index: 200; display: none; }
+    #placeModal.open { display: block; }
+    .place-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+    .place-sheet { position: absolute; bottom: 0; left: 0; right: 0; background: var(--white); border-radius: 24px 24px 0 0; max-height: 92vh; display: flex; flex-direction: column; overflow: hidden; transform: translateY(100%); transition: transform 0.38s cubic-bezier(0.32,0.72,0,1); }
+    #placeModal.open .place-sheet { transform: translateY(0); }
+    @media (min-width: 641px) { .place-sheet { left: 50%; right: auto; width: 420px; margin-left: -210px; } }
+    .place-handle { display: flex; justify-content: center; padding: 12px 0 0; flex-shrink: 0; }
+    .place-handle-bar { width: 40px; height: 4px; background: #E0E0E5; border-radius: 2px; }
+    .place-scroll { overflow-y: auto; -webkit-overflow-scrolling: touch; flex: 1; }
+    .place-hero { width: 100%; height: 200px; background: linear-gradient(135deg, #FFE082, #FFCC02); display: flex; align-items: center; justify-content: center; font-size: 60px; position: relative; overflow: hidden; flex-shrink: 0; }
+    .place-hero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .place-partner-badge { position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.55); backdrop-filter: blur(8px); color: var(--yellow); font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 10px; letter-spacing: 0.3px; }
+    .place-close-btn { position: absolute; top: 12px; left: 12px; width: 32px; height: 32px; background: rgba(0,0,0,0.45); backdrop-filter: blur(8px); border: none; border-radius: 50%; color: white; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 1; font-family: Arial, sans-serif; }
+    .place-body { padding: 20px 20px 8px; }
+    .place-name { font-size: 22px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; margin-bottom: 4px; font-family: Arial, sans-serif; }
+    .place-type-row { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+    .place-type { font-size: 13px; color: var(--text-2); }
+    .place-rating { display: inline-flex; align-items: center; gap: 4px; background: var(--yellow-bg); padding: 3px 8px; border-radius: 8px; }
+    .place-rating-num { font-size: 13px; font-weight: 700; color: #7A6000; }
+    .place-rating-count { font-size: 11px; color: #9A8000; }
+    .place-happy { background: linear-gradient(135deg, #FFF8DC, #FFFBE0); border: 1.5px solid var(--yellow); border-radius: 14px; padding: 12px 16px; margin-bottom: 16px; }
+    .place-happy-label { font-size: 10px; font-weight: 700; color: #9A7E00; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 4px; }
+    .place-happy-text { font-size: 14px; font-weight: 600; color: var(--text); font-family: Arial, sans-serif; }
+    .place-divider { height: 1px; background: var(--divider); margin: 0 0 16px; }
+    .place-rows { display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px; }
+    .place-row { display: flex; gap: 12px; align-items: flex-start; }
+    .place-row-icon { width: 32px; height: 32px; background: var(--bg); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 15px; }
+    .place-row-content { flex: 1; padding-top: 2px; }
+    .place-row-label { font-size: 11px; color: var(--text-3); margin-bottom: 3px; }
+    .place-row-value { font-size: 14px; color: var(--text); font-weight: 500; line-height: 1.4; font-family: Arial, sans-serif; }
+    .place-row-value a { color: #007AFF; text-decoration: none; }
+    .place-hours-list { list-style: none; }
+    .place-hours-list li { font-size: 13px; color: var(--text-2); padding: 1px 0; font-family: Arial, sans-serif; }
+    .place-hours-list li.today { font-weight: 700; color: var(--text); }
+    .place-actions { display: flex; gap: 10px; padding: 0 20px calc(env(safe-area-inset-bottom, 20px) + 16px); flex-shrink: 0; }
+    .place-action-btn { flex: 1; height: 50px; border: none; border-radius: 14px; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: transform 0.1s; font-family: Arial, sans-serif; }
+    .place-action-btn:active { transform: scale(0.97); }
+    .place-action-primary { background: var(--yellow); color: #7A6000; }
+    .place-action-secondary { background: var(--bg); color: var(--text); }
+    .place-loading { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; gap: 12px; color: var(--text-3); font-size: 13px; font-family: Arial, sans-serif; }
   </style>
 </head>
 <body>
@@ -253,6 +310,16 @@
       <input type="text" id="drawerSearch" placeholder="Rechercher un établissement…">
     </div>
   </div>
+
+  <!-- SECTION PARTENAIRES -->
+  <div class="featured-section" id="featuredSection" style="display:none;">
+    <div class="featured-section-header">
+      <span>⭐</span>
+      <span class="featured-section-label">Vos terrasses préférées</span>
+    </div>
+    <div class="featured-scroll" id="featuredScroll"></div>
+  </div>
+
   <div class="section-title"><span class="section-label">Résultats</span></div>
   <div id="loadingState"><div class="spinner"></div><span>Chargement…</span></div>
   <div class="list" id="terrasseList" style="display:none;"></div>
@@ -260,6 +327,17 @@
     <div class="live-dot"></div>
     <span class="footer-text" id="footerText">Ombres 3D · OpenStreetMap</span>
     <a class="privacy-link" href="https://soleil-bordeaux.vercel.app/privacy.html" target="_blank">Confidentialité</a>
+  </div>
+</div>
+
+<!-- MODAL FICHE PARTENAIRE -->
+<div id="placeModal">
+  <div class="place-backdrop" onclick="closePlaceModal()"></div>
+  <div class="place-sheet">
+    <div class="place-handle"><div class="place-handle-bar"></div></div>
+    <div class="place-scroll" id="placeContent">
+      <div class="place-loading"><div class="spinner"></div><span>Chargement…</span></div>
+    </div>
   </div>
 </div>
 
@@ -272,6 +350,51 @@
     _orig(p => { _pos = p; ok(p); }, err, { enableHighAccuracy: false, timeout: 6000, maximumAge: 300000 });
   };
 })();
+
+// ============================================================
+// CONFIGURATION PARTENAIRES
+// Remplace VOTRE_CLE_API_ICI par ta clé Google Places API
+// (Google Cloud Console → activer "Places API (New)")
+// ============================================================
+const GOOGLE_PLACES_KEY = 'AIzaSyCGvuqGpJNIcO5LQuv-doazgLtXzc6prnw';
+
+// Liste des terrasses partenaires
+// Pour chaque terrasse cliente, ajoute un objet avec :
+//   nom, placeId (depuis Google Maps → Partager → Place ID),
+//   city (id de la ville), type, happyHour, emoji
+const FEATURED = [
+  {
+    id: 'feat_bdx_1',
+    city: 'bordeaux',
+    nom: 'La Terrasse du Miroir',
+    placeId: 'ChIJ_REMPLACER_1',
+    lat: 44.8416, lng: -0.5712,
+    type: 'Bar · Terrasse',
+    happyHour: '17h – 20h · Cocktails à -50%',
+    emoji: '🍹'
+  },
+  {
+    id: 'feat_bdx_2',
+    city: 'bordeaux',
+    nom: 'Le Jardin Public Café',
+    placeId: 'ChIJ_REMPLACER_2',
+    lat: 44.8480, lng: -0.5780,
+    type: 'Café · Brasserie',
+    happyHour: '18h – 20h · Bières à 3€',
+    emoji: '☕'
+  },
+  {
+    id: 'feat_mrs_1',
+    city: 'marseille',
+    nom: 'Soleil du Vieux-Port',
+    placeId: 'ChIJ_REMPLACER_3',
+    lat: 43.2965, lng: 5.3698,
+    type: 'Restaurant · Bar',
+    happyHour: '17h – 19h · Rosé offert',
+    emoji: '🌊'
+  }
+];
+// ============================================================
 
 const CITIES = [
   {id:'bordeaux',   nom:'Bordeaux',    lat:44.837789, lng:-0.57918 },
@@ -302,6 +425,7 @@ CITIES.forEach(city => {
     terrasses = []; sunStates = {};
     viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(city.lng, city.lat, 500), orientation: { heading: 0, pitch: Cesium.Math.toRadians(-50), roll: 0 }, duration: 0.2 });
     loadTerrasses();
+    renderFeatured();
   });
   cityMenuEl.appendChild(item);
 });
@@ -442,7 +566,7 @@ function checkSunny(t,sunDir){
 let cameraMoving=false;
 viewer.camera.moveStart.addEventListener(()=>{cameraMoving=true;});
 viewer.camera.moveEnd.addEventListener(()=>{cameraMoving=false;});
-  
+
 let shadowDebounce=null,computing=false,shadowVersion=0;
 function scheduleShadow(){
   clearTimeout(shadowDebounce);
@@ -503,7 +627,7 @@ function showTooltip(t,x,y){
 }
 function hideTooltip(){clearTimeout(ttTimeout);tooltip.classList.remove('visible');}
 
-function normalize(s){return(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
+function normalize(s){return(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');}
 function highlight(text,q){if(!q)return text;return text.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi'),'<mark style="background:#FFFBE0;color:#9A7E00;border-radius:3px;padding:0 2px">$1</mark>');}
 
 function renderList(h,query){
@@ -567,12 +691,147 @@ async function loadTerrasses(){
   }
 }
 
+// ============================================================
+// PARTENAIRES — rendu et modal
+// ============================================================
+
+function renderFeatured() {
+  const section = document.getElementById('featuredSection');
+  const scroll = document.getElementById('featuredScroll');
+  const cityFeatured = FEATURED.filter(f => !f.city || f.city === currentCity.id);
+  if (!cityFeatured.length) { section.style.display = 'none'; return; }
+  section.style.display = '';
+  scroll.innerHTML = '';
+  cityFeatured.forEach(feat => {
+    const card = document.createElement('div');
+    card.className = 'featured-card';
+    card.innerHTML = `
+      <div class="featured-photo" id="fphoto_${feat.id}">${feat.emoji || '🌞'}</div>
+      <div class="featured-info">
+        <div class="featured-badge">⭐ Partenaire</div>
+        <div class="featured-name">${feat.nom}</div>
+        <div class="featured-meta">${feat.happyHour ? feat.happyHour.split('·')[0].trim() : feat.type}</div>
+      </div>`;
+    card.addEventListener('click', () => openPlaceModal(feat));
+    scroll.appendChild(card);
+    if (GOOGLE_PLACES_KEY !== 'AIzaSyCGvuqGpJNIcO5LQuv-doazgLtXzc6prnw') {
+      loadFeaturedPhoto(feat.placeId, `fphoto_${feat.id}`, feat.emoji);
+    }
+  });
+}
+
+async function loadFeaturedPhoto(placeId, containerId, fallback) {
+  try {
+    const res = await fetch(`https://places.googleapis.com/v1/places/${placeId}?fields=photos`, {
+      headers: { 'X-Goog-Api-Key': GOOGLE_PLACES_KEY, 'X-Goog-FieldMask': 'photos' }
+    });
+    const data = await res.json();
+    if (data.photos && data.photos.length) {
+      const url = `https://places.googleapis.com/v1/${data.photos[0].name}/media?maxWidthPx=320&key=${GOOGLE_PLACES_KEY}`;
+      const el = document.getElementById(containerId);
+      if (el) el.innerHTML = `<img src="${url}" alt="" onerror="this.parentElement.textContent='${fallback||'🌞'}'">`;
+    }
+  } catch(e) {}
+}
+
+function openPlaceModal(feat) {
+  const modal = document.getElementById('placeModal');
+  const content = document.getElementById('placeContent');
+  content.innerHTML = `<div class="place-loading"><div class="spinner"></div><span>Chargement…</span></div>`;
+  modal.classList.add('open');
+
+  if (GOOGLE_PLACES_KEY === 'VOTRE_CLE_API_ICI') {
+    renderPlaceStatic(feat); return;
+  }
+  const fields = 'displayName,photos,rating,userRatingCount,regularOpeningHours,formattedAddress,internationalPhoneNumber,websiteUri';
+  fetch(`https://places.googleapis.com/v1/places/${feat.placeId}`, {
+    headers: { 'X-Goog-Api-Key': GOOGLE_PLACES_KEY, 'X-Goog-FieldMask': fields }
+  })
+  .then(r => r.json())
+  .then(data => renderPlaceFull(data, feat))
+  .catch(() => renderPlaceStatic(feat));
+}
+
+function closePlaceModal() {
+  document.getElementById('placeModal').classList.remove('open');
+}
+
+function renderPlaceFull(data, feat) {
+  const content = document.getElementById('placeContent');
+  const photoUrl = data.photos && data.photos.length
+    ? `https://places.googleapis.com/v1/${data.photos[0].name}/media?maxWidthPx=600&key=${GOOGLE_PLACES_KEY}`
+    : null;
+  const mapsUrl = `https://www.google.com/maps/place/?q=place_id:${feat.placeId}`;
+  const appleMapsUrl = `https://maps.apple.com/?q=${encodeURIComponent(feat.nom)}&ll=${feat.lat},${feat.lng}`;
+  const today = (new Date().getDay() + 6) % 7;
+  let hoursHTML = '';
+  if (data.regularOpeningHours?.weekdayDescriptions) {
+    hoursHTML = '<ul class="place-hours-list">' + data.regularOpeningHours.weekdayDescriptions.map((d, i) =>
+      `<li class="${i === today ? 'today' : ''}">${d}</li>`).join('') + '</ul>';
+  }
+  content.innerHTML = `
+    <div class="place-hero">
+      ${photoUrl ? `<img src="${photoUrl}" alt="" onerror="this.remove()">` : `<span>${feat.emoji || '🌞'}</span>`}
+      <button class="place-close-btn" onclick="closePlaceModal()">✕</button>
+      <div class="place-partner-badge">⭐ Partenaire</div>
+    </div>
+    <div class="place-body">
+      <div class="place-name">${data.displayName?.text || feat.nom}</div>
+      <div class="place-type-row">
+        <span class="place-type">${feat.type}</span>
+        ${data.rating ? `<div class="place-rating"><span class="place-rating-num">★ ${data.rating.toFixed(1)}</span><span class="place-rating-count">(${data.userRatingCount} avis)</span></div>` : ''}
+      </div>
+      ${feat.happyHour ? `<div class="place-happy"><div class="place-happy-label">🍺 Happy Hour</div><div class="place-happy-text">${feat.happyHour}</div></div>` : ''}
+      <div class="place-divider"></div>
+      <div class="place-rows">
+        ${data.formattedAddress ? `<div class="place-row"><div class="place-row-icon">📍</div><div class="place-row-content"><div class="place-row-label">Adresse</div><div class="place-row-value">${data.formattedAddress}</div></div></div>` : ''}
+        ${hoursHTML ? `<div class="place-row"><div class="place-row-icon">🕐</div><div class="place-row-content"><div class="place-row-label">Horaires</div><div class="place-row-value">${hoursHTML}</div></div></div>` : ''}
+        ${data.internationalPhoneNumber ? `<div class="place-row"><div class="place-row-icon">📞</div><div class="place-row-content"><div class="place-row-label">Téléphone</div><div class="place-row-value"><a href="tel:${data.internationalPhoneNumber}">${data.internationalPhoneNumber}</a></div></div></div>` : ''}
+        ${data.websiteUri ? `<div class="place-row"><div class="place-row-icon">🌐</div><div class="place-row-content"><div class="place-row-label">Site web</div><div class="place-row-value"><a href="${data.websiteUri}" target="_blank">${data.websiteUri.replace(/^https?:\/\/(www\.)?/,'').split('/')[0]}</a></div></div></div>` : ''}
+      </div>
+    </div>
+    <div class="place-actions">
+      <button class="place-action-btn place-action-primary" onclick="window.open('${mapsUrl}','_blank')">🗺 Google Maps</button>
+      <button class="place-action-btn place-action-secondary" onclick="window.open('${appleMapsUrl}','_blank')">📍 Apple Maps</button>
+    </div>`;
+}
+
+function renderPlaceStatic(feat) {
+  const content = document.getElementById('placeContent');
+  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(feat.nom+' '+currentCity.nom)}`;
+  const appleMapsUrl = `https://maps.apple.com/?q=${encodeURIComponent(feat.nom)}&ll=${feat.lat},${feat.lng}`;
+  content.innerHTML = `
+    <div class="place-hero">
+      <span>${feat.emoji || '🌞'}</span>
+      <button class="place-close-btn" onclick="closePlaceModal()">✕</button>
+      <div class="place-partner-badge">⭐ Partenaire</div>
+    </div>
+    <div class="place-body">
+      <div class="place-name">${feat.nom}</div>
+      <div class="place-type-row"><span class="place-type">${feat.type}</span></div>
+      ${feat.happyHour ? `<div class="place-happy"><div class="place-happy-label">🍺 Happy Hour</div><div class="place-happy-text">${feat.happyHour}</div></div>` : ''}
+    </div>
+    <div class="place-actions">
+      <button class="place-action-btn place-action-primary" onclick="window.open('${mapsUrl}','_blank')">🗺 Google Maps</button>
+      <button class="place-action-btn place-action-secondary" onclick="window.open('${appleMapsUrl}','_blank')">📍 Apple Maps</button>
+    </div>`;
+}
+
+// Swipe bas pour fermer le modal
+(function(){
+  let startY = 0;
+  const sheet = document.querySelector('.place-sheet');
+  sheet.addEventListener('touchstart', e => { startY = e.touches[0].clientY; }, { passive: true });
+  sheet.addEventListener('touchend', e => { if (e.changedTouches[0].clientY - startY > 80) closePlaceModal(); }, { passive: true });
+})();
+
 async function init(){
   const now=new Date();
   const initH=Math.min(21,Math.max(8,now.getHours()+(Math.round(now.getMinutes()/15)*15/60)));
   slider.value=initH;
   slider.dispatchEvent(new Event('input'));
   loadTerrasses();
+  renderFeatured();
 }
 
 init();
