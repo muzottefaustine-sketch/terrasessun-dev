@@ -552,16 +552,11 @@ async function loadTerrasses(){
     document.getElementById('terrasseList').style.display='block';
     terrasses=data;
     terrasses.forEach(t=>{sunStates[t.id]=true;});
-    syncDots();
     document.getElementById('footerText').textContent=`${terrasses.length} terrasses · ${currentCity.nom}`;
     renderList(currentHeure,'');
     const launch=()=>{
-  viewer.scene.postRender.addEventListener(function once(){
-    viewer.scene.postRender.removeEventListener(once);
-    runShadow();
-  });
-};
-    
+      runShadow();
+    };
     if(splashDone) launch();
     else{const w=setInterval(()=>{if(splashDone){clearInterval(w);launch();}},100);}
   }catch(e){
