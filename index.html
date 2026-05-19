@@ -554,9 +554,10 @@ async function loadTerrasses(){
     terrasses.forEach(t=>{sunStates[t.id]=true;});
     document.getElementById('footerText').textContent=`${terrasses.length} terrasses · ${currentCity.nom}`;
     renderList(currentHeure,'');
-    const launch=()=>{
-      runShadow();
-    };
+   const launch=()=>{
+  syncDots();
+  runShadow();
+};
     if(splashDone) launch();
     else{const w=setInterval(()=>{if(splashDone){clearInterval(w);launch();}},100);}
   }catch(e){
