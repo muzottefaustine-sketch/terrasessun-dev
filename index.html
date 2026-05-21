@@ -193,6 +193,130 @@
   </style>
 </head>
 <body>
+  #btnFav{
+  font-size:18px;
+}
+
+.favs-drawer{
+  position:fixed;
+  top:0;
+  right:0;
+  width:360px;
+  max-width:100%;
+  height:100%;
+  background:white;
+  z-index:80;
+  transform:translateX(100%);
+  transition:transform .35s cubic-bezier(0.32,0.72,0,1);
+  overflow-y:auto;
+  box-shadow:-10px 0 40px rgba(0,0,0,.15);
+  -webkit-overflow-scrolling:touch;
+}
+  .favs-drawer.open{
+  transform:translateX(0);
+}
+
+@media (max-width:640px){
+
+  .favs-drawer{
+    width:100%;
+    height:82vh;
+    top:auto;
+    bottom:0;
+    border-radius:24px 24px 0 0;
+    transform:translateY(100%);
+  }
+   .favs-drawer.open{
+    transform:translateY(0);
+  }
+}
+
+.favs-header{
+  position:sticky;
+  top:0;
+  z-index:5;
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  padding:20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid #eee;
+}
+  .favs-header h2{
+  font-size:20px;
+  font-weight:700;
+  color:#1C1C1E;
+}
+
+.favs-header button{
+  border:none;
+  background:#F2F2F7;
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  cursor:pointer;
+  font-size:14px;
+}
+
+.favs-list{
+  padding:16px;}
+
+.fav-card{
+  margin-bottom:20px;
+  border-radius:22px;
+  overflow:hidden;
+  background:white;
+  box-shadow:0 8px 30px rgba(0,0,0,.08);
+  cursor:pointer;
+  transition:transform .15s ease;
+}
+
+.fav-card:active{
+  transform:scale(.98);
+}
+
+.fav-card img{
+  width:100%;
+  height:210px;
+  object-fit:cover;
+  display:block;
+}
+
+.fav-content{
+  padding:16px;
+}
+
+.fav-content h3{
+  font-size:18px;
+  margin-bottom:8px;
+  color:#1C1C1E;
+}
+
+.fav-content p{
+  font-size:14px;
+  color:#6C6C70;
+  line-height:1.5;
+}
+
+.fav-tags{
+  margin-top:12px;
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.fav-tag{
+  background:#FFFBE0;
+  color:#9A7E00;
+  padding:6px 11px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:600;
+}
+
+  
 
 <div id="splash">
   <div class="splash-sun">
@@ -226,18 +350,36 @@
 
 <div id="topBar">
   <div class="search-glass">
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="#1C1C1E" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="#1C1C1E" stroke-width="1.5" stroke-linecap="round"/></svg>
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <circle cx="6.5" cy="6.5" r="5" stroke="#1C1C1E" stroke-width="1.5"/>
+      <path d="M10.5 10.5L14 14" stroke="#1C1C1E" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+
     <input type="text" id="searchInput" placeholder="Cherche ta terrasse au soleil…">
+
     <button class="search-clear-btn" id="searchClear">✕</button>
   </div>
+
   <button class="icon-btn" id="btnListe" onclick="openDrawer()" title="Liste">
-    <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><rect width="18" height="2" rx="1" fill="#1C1C1E"/><rect y="6" width="18" height="2" rx="1" fill="#1C1C1E"/><rect y="12" width="18" height="2" rx="1" fill="#1C1C1E"/></svg>
+    <svg width="18" height="14" viewBox="0 0 18 14" fill="none">
+      <rect width="18" height="2" rx="1" fill="#1C1C1E"/>
+      <rect y="6" width="18" height="2" rx="1" fill="#1C1C1E"/>
+      <rect y="12" width="18" height="2" rx="1" fill="#1C1C1E"/>
+    </svg>
+  </button>
+
+  <button class="icon-btn" id="btnFav" onclick="openFavs()" title="Nos terrasses">
+    ⭐
   </button>
   <button id="btnVille" ontouchend="toggleCityMenu()">
     <span id="villeLabel">Bordeaux</span> ▾
   </button>
+
   <button class="icon-btn" id="btnGeo" onclick="geolocate()" title="Ma position">
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="3.5" fill="#007AFF"/><circle cx="10" cy="10" r="6" stroke="#007AFF" stroke-width="1.2" fill="none" opacity="0.35"/></svg>
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <circle cx="10" cy="10" r="3.5" fill="#007AFF"/>
+      <circle cx="10" cy="10" r="6" stroke="#007AFF" stroke-width="1.2" fill="none" opacity="0.35"/>
+    </svg>
   </button>
 </div>
 
@@ -257,6 +399,29 @@
 </div>
 
 <div id="drawer">
+  <div id="favsDrawer" class="favs-drawer">
+  <div class="favs-header">
+    <h2>☀️ Nos terrasses préférées</h2>
+    <button onclick="closeFavs()">✕</button>
+  </div>
+    <div id="favsDrawer" class="favs-drawer">
+
+  <div class="favs-header">
+
+    <h2>☀️ Nos terrasses préférées</h2>
+
+    <button onclick="closeFavs()">
+      ✕
+    </button>
+
+  </div>
+
+  <div id="favsList" class="favs-list"></div>
+
+</div>
+
+  <div id="favsList" class="favs-list"></div>
+</div>
   <div class="drawer-handle" id="drawerHandle"><div class="drawer-bar"></div></div>
   <div class="drawer-header">
     <div class="drawer-top">
@@ -590,6 +755,97 @@ async function init(){
   slider.dispatchEvent(new Event('input'));
   loadTerrasses();
 }
+const favsDrawer = document.getElementById('favsDrawer');
+
+function openFavs(){
+  favsDrawer.classList.add('open');
+}
+
+function closeFavs(){
+  favsDrawer.classList.remove('open');
+}
+
+async function loadFavorites(){
+
+  try{
+
+    const res = await fetch('/data/favorites.json');
+
+    if(!res.ok){
+      throw new Error('favorites.json introuvable');
+    } const favs = await res.json();
+
+    const container = document.getElementById('favsList');
+
+    container.innerHTML = '';
+
+    favs.forEach(fav => {
+
+      const card = document.createElement('div');
+
+      card.className = 'fav-card';
+
+      card.innerHTML = `
+
+        <img src="${fav.image}" alt="${fav.name}">
+
+        <div class="fav-content">
+
+          <h3>${fav.name}</h3>
+
+          <p>${fav.description || ''}</p>
+
+          <div class="fav-tags">
+ ${(fav.tags || []).map(tag => `
+              <span class="fav-tag">${tag}</span>
+            `).join('')}
+
+          </div>
+
+        </div>
+
+      `;
+
+      card.addEventListener('click', () => {
+
+        viewer.camera.flyTo({
+
+          destination: Cesium.Cartesian3.fromDegrees(
+            fav.lng,
+            fav.lat,
+            220
+          ),
+ orientation:{
+            heading:0,
+            pitch:Cesium.Math.toRadians(-50),
+            roll:0
+          },
+
+          duration:1.5
+        });
+
+        closeFavs();
+      });
+
+      container.appendChild(card);
+    });
+
+  }catch(err){
+
+    console.error(err);
+ document.getElementById('favsList').innerHTML = `
+
+      <div style="padding:30px;text-align:center;color:#999;font-size:14px;line-height:1.6;">
+
+        Impossible de charger les terrasses favorites.
+
+      </div>
+
+    `;
+  }
+}
+
+loadFavorites();
 
 init();
 </script>
