@@ -1,5 +1,4 @@
 <!DOCTYPE html><html lang="fr">
-
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -28,14 +27,15 @@
     #cesiumContainer { touch-action: none; }
     html, body { height: 100%; width: 100%; overflow: hidden; font-family: Arial, sans-serif; background: #000; position: fixed; inset: 0; }
 
+    /* SPLASH */
     #splash { position: fixed; inset: 0; z-index: 1000; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.6s ease; }
     #splash.out { opacity: 0; pointer-events: none; }
     .splash-sun { width: 90px; height: 90px; margin-bottom: 24px; animation: splash-pulse 2.5s ease-in-out infinite; }
     @keyframes splash-pulse { 0%,100%{transform:scale(1) rotate(0deg);} 50%{transform:scale(1.07) rotate(6deg);} }
     .splash-name { font-size: 32px; font-weight: 700; color: var(--text); letter-spacing: -0.5px; margin-bottom: 8px; }
-    .splash-name em { font-family: Arial, sans-serif; font-style: italic; font-weight: 700; }
-    .splash-name span { font-family: Arial, sans-serif; font-style: normal; font-weight: 700; }
-    .splash-tagline { font-size: 14px; color: var(--text-2); text-align: center; line-height: 1.5; max-width: 220px; font-family: Arial, sans-serif; }
+    .splash-name em { font-style: italic; font-weight: 700; }
+    .splash-name span { font-style: normal; font-weight: 700; }
+    .splash-tagline { font-size: 14px; color: var(--text-2); text-align: center; line-height: 1.5; max-width: 220px; }
     .splash-tagline strong { color: var(--yellow); font-weight: 600; }
     .splash-progress-wrap { position: absolute; bottom: 52px; left: 50%; transform: translateX(-50%); width: 140px; }
     .splash-progress-track { width: 100%; height: 2px; background: #E5E5EA; border-radius: 2px; overflow: hidden; }
@@ -47,10 +47,10 @@
     .cesium-selection-wrapper, .cesium-infoBox { display: none !important; }
     .cesium-widget-credits { display: none !important; }
 
+    /* TOP BAR */
     #topBar {
       position: fixed; top: calc(env(safe-area-inset-top, 44px) + 12px); left: 50%;
-      transform: translate3d(-50%, 0, 0); -webkit-transform: translate3d(-50%, 0, 0);
-      will-change: transform; isolation: isolate; z-index: 30;
+      transform: translate3d(-50%, 0, 0); will-change: transform; isolation: isolate; z-index: 30;
       width: calc(100% - 32px); max-width: 480px; display: flex; align-items: center; gap: 10px;
     }
     .search-glass {
@@ -71,12 +71,14 @@
       border: 1px solid rgba(255,255,255,0.6); border-radius: 15px;
       box-shadow: 0 4px 24px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.8);
       cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: transform 0.1s, background 0.15s; -webkit-transform: translate3d(0, 0, 0);
-      will-change: transform; isolation: isolate;
+      transition: transform 0.1s, background 0.15s; will-change: transform; isolation: isolate;
     }
     .icon-btn:active { transform: scale(0.94); background: rgba(255,255,255,0.98); }
     #btnGeo.locating { animation: geo-pulse 1s ease-in-out infinite; }
     @keyframes geo-pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    #btnFav { position: relative; }
+    #favBadge { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: 50%; background: #FF3B30; border: 1.5px solid white; display: none; }
+    #favBadge.show { display: block; }
 
     #btnVille {
       flex-shrink: 0; height: 50px; padding: 0 14px;
@@ -85,36 +87,22 @@
       box-shadow: 0 4px 24px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.8);
       cursor: pointer; display: flex; align-items: center; gap: 5px;
       font-family: Arial, sans-serif; font-size: 13px; font-weight: 600; color: var(--text);
-      white-space: nowrap; transition: transform 0.1s, background 0.15s;
-      -webkit-transform: translate3d(0, 0, 0); will-change: transform; isolation: isolate;
+      white-space: nowrap; transition: transform 0.1s, background 0.15s; will-change: transform;
     }
     #btnVille:active { transform: scale(0.94); background: rgba(255,255,255,0.98); }
 
     #cityMenu {
-      position: fixed;
-      top: calc(env(safe-area-inset-top, 44px) + 70px);
-      right: 16px;
-      background: var(--white);
-      border-radius: 16px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-      z-index: 100;
-      display: none;
-      min-width: 160px;
-      overflow: hidden;
-      border: 1px solid var(--divider);
+      position: fixed; top: calc(env(safe-area-inset-top, 44px) + 70px); right: 16px;
+      background: var(--white); border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      z-index: 100; display: none; min-width: 160px; overflow: hidden; border: 1px solid var(--divider);
     }
     #cityMenu.open { display: block; }
-    .city-item {
-      padding: 13px 16px;
-      font-size: 14px; font-weight: 600; color: var(--text);
-      cursor: pointer; border-bottom: 1px solid var(--divider);
-      font-family: Arial, sans-serif;
-      transition: background 0.1s;
-    }
+    .city-item { padding: 13px 16px; font-size: 14px; font-weight: 600; color: var(--text); cursor: pointer; border-bottom: 1px solid var(--divider); transition: background 0.1s; }
     .city-item:last-child { border-bottom: none; }
     .city-item.active { color: var(--yellow); background: var(--yellow-bg); }
     .city-item:active { background: var(--bg); }
 
+    /* PANEL SLIDER */
     .panel-map {
       position: fixed; bottom: calc(env(safe-area-inset-bottom, 34px) + 16px); left: 50%;
       transform: translateX(-50%); background: var(--glass);
@@ -124,18 +112,25 @@
       text-align: center; z-index: 30; width: 82%; max-width: 400px;
     }
     .panel-map h3 { margin: 0 0 12px 0; font-size: 15px; font-weight: 600; color: var(--text); display: flex; align-items: center; justify-content: center; gap: 8px; }
-    .panel-map h3 .heure { font-size: 18px; font-weight: 700; color: var(--text); font-family: Arial, sans-serif; }
+    .panel-map h3 .heure { font-size: 18px; font-weight: 700; color: var(--text); }
     .panel-map input[type=range] { width: 100%; cursor: pointer; -webkit-appearance: none; height: 4px; border-radius: 2px; background: linear-gradient(to right, var(--yellow) var(--pct,46%), rgba(0,0,0,0.1) var(--pct,46%)); outline: none; }
     .panel-map input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%; background: white; border: 3px solid var(--yellow); box-shadow: 0 2px 10px rgba(0,0,0,0.15); cursor: pointer; }
     .panel-labels { display: flex; justify-content: space-between; margin-top: 6px; font-size: 10px; color: var(--text-3); font-weight: 500; }
 
+    /* TOOLTIP */
     #tooltip { position: fixed; z-index: 50; background: rgba(20,20,22,0.93); color: white; padding: 12px 18px; border-radius: 16px; font-size: 15px; font-weight: 600; pointer-events: none; opacity: 0; transform: translateY(6px); transition: opacity 0.18s, transform 0.18s; backdrop-filter: blur(12px); max-width: 260px; text-align: center; border: 1px solid rgba(255,255,255,0.08); }
     #tooltip.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
-    #tooltip .tt-type { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 3px; font-weight: 400; font-family: Arial, sans-serif; }
-    #tooltip .tt-sun { font-size: 13px; font-weight: 600; margin-top: 6px; font-family: Arial, sans-serif; }
+    #tooltip .tt-type { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 3px; font-weight: 400; }
+    #tooltip .tt-sun { font-size: 13px; font-weight: 600; margin-top: 6px; }
     #tooltip .tt-sun.sun { color: var(--yellow); }
     #tooltip .tt-sun.shade { color: #90CAF9; }
+    .tt-actions { display: flex; gap: 8px; margin-top: 8px; }
+    .tt-btn { flex: 1; background: rgba(255,255,255,0.15); color: white; padding: 6px 10px; border-radius: 10px; font-size: 12px; text-align: center; text-decoration: none; border: none; cursor: pointer; font-family: Arial, sans-serif; font-weight: 500; }
+    .tt-btn:active { background: rgba(255,255,255,0.25); }
+    .tt-btn.heart { font-size: 16px; flex: 0 0 36px; }
+    .tt-btn.heart.active { background: rgba(255,59,48,0.4); }
 
+    /* MAIN DRAWER */
     #drawer { position: fixed; z-index: 40; background: var(--white); display: flex; flex-direction: column; transition: transform 0.38s cubic-bezier(0.32,0.72,0,1); }
     @media (min-width: 641px) { #drawer { top:0; right:0; width:var(--panel-w); height:100vh; border-left:1px solid var(--divider); transform:translateX(110%); } #drawer.open { transform:translateX(0); } }
     @media (max-width: 640px) { #drawer { left:0; bottom:0; width:100%; height:80vh; border-radius:20px 20px 0 0; border-top:1px solid var(--divider); box-shadow:0 -8px 40px rgba(0,0,0,0.12); transform:translateY(110%); } #drawer.open { transform:translateY(0); } }
@@ -145,10 +140,9 @@
     .drawer-header { padding:20px 20px 0; flex-shrink:0; }
     .drawer-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
     .drawer-title { font-size: 22px; font-weight: 700; color: var(--text); letter-spacing:-0.3px; }
-    .drawer-title em { font-family: Arial, sans-serif; font-style: italic; font-weight: 700; }
-    .drawer-title span { font-family: Arial, sans-serif; font-style: normal; color: var(--yellow); font-weight: 700; }
-    #btnClose { background: var(--bg); border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-2); transition: background 0.15s; }
-    #btnClose:active { background: #E5E5EA; }
+    .drawer-title em { font-style: italic; font-weight: 700; }
+    .drawer-title span { font-style: normal; color: var(--yellow); font-weight: 700; }
+    #btnClose { background: var(--bg); border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-2); }
     .drawer-search { display: flex; align-items: center; gap: 8px; background: var(--bg); border-radius: 12px; padding: 0 12px; height: 40px; margin-bottom: 12px; }
     .drawer-search svg { flex-shrink: 0; opacity: 0.3; }
     #drawerSearch { flex: 1; border: none; background: transparent; font-family: Arial, sans-serif; font-size: 15px; color: var(--text); outline: none; }
@@ -164,11 +158,13 @@
     .card { display:flex; align-items:center; gap:12px; padding:12px 8px; border-radius:var(--radius-md); cursor:pointer; transition: background 0.15s; border-bottom:1px solid var(--divider); }
     .card:last-child { border-bottom:none; }
     .card:active, .card.active { background:var(--bg); border-color:transparent; }
-    .card-icon { width:38px; height:38px; border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center; font-size:17px; flex-shrink:0; }
-    .card-icon.sun { background:var(--yellow-bg); }
+    .card-icon { width:38px; height:38px; border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center; font-size:17px; flex-shrink:0; background:var(--yellow-bg); }
     .card-body { flex:1; min-width:0; }
-    .card-name { font-size:15px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:2px; font-family: Arial, sans-serif; }
-    .card-sub { font-size:12px; color:var(--text-3); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-family: Arial, sans-serif; }
+    .card-name { font-size:15px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:2px; }
+    .card-sub { font-size:12px; color:var(--text-3); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .card-heart { background: none; border: none; font-size: 18px; cursor: pointer; padding: 4px; flex-shrink: 0; opacity: 0.3; transition: opacity 0.15s, transform 0.15s; }
+    .card-heart.active { opacity: 1; }
+    .card-heart:active { transform: scale(1.3); }
     .no-results { padding:40px 20px; text-align:center; color:var(--text-3); font-size:13px; line-height:1.7; }
     .drawer-footer { padding:12px 20px; border-top:1px solid var(--divider); display:flex; align-items:center; gap:6px; flex-shrink:0; }
     .footer-text { font-size:10px; color:var(--text-3); }
@@ -176,62 +172,85 @@
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
     .privacy-link { margin-left:auto; font-size:10px; color:var(--text-3); cursor:pointer; text-decoration:none; }
 
-    /* ===== SECTION PARTENAIRES ===== */
-    .featured-section { flex-shrink:0; padding: 0 0 4px; border-bottom: 1px solid var(--divider); margin-bottom: 4px; }
-    .featured-section-header { padding: 10px 20px 10px; display: flex; align-items: center; gap: 6px; }
-    .featured-section-label { font-size: 11px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.8px; }
-    .featured-scroll { display: flex; gap: 12px; padding: 0 20px 12px; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
-    .featured-scroll::-webkit-scrollbar { display: none; }
-    .featured-card { flex-shrink: 0; width: 150px; border-radius: 16px; overflow: hidden; background: var(--bg); cursor: pointer; box-shadow: 0 2px 12px rgba(0,0,0,0.08); transition: transform 0.15s; border: 1px solid rgba(0,0,0,0.05); }
-    .featured-card:active { transform: scale(0.97); }
-    .featured-photo { width: 100%; height: 96px; background: linear-gradient(135deg, #FFE082, #FFCC02); display: flex; align-items: center; justify-content: center; font-size: 36px; position: relative; overflow: hidden; }
-    .featured-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-    .featured-info { padding: 8px 10px 10px; }
-    .featured-badge { display: inline-flex; align-items: center; gap: 3px; background: var(--yellow); color: #7A6000; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 6px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.4px; }
-    .featured-name { font-size: 13px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
-    .featured-meta { font-size: 11px; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    /* ===== FAVORIS POPUP ===== */
+    #favOverlay {
+      position: fixed; inset: 0; z-index: 60;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+      display: flex; align-items: flex-end; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    #favOverlay.open { opacity: 1; pointer-events: auto; }
+    #favPanel {
+      width: 100%; max-width: 540px;
+      background: var(--white);
+      border-radius: 28px 28px 0 0;
+      max-height: 85vh;
+      display: flex; flex-direction: column;
+      transform: translateY(100%);
+      transition: transform 0.38s cubic-bezier(0.32,0.72,0,1);
+      box-shadow: 0 -8px 40px rgba(0,0,0,0.18);
+      padding-bottom: calc(env(safe-area-inset-bottom, 34px) + 8px);
+    }
+    #favOverlay.open #favPanel { transform: translateY(0); }
+    .fav-handle { display: flex; justify-content: center; padding: 14px 0 8px; cursor: pointer; flex-shrink: 0; }
+    .fav-handle-bar { width: 40px; height: 4px; background: #E0E0E5; border-radius: 2px; }
+    .fav-header { padding: 0 20px 16px; flex-shrink: 0; border-bottom: 1px solid var(--divider); }
+    .fav-header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+    .fav-title { font-size: 22px; font-weight: 700; color: var(--text); }
+    .fav-title span { color: #FF3B30; }
+    .fav-subtitle { font-size: 13px; color: var(--text-3); }
+    #btnFavClose { background: var(--bg); border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-2); flex-shrink: 0; }
 
-    /* ===== MODAL FICHE PARTENAIRE ===== */
-    #placeModal { position: fixed; inset: 0; z-index: 200; display: none; }
-    #placeModal.open { display: block; }
-    .place-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
-    .place-sheet { position: absolute; bottom: 0; left: 0; right: 0; background: var(--white); border-radius: 24px 24px 0 0; max-height: 92vh; display: flex; flex-direction: column; overflow: hidden; transform: translateY(100%); transition: transform 0.38s cubic-bezier(0.32,0.72,0,1); }
-    #placeModal.open .place-sheet { transform: translateY(0); }
-    @media (min-width: 641px) { .place-sheet { left: 50%; right: auto; width: 420px; margin-left: -210px; } }
-    .place-handle { display: flex; justify-content: center; padding: 12px 0 0; flex-shrink: 0; }
-    .place-handle-bar { width: 40px; height: 4px; background: #E0E0E5; border-radius: 2px; }
-    .place-scroll { overflow-y: auto; -webkit-overflow-scrolling: touch; flex: 1; }
-    .place-hero { width: 100%; height: 200px; background: linear-gradient(135deg, #FFE082, #FFCC02); display: flex; align-items: center; justify-content: center; font-size: 60px; position: relative; overflow: hidden; flex-shrink: 0; }
-    .place-hero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-    .place-partner-badge { position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.55); backdrop-filter: blur(8px); color: var(--yellow); font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 10px; letter-spacing: 0.3px; }
-    .place-close-btn { position: absolute; top: 12px; left: 12px; width: 32px; height: 32px; background: rgba(0,0,0,0.45); backdrop-filter: blur(8px); border: none; border-radius: 50%; color: white; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 1; font-family: Arial, sans-serif; }
-    .place-body { padding: 20px 20px 8px; }
-    .place-name { font-size: 22px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; margin-bottom: 4px; font-family: Arial, sans-serif; }
-    .place-type-row { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
-    .place-type { font-size: 13px; color: var(--text-2); }
-    .place-rating { display: inline-flex; align-items: center; gap: 4px; background: var(--yellow-bg); padding: 3px 8px; border-radius: 8px; }
-    .place-rating-num { font-size: 13px; font-weight: 700; color: #7A6000; }
-    .place-rating-count { font-size: 11px; color: #9A8000; }
-    .place-happy { background: linear-gradient(135deg, #FFF8DC, #FFFBE0); border: 1.5px solid var(--yellow); border-radius: 14px; padding: 12px 16px; margin-bottom: 16px; }
-    .place-happy-label { font-size: 10px; font-weight: 700; color: #9A7E00; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 4px; }
-    .place-happy-text { font-size: 14px; font-weight: 600; color: var(--text); font-family: Arial, sans-serif; }
-    .place-divider { height: 1px; background: var(--divider); margin: 0 0 16px; }
-    .place-rows { display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px; }
-    .place-row { display: flex; gap: 12px; align-items: flex-start; }
-    .place-row-icon { width: 32px; height: 32px; background: var(--bg); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 15px; }
-    .place-row-content { flex: 1; padding-top: 2px; }
-    .place-row-label { font-size: 11px; color: var(--text-3); margin-bottom: 3px; }
-    .place-row-value { font-size: 14px; color: var(--text); font-weight: 500; line-height: 1.4; font-family: Arial, sans-serif; }
-    .place-row-value a { color: #007AFF; text-decoration: none; }
-    .place-hours-list { list-style: none; }
-    .place-hours-list li { font-size: 13px; color: var(--text-2); padding: 1px 0; font-family: Arial, sans-serif; }
-    .place-hours-list li.today { font-weight: 700; color: var(--text); }
-    .place-actions { display: flex; gap: 10px; padding: 0 20px calc(env(safe-area-inset-bottom, 20px) + 16px); flex-shrink: 0; }
-    .place-action-btn { flex: 1; height: 50px; border: none; border-radius: 14px; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: transform 0.1s; font-family: Arial, sans-serif; }
-    .place-action-btn:active { transform: scale(0.97); }
-    .place-action-primary { background: var(--yellow); color: #7A6000; }
-    .place-action-secondary { background: var(--bg); color: var(--text); }
-    .place-loading { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; gap: 12px; color: var(--text-3); font-size: 13px; font-family: Arial, sans-serif; }
+    .fav-body { flex: 1; overflow-y: auto; padding: 16px 16px 8px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .fav-body::-webkit-scrollbar { display: none; }
+
+    /* Fav cards grid style SunSeekr */
+    .fav-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px 24px; gap: 12px; }
+    .fav-empty-icon { font-size: 48px; opacity: 0.3; }
+    .fav-empty-text { font-size: 16px; font-weight: 600; color: var(--text-2); }
+    .fav-empty-sub { font-size: 13px; color: var(--text-3); text-align: center; line-height: 1.6; }
+
+    .fav-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .fav-card {
+      border-radius: 18px; overflow: hidden; background: var(--bg);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      cursor: pointer; transition: transform 0.15s;
+      position: relative;
+    }
+    .fav-card:active { transform: scale(0.97); }
+    .fav-card-img {
+      width: 100%; aspect-ratio: 4/3; object-fit: cover;
+      background: linear-gradient(135deg, #f5e6c8 0%, #ffd580 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 36px; position: relative;
+    }
+    .fav-card-img-bg { width: 100%; aspect-ratio: 4/3; background: linear-gradient(135deg, #FFF3C4 0%, #FFE066 60%, #FFB800 100%); display: flex; align-items: center; justify-content: center; font-size: 36px; position: relative; }
+    .fav-sun-badge {
+      position: absolute; top: 8px; left: 8px;
+      background: rgba(255,214,0,0.92); color: #7A5800;
+      font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 20px;
+      backdrop-filter: blur(4px);
+    }
+    .fav-sun-badge.shade { background: rgba(142,155,173,0.92); color: white; }
+    .fav-card-del {
+      position: absolute; top: 8px; right: 8px;
+      background: rgba(0,0,0,0.4); color: white; border: none; border-radius: 50%;
+      width: 26px; height: 26px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+    .fav-card-body { padding: 10px 12px 12px; }
+    .fav-card-name { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .fav-card-type { font-size: 11px; color: var(--text-3); margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .fav-card-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+    .fav-tag {
+      font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 20px;
+      background: var(--yellow-bg); color: #9A7E00;
+    }
+    .fav-tag.shade { background: var(--shade-bg); color: #5A6475; }
+
+    .fav-count-header { padding: 0 4px 12px; font-size: 13px; font-weight: 600; color: var(--text-2); }
   </style>
 </head>
 <body>
@@ -275,6 +294,11 @@
   <button class="icon-btn" id="btnListe" onclick="openDrawer()" title="Liste">
     <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><rect width="18" height="2" rx="1" fill="#1C1C1E"/><rect y="6" width="18" height="2" rx="1" fill="#1C1C1E"/><rect y="12" width="18" height="2" rx="1" fill="#1C1C1E"/></svg>
   </button>
+  <!-- Bouton Favoris -->
+  <button class="icon-btn" id="btnFav" onclick="openFavoris()" title="Mes favoris">
+    <svg width="20" height="18" viewBox="0 0 20 18" fill="none"><path d="M10 16.5L2.5 9.5C1.2 8.2 1.2 6.1 2.5 4.8C3.8 3.5 5.9 3.5 7.2 4.8L10 7.6L12.8 4.8C14.1 3.5 16.2 3.5 17.5 4.8C18.8 6.1 18.8 8.2 17.5 9.5L10 16.5Z" stroke="#1C1C1E" stroke-width="1.5" stroke-linejoin="round"/></svg>
+    <div class="fav-badge" id="favBadge"></div>
+  </button>
   <button id="btnVille" ontouchend="toggleCityMenu()">
     <span id="villeLabel">Bordeaux</span> ▾
   </button>
@@ -295,9 +319,13 @@
   <div id="ttName"></div>
   <div class="tt-type" id="ttType"></div>
   <div class="tt-sun" id="ttSun"></div>
-  <a id="ttMaps" href="#" target="_blank" style="display:block;margin-top:8px;background:rgba(255,255,255,0.15);color:white;padding:6px 14px;border-radius:10px;font-size:12px;text-align:center;text-decoration:none;">Ouvrir dans Maps</a>
+  <div class="tt-actions">
+    <a id="ttMaps" href="#" target="_blank" class="tt-btn">Ouvrir dans Maps</a>
+    <button class="tt-btn heart" id="ttHeart" onclick="toggleFavFromTooltip()">🤍</button>
+  </div>
 </div>
 
+<!-- Drawer liste principale -->
 <div id="drawer">
   <div class="drawer-handle" id="drawerHandle"><div class="drawer-bar"></div></div>
   <div class="drawer-header">
@@ -310,16 +338,6 @@
       <input type="text" id="drawerSearch" placeholder="Rechercher un établissement…">
     </div>
   </div>
-
-  <!-- SECTION PARTENAIRES -->
-  <div class="featured-section" id="featuredSection" style="display:none;">
-    <div class="featured-section-header">
-      <span>⭐</span>
-      <span class="featured-section-label">Vos terrasses préférées</span>
-    </div>
-    <div class="featured-scroll" id="featuredScroll"></div>
-  </div>
-
   <div class="section-title"><span class="section-label">Résultats</span></div>
   <div id="loadingState"><div class="spinner"></div><span>Chargement…</span></div>
   <div class="list" id="terrasseList" style="display:none;"></div>
@@ -330,18 +348,23 @@
   </div>
 </div>
 
-<!-- MODAL FICHE PARTENAIRE -->
-<div id="placeModal">
-  <div class="place-backdrop" onclick="closePlaceModal()"></div>
-  <div class="place-sheet">
-    <div class="place-handle"><div class="place-handle-bar"></div></div>
-    <div class="place-scroll" id="placeContent">
-      <div class="place-loading"><div class="spinner"></div><span>Chargement…</span></div>
+<!-- ===== POPUP FAVORIS ===== -->
+<div id="favOverlay" onclick="handleFavOverlayClick(event)">
+  <div id="favPanel">
+    <div class="fav-handle" id="favHandle"><div class="fav-handle-bar"></div></div>
+    <div class="fav-header">
+      <div class="fav-header-top">
+        <div class="fav-title">Mes <span>♥</span> Favoris</div>
+        <button id="btnFavClose" onclick="closeFavoris()">✕</button>
+      </div>
+      <div class="fav-subtitle" id="favSubtitle">0 terrasse enregistrée</div>
     </div>
+    <div class="fav-body" id="favBody"></div>
   </div>
 </div>
 
 <script>
+/* ===================== GÉOLOCALISATION CACHE ===================== */
 (function() {
   const _orig = navigator.geolocation.getCurrentPosition.bind(navigator.geolocation);
   let _pos = null;
@@ -351,51 +374,7 @@
   };
 })();
 
-// ============================================================
-// CONFIGURATION PARTENAIRES
-// Remplace VOTRE_CLE_API_ICI par ta clé Google Places API
-// (Google Cloud Console → activer "Places API (New)")
-// ============================================================
-const GOOGLE_PLACES_KEY = 'AIzaSyCGvuqGpJNIcO5LQuv-doazgLtXzc6prnw';
-
-// Liste des terrasses partenaires
-// Pour chaque terrasse cliente, ajoute un objet avec :
-//   nom, placeId (depuis Google Maps → Partager → Place ID),
-//   city (id de la ville), type, happyHour, emoji
-const FEATURED = [
-  {
-    id: 'feat_bdx_1',
-    city: 'bordeaux',
-    nom: 'La Terrasse du Miroir',
-    placeId: 'ChIJ_REMPLACER_1',
-    lat: 44.8416, lng: -0.5712,
-    type: 'Bar · Terrasse',
-    happyHour: '17h – 20h · Cocktails à -50%',
-    emoji: '🍹'
-  },
-  {
-    id: 'feat_bdx_2',
-    city: 'bordeaux',
-    nom: 'Le Jardin Public Café',
-    placeId: 'ChIJ_REMPLACER_2',
-    lat: 44.8480, lng: -0.5780,
-    type: 'Café · Brasserie',
-    happyHour: '18h – 20h · Bières à 3€',
-    emoji: '☕'
-  },
-  {
-    id: 'feat_mrs_1',
-    city: 'marseille',
-    nom: 'Soleil du Vieux-Port',
-    placeId: 'ChIJ_REMPLACER_3',
-    lat: 43.2965, lng: 5.3698,
-    type: 'Restaurant · Bar',
-    happyHour: '17h – 19h · Rosé offert',
-    emoji: '🌊'
-  }
-];
-// ============================================================
-
+/* ===================== VILLES ===================== */
 const CITIES = [
   {id:'bordeaux',   nom:'Bordeaux',    lat:44.837789, lng:-0.57918 },
   {id:'marseille',  nom:'Marseille',   lat:43.296482, lng:5.381118 },
@@ -425,7 +404,6 @@ CITIES.forEach(city => {
     terrasses = []; sunStates = {};
     viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(city.lng, city.lat, 500), orientation: { heading: 0, pitch: Cesium.Math.toRadians(-50), roll: 0 }, duration: 0.2 });
     loadTerrasses();
-    renderFeatured();
   });
   cityMenuEl.appendChild(item);
 });
@@ -433,6 +411,7 @@ CITIES.forEach(city => {
 function toggleCityMenu() { cityMenuEl.classList.toggle('open'); }
 document.addEventListener('touchend', e => { if (!e.target.closest('#btnVille') && !e.target.closest('#cityMenu')) cityMenuEl.classList.remove('open'); });
 
+/* ===================== DRAWER ===================== */
 const drawer = document.getElementById('drawer');
 function openDrawer()  { drawer.classList.add('open'); }
 function closeDrawer() { drawer.classList.remove('open'); }
@@ -441,6 +420,7 @@ let ty0 = 0;
 dhandle.addEventListener('touchstart', e => { ty0 = e.touches[0].clientY; }, { passive:true });
 dhandle.addEventListener('touchend',   e => { if (e.changedTouches[0].clientY - ty0 > 50) closeDrawer(); }, { passive:true });
 
+/* ===================== SPLASH ===================== */
 const progressBar = document.getElementById('progressBar');
 let splashDone = false, loadProgress = 0;
 function setProgress(pct, label) {
@@ -454,6 +434,7 @@ function completeSplash() {
 }
 setTimeout(completeSplash, 8000);
 
+/* ===================== CESIUM ===================== */
 Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIwM2M0Njk1Yi1iYzI1LTQ3MzAtOGU1MS1iNzU4MTRiNWVkY2QiLCJpZCI6Mzk5MDg5LCJpYXQiOjE3NzI3ODI3NTh9.aGJt8zcDKPwk-pJsAcp0egE1wgJ5Vg41y_yQKNfUtYw';
 
 const viewer = new Cesium.Viewer('cesiumContainer', {
@@ -482,6 +463,7 @@ const osmBuildings = viewer.scene.primitives.add(Cesium.createOsmBuildings());
 osmBuildings.maximumScreenSpaceError = 2;
 viewer.scene.globe.tileLoadProgressEvent.addEventListener(remaining => {
   setProgress(Math.min(60, 10 + (1 - Math.min(remaining, 50) / 50) * 50), remaining === 0 ? 'Bâtiments…' : 'Chargement…');
+  if (remaining === 0 && terrasses.length > 0 && !computing) scheduleShadow();
 });
 let globeOk = false, buildingsOk = false;
 function tryOpen() {
@@ -494,6 +476,7 @@ viewer.scene.postRender.addEventListener(function watchGlobe() {
 });
 osmBuildings.readyPromise.then(() => { buildingsOk = true; setProgress(85, 'Finalisation…'); tryOpen(); }).catch(() => { buildingsOk = true; tryOpen(); });
 
+/* ===================== POINT GPS ===================== */
 let userDot = null;
 function makeUserDot() {
   const c = document.createElement('canvas'); c.width = 20; c.height = 20; const ctx = c.getContext('2d');
@@ -506,9 +489,6 @@ function placeUserDot(lng, lat) {
   if (userDot) viewer.entities.remove(userDot);
   userDot = viewer.entities.add({ position: Cesium.Cartesian3.fromDegrees(lng, lat, 3), billboard: { image:makeUserDot(), verticalOrigin:Cesium.VerticalOrigin.CENTER, heightReference:Cesium.HeightReference.RELATIVE_TO_GROUND, width:20, height:20, disableDepthTestDistance:Number.POSITIVE_INFINITY } });
 }
-const _origGPS = navigator.geolocation.getCurrentPosition.bind(navigator.geolocation);
-let _cachedPos = null;
-navigator.geolocation.getCurrentPosition = function(ok, err, opt) { if (_cachedPos) { ok(_cachedPos); return; } _origGPS(p => { _cachedPos = p; ok(p); }, err, opt); };
 function geolocate() {
   if (!navigator.geolocation) return;
   const btn = document.getElementById('btnGeo'); btn.classList.add('locating');
@@ -520,12 +500,13 @@ function geolocate() {
   }, ()=>btn.classList.remove('locating'), { enableHighAccuracy:true, timeout:8000 });
 }
 
+/* ===================== DONNÉES ===================== */
 let terrasses=[], sunStates={}, searchQuery='', currentHeure=14, currentDate=new Date();
 const markerEntities={};
-
+const AMENITY_VALIDES = new Set(['bar','cafe','restaurant','pub','biergarten']);
 function typeLabel(a){return{bar:'Bar',cafe:'Café',restaurant:'Restaurant',pub:'Pub',biergarten:'Brasserie'}[a]||'Terrasse';}
-
 const OVERPASS=['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter'];
+
 async function fetchTerrasses(){
   try {
     const res = await fetch(`/data/${currentCity.id}.json`);
@@ -533,15 +514,26 @@ async function fetchTerrasses(){
     const data = await res.json();
     const seen = new Set();
     return (data.features || data.elements || [])
-      .filter(f => f.properties?.name && !seen.has(f.properties.name) && seen.add(f.properties.name))
-      .map(f => ({
-        id: f.properties['@id'] || f.properties.id || Math.random(),
-        nom: f.properties.name,
-        adresse: f.properties['addr:street'] ? ((f.properties['addr:housenumber']||'')+' '+f.properties['addr:street']).trim() : '',
-        type: typeLabel(f.properties.amenity),
-        lng: f.geometry.coordinates[0],
-        lat: f.geometry.coordinates[1]
-      }));
+      .filter(f => {
+        const amenity = f.properties?.amenity || f.tags?.amenity;
+        const name = f.properties?.name || f.tags?.name;
+        return AMENITY_VALIDES.has(amenity) && name && !seen.has(name) && seen.add(name);
+      })
+      .slice(0, 200)
+      .map(f => {
+        const isGeoJSON = !!f.geometry;
+        return {
+          id: f.properties?.['@id'] || f.properties?.id || f.id || Math.random(),
+          nom: f.properties?.name || f.tags?.name,
+          adresse: isGeoJSON
+            ? (f.properties?.['addr:street'] ? ((f.properties?.['addr:housenumber']||'')+' '+f.properties?.['addr:street']).trim() : '')
+            : (f.tags?.['addr:street'] ? ((f.tags?.['addr:housenumber']||'')+' '+f.tags?.['addr:street']).trim() : ''),
+          type: typeLabel(isGeoJSON ? f.properties?.amenity : f.tags?.amenity),
+          lng: isGeoJSON ? f.geometry.coordinates[0] : f.lon,
+          lat: isGeoJSON ? f.geometry.coordinates[1] : f.lat
+        };
+      })
+      .filter(f => f.lat && f.lng);
   } catch(e) {
     console.warn('JSON local non trouvé, fallback Overpass');
     const bbox=`${currentCity.lat-0.04},${currentCity.lng-0.06},${currentCity.lat+0.04},${currentCity.lng+0.06}`;
@@ -551,23 +543,51 @@ async function fetchTerrasses(){
   }
 }
 
+/* ===================== OMBRES PRÉCISES (multi-rayons) ===================== */
 function getSunDir(jd){
   const s=Cesium.Simon1994PlanetaryPositions.computeSunPositionInEarthInertialFrame(jd);
   const m=Cesium.Transforms.computeIcrfToFixedMatrix(jd); if(!m) return null;
   const d=new Cesium.Cartesian3(); Cesium.Matrix3.multiplyByVector(m,s,d); return Cesium.Cartesian3.normalize(d,d);
 }
-function checkSunny(t,sunDir){
-  if(!sunDir) return false;
-  const pos=Cesium.Cartesian3.fromDegrees(t.lng,t.lat,4); const up=Cesium.Cartesian3.normalize(pos,new Cesium.Cartesian3());
-  if(Cesium.Cartesian3.dot(sunDir,up)<=0.0) return false;
-  return !viewer.scene.pickFromRay(new Cesium.Ray(pos,sunDir),Object.values(markerEntities));
+
+/**
+ * Vérification précise : on lance 5 rayons depuis 5 points autour de la terrasse
+ * (centre + 4 coins à ~1.5m) à une hauteur de 2.5m.
+ * Si la majorité (≥3/5) est éclairée → soleil.
+ * Cela évite les faux-positifs causés par les bords de bâtiments.
+ */
+function checkSunny(t, sunDir) {
+  if (!sunDir) return false;
+  const carto = Cesium.Cartographic.fromDegrees(t.lng, t.lat);
+  const terrainH = viewer.scene.globe.getHeight(carto) || 0;
+
+  // Vérif horizon : soleil au-dessus de l'horizon local
+  const centerPos = Cesium.Cartesian3.fromDegrees(t.lng, t.lat, terrainH + 1);
+  const up = Cesium.Cartesian3.normalize(centerPos, new Cesium.Cartesian3());
+  if (Cesium.Cartesian3.dot(sunDir, up) <= 0.05) return false;
+
+  // 5 points : centre + N/S/E/O (décalage ~1.5m en degrés ≈ 0.000015°)
+  const D = 0.000015;
+  const offsets = [[0,0],[D,0],[-D,0],[0,D],[0,-D]];
+  const exclude = Object.values(markerEntities);
+  let sunCount = 0;
+
+  for (const [dLng, dLat] of offsets) {
+    const pos = Cesium.Cartesian3.fromDegrees(t.lng + dLng, t.lat + dLat, terrainH + 2.5);
+    const hit = viewer.scene.pickFromRay(new Cesium.Ray(pos, sunDir), exclude);
+    if (!hit || !Cesium.defined(hit.object)) sunCount++;
+  }
+
+  // Majoritaire : ≥ 3 points sur 5 en plein soleil
+  return sunCount >= 3;
 }
 
-let cameraMoving=false;
-viewer.camera.moveStart.addEventListener(()=>{cameraMoving=true;});
-viewer.camera.moveEnd.addEventListener(()=>{cameraMoving=false;});
+/* ===================== CAMÉRA & DEBOUNCE ===================== */
+let cameraMoving = false;
+viewer.camera.moveStart.addEventListener(()=>{ cameraMoving=true; });
+viewer.camera.moveEnd.addEventListener(()=>{ cameraMoving=false; });
 
-let shadowDebounce=null,computing=false,shadowVersion=0;
+let shadowDebounce=null, computing=false, shadowVersion=0;
 function scheduleShadow(){
   clearTimeout(shadowDebounce);
   shadowDebounce=setTimeout(()=>{
@@ -588,6 +608,7 @@ async function runShadow(){
   computing=false;
 }
 
+/* ===================== MARQUEURS ===================== */
 function makeSunIcon(sunny){
   const c=document.createElement('canvas'); c.width=20; c.height=20; const ctx=c.getContext('2d');
   if(sunny){
@@ -601,241 +622,269 @@ function makeSunIcon(sunny){
   }
   return c.toDataURL();
 }
-const DOT_SUN=makeSunIcon(true),DOT_SHADE=makeSunIcon(false);
+const DOT_SUN=makeSunIcon(true), DOT_SHADE=makeSunIcon(false);
 
 function syncDots(){
   terrasses.forEach(t=>{
     const s=sunStates[t.id]===true;
-    if(s){
-      if(!markerEntities[t.id]){
-        markerEntities[t.id]=viewer.entities.add({position:Cesium.Cartesian3.fromDegrees(t.lng,t.lat,2),billboard:{image:DOT_SUN,verticalOrigin:Cesium.VerticalOrigin.CENTER,heightReference:Cesium.HeightReference.RELATIVE_TO_GROUND,width:20,height:20,disableDepthTestDistance:Number.POSITIVE_INFINITY},properties:{id:t.id}});
-      }else{ markerEntities[t.id].billboard.image=DOT_SUN; markerEntities[t.id].show=true; }
-    }else{
-      if(markerEntities[t.id]) markerEntities[t.id].show=true;
+    if(!markerEntities[t.id]){
+      markerEntities[t.id]=viewer.entities.add({position:Cesium.Cartesian3.fromDegrees(t.lng,t.lat,2),billboard:{image:s?DOT_SUN:DOT_SHADE,verticalOrigin:Cesium.VerticalOrigin.CENTER,heightReference:Cesium.HeightReference.RELATIVE_TO_GROUND,width:20,height:20,disableDepthTestDistance:Number.POSITIVE_INFINITY},properties:{id:t.id}});
+    } else {
+      markerEntities[t.id].billboard.image = s ? DOT_SUN : DOT_SHADE;
+      markerEntities[t.id].show = true;
     }
   });
 }
 
-const tooltip=document.getElementById('tooltip'); let ttTimeout=null;
-function showTooltip(t,x,y){
-  document.getElementById('ttName').textContent=t.nom;
-  document.getElementById('ttType').textContent=t.type+(t.adresse?' · '+t.adresse:'');
-  const w=260; tooltip.style.left=Math.min(Math.max(x-w/2,10),window.innerWidth-w-10)+'px'; tooltip.style.top=Math.max(y-130,10)+'px';
-  tooltip.classList.add('visible'); if(navigator.vibrate) navigator.vibrate(10);
-  const ml=document.getElementById('ttMaps'); if(ml) ml.href=`https://maps.apple.com/?q=${encodeURIComponent(t.nom+', '+currentCity.nom)}&ll=${t.lat},${t.lng}`;
-  clearTimeout(ttTimeout); ttTimeout=setTimeout(()=>tooltip.classList.remove('visible'),6000);
-}
-function hideTooltip(){clearTimeout(ttTimeout);tooltip.classList.remove('visible');}
+/* ===================== FAVORIS ===================== */
+let favorites = {};
+try { favorites = JSON.parse(localStorage.getItem('soleil_favoris') || '{}'); } catch(e){}
 
-function normalize(s){return(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');}
+function saveFavorites() {
+  try { localStorage.setItem('soleil_favoris', JSON.stringify(favorites)); } catch(e){}
+  updateFavBadge();
+}
+function isFav(id) { return !!favorites[String(id)]; }
+function toggleFav(t) {
+  const key = String(t.id);
+  if (favorites[key]) { delete favorites[key]; } else { favorites[key] = { id: t.id, nom: t.nom, type: t.type, adresse: t.adresse, lng: t.lng, lat: t.lat, addedAt: Date.now() }; }
+  saveFavorites();
+  renderList(currentHeure, searchQuery);
+  renderFavPanel();
+}
+function updateFavBadge() {
+  const count = Object.keys(favorites).length;
+  const badge = document.getElementById('favBadge');
+  badge.classList.toggle('show', count > 0);
+}
+updateFavBadge();
+
+/* Popup favoris */
+const favOverlay = document.getElementById('favOverlay');
+function openFavoris()  { favOverlay.classList.add('open'); renderFavPanel(); if(navigator.vibrate) navigator.vibrate(8); }
+function closeFavoris() { favOverlay.classList.remove('open'); }
+function handleFavOverlayClick(e) { if(e.target === favOverlay) closeFavoris(); }
+
+// Swipe down to close
+const favHandle = document.getElementById('favHandle');
+let fty0 = 0;
+favHandle.addEventListener('touchstart', e => { fty0 = e.touches[0].clientY; }, {passive:true});
+favHandle.addEventListener('touchend',   e => { if(e.changedTouches[0].clientY - fty0 > 50) closeFavoris(); }, {passive:true});
+
+function renderFavPanel() {
+  const body = document.getElementById('favBody');
+  const items = Object.values(favorites).sort((a,b) => b.addedAt - a.addedAt);
+  document.getElementById('favSubtitle').textContent = items.length === 0 ? '0 terrasse enregistrée' : `${items.length} terrasse${items.length > 1 ? 's' : ''} enregistrée${items.length > 1 ? 's' : ''}`;
+
+  if (items.length === 0) {
+    body.innerHTML = `<div class="fav-empty">
+      <div class="fav-empty-icon">🤍</div>
+      <div class="fav-empty-text">Aucun favori pour l'instant</div>
+      <div class="fav-empty-sub">Appuie sur 🤍 sur une terrasse pour l'ajouter à tes favoris.</div>
+    </div>`;
+    return;
+  }
+
+  const EMOJIS = ['☀️','🌞','🍻','🥂','🌿','🌸','🏡','🌅'];
+  body.innerHTML = `<div class="fav-count-header">${items.length} terrasse${items.length>1?'s':''} sauvegardée${items.length>1?'s':''}</div>
+  <div class="fav-grid">` +
+    items.map(t => {
+      const sunny = sunStates[t.id] === true;
+      const emoji = EMOJIS[Math.abs(hashStr(t.nom)) % EMOJIS.length];
+      const badgeClass = sunny ? '' : 'shade';
+      const badgeText = sunny ? '☀️ Soleil' : '🌑 Ombre';
+      const tags = [t.type, sunny ? 'Ensoleillé' : 'Ombragé'];
+      return `<div class="fav-card" onclick="flyToFav('${t.id}')">
+        <div class="fav-card-img-bg">
+          <span style="font-size:40px">${emoji}</span>
+          <div class="fav-sun-badge ${badgeClass}">${badgeText}</div>
+          <button class="fav-card-del" onclick="removeFav(event,'${t.id}')">✕</button>
+        </div>
+        <div class="fav-card-body">
+          <div class="fav-card-name">${escHtml(t.nom)}</div>
+          <div class="fav-card-type">${escHtml(t.type)}${t.adresse ? ' · ' + escHtml(t.adresse) : ''}</div>
+          <div class="fav-card-tags">
+            ${tags.map(tag => `<span class="fav-tag ${!sunny && tag==='Ombragé'?'shade':''}">${tag}</span>`).join('')}
+          </div>
+        </div>
+      </div>`;
+    }).join('') +
+  '</div>';
+}
+
+function hashStr(s) { let h=0; for(let i=0;i<s.length;i++) h=(Math.imul(31,h)+s.charCodeAt(i))|0; return h; }
+function escHtml(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function removeFav(e, id) {
+  e.stopPropagation();
+  delete favorites[String(id)];
+  saveFavorites();
+  renderFavPanel();
+  renderList(currentHeure, searchQuery);
+}
+function flyToFav(id) {
+  const t = favorites[String(id)];
+  if (!t) return;
+  closeFavoris();
+  viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(t.lng, t.lat, 300), orientation: { heading:0, pitch:Cesium.Math.toRadians(-50), roll:0 }, duration: 1.5 });
+}
+
+/* ===================== TOOLTIP ===================== */
+const tooltip = document.getElementById('tooltip');
+let ttTimeout = null, currentTT = null;
+
+function showTooltip(t, x, y) {
+  currentTT = t;
+  document.getElementById('ttName').textContent = t.nom;
+  document.getElementById('ttType').textContent = t.type + (t.adresse ? ' · ' + t.adresse : '');
+  const sunEl = document.getElementById('ttSun');
+  const sunny = sunStates[t.id] === true;
+  sunEl.textContent = sunny ? '☀️ En plein soleil' : '🌑 À l\'ombre';
+  sunEl.className = 'tt-sun ' + (sunny ? 'sun' : 'shade');
+  // Cœur
+  const heart = document.getElementById('ttHeart');
+  heart.textContent = isFav(t.id) ? '❤️' : '🤍';
+  heart.classList.toggle('active', isFav(t.id));
+  const w = 260;
+  tooltip.style.left = Math.min(Math.max(x - w/2, 10), window.innerWidth - w - 10) + 'px';
+  tooltip.style.top = Math.max(y - 145, 10) + 'px';
+  tooltip.classList.add('visible');
+  if (navigator.vibrate) navigator.vibrate(10);
+  const ml = document.getElementById('ttMaps');
+  if (ml) ml.href = `https://maps.apple.com/?q=${encodeURIComponent(t.nom+', '+currentCity.nom)}&ll=${t.lat},${t.lng}`;
+  clearTimeout(ttTimeout);
+  ttTimeout = setTimeout(() => tooltip.classList.remove('visible'), 7000);
+}
+function hideTooltip() { clearTimeout(ttTimeout); tooltip.classList.remove('visible'); currentTT = null; }
+function toggleFavFromTooltip() {
+  if (!currentTT) return;
+  toggleFav(currentTT);
+  const heart = document.getElementById('ttHeart');
+  heart.textContent = isFav(currentTT.id) ? '❤️' : '🤍';
+  heart.classList.toggle('active', isFav(currentTT.id));
+  clearTimeout(ttTimeout);
+  ttTimeout = setTimeout(() => tooltip.classList.remove('visible'), 7000);
+}
+
+/* ===================== LISTE ===================== */
+function normalize(s){return(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
 function highlight(text,q){if(!q)return text;return text.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi'),'<mark style="background:#FFFBE0;color:#9A7E00;border-radius:3px;padding:0 2px">$1</mark>');}
 
-function renderList(h,query){
-  const list=document.getElementById('terrasseList');
-  const q=normalize(query||'');
-  let filtered=terrasses; if(q) filtered=terrasses.filter(t=>normalize(t.nom).includes(q)||normalize(t.type).includes(q)||normalize(t.adresse).includes(q));
-  const sorted=[...filtered].sort((a,b)=>(sunStates[b.id]?1:0)-(sunStates[a.id]?1:0));
-  list.innerHTML='';
-  if(!sorted.length){list.innerHTML=`<div class="no-results">Aucun résultat${query?' pour <strong>"'+query+'"</strong>':''}</div>`;return;}
-  sorted.forEach(t=>{
-    const card=document.createElement('div'); card.className='card'; card.dataset.id=t.id;
-    card.innerHTML=`<div class="card-icon sun">☀️</div><div class="card-body"><div class="card-name">${highlight(t.nom,query)}</div><div class="card-sub">${t.type}${t.adresse?' · '+t.adresse:''}</div></div>`;
-    card.addEventListener('click',()=>{ document.querySelectorAll('.card').forEach(c=>c.classList.remove('active')); card.classList.add('active'); closeDrawer(); viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(t.lng,t.lat,300),orientation:{heading:0,pitch:Cesium.Math.toRadians(-50),roll:0},duration:0});});
+function renderList(h, query) {
+  const list = document.getElementById('terrasseList');
+  const q = normalize(query || '');
+  let filtered = terrasses;
+  if (q) filtered = terrasses.filter(t => normalize(t.nom).includes(q) || normalize(t.type).includes(q) || normalize(t.adresse).includes(q));
+  const sorted = [...filtered].sort((a,b) => (sunStates[b.id]?1:0) - (sunStates[a.id]?1:0));
+  list.innerHTML = '';
+  if (!sorted.length) {
+    list.innerHTML = `<div class="no-results">Aucun résultat${query?' pour <strong>"'+query+'"</strong>':''}</div>`;
+    return;
+  }
+  sorted.forEach(t => {
+    const card = document.createElement('div');
+    card.className = 'card'; card.dataset.id = t.id;
+    const fav = isFav(t.id);
+    card.innerHTML = `<div class="card-icon sun">☀️</div>
+      <div class="card-body">
+        <div class="card-name">${highlight(t.nom, query)}</div>
+        <div class="card-sub">${t.type}${t.adresse?' · '+t.adresse:''}</div>
+      </div>
+      <button class="card-heart ${fav ? 'active' : ''}" data-id="${t.id}" title="${fav?'Retirer':'Ajouter'}">${fav?'❤️':'🤍'}</button>`;
+    card.querySelector('.card-heart').addEventListener('click', e => {
+      e.stopPropagation();
+      toggleFav(t);
+    });
+    card.addEventListener('click', () => {
+      shadowVersion++;
+      document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+      closeDrawer();
+      viewer.camera.setView({ destination: Cesium.Cartesian3.fromDegrees(t.lng, t.lat, 300), orientation: { heading:0, pitch:Cesium.Math.toRadians(-50), roll:0 } });
+    });
     list.appendChild(card);
   });
 }
 
-const searchInput=document.getElementById('searchInput'),searchClear=document.getElementById('searchClear');
-searchInput.addEventListener('input',e=>{searchQuery=e.target.value;document.getElementById('drawerSearch').value=searchQuery;searchClear.classList.toggle('visible',searchQuery.length>0);renderList(currentHeure,searchQuery);if(searchQuery.length>0)openDrawer();});
-searchClear.addEventListener('click',()=>{searchInput.value='';searchQuery='';document.getElementById('drawerSearch').value='';searchClear.classList.remove('visible');renderList(currentHeure,'');});
-document.getElementById('drawerSearch').addEventListener('input',e=>{searchQuery=e.target.value;searchInput.value=searchQuery;searchClear.classList.toggle('visible',searchQuery.length>0);renderList(currentHeure,searchQuery);});
-
-const slider=document.getElementById('timeSlider');
-slider.addEventListener('input',e=>{
-  const val=parseFloat(e.target.value),h=Math.floor(val),m=Math.round((val-h)*60);
-  document.getElementById('heureAffichee').textContent=h+'h'+(m<10?'0'+m:m);
-  slider.style.setProperty('--pct',((val-8)/13)*100+'%');
-  currentDate=new Date(); currentDate.setHours(h-2,m,0,0);
-  viewer.clock.currentTime=Cesium.JulianDate.fromDate(currentDate); currentHeure=val;
+/* ===================== INPUTS ===================== */
+const searchInput = document.getElementById('searchInput'), searchClear = document.getElementById('searchClear');
+searchInput.addEventListener('input', e => {
+  searchQuery = e.target.value;
+  document.getElementById('drawerSearch').value = searchQuery;
+  searchClear.classList.toggle('visible', searchQuery.length > 0);
+  renderList(currentHeure, searchQuery);
+  if (searchQuery.length > 0) openDrawer();
 });
-slider.addEventListener('touchend',e=>{if(terrasses.length>0)scheduleShadow();});
+searchClear.addEventListener('click', () => {
+  searchInput.value = ''; searchQuery = '';
+  document.getElementById('drawerSearch').value = '';
+  searchClear.classList.remove('visible');
+  renderList(currentHeure, '');
+});
+document.getElementById('drawerSearch').addEventListener('input', e => {
+  searchQuery = e.target.value;
+  searchInput.value = searchQuery;
+  searchClear.classList.toggle('visible', searchQuery.length > 0);
+  renderList(currentHeure, searchQuery);
+});
 
-const handler=new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
-handler.setInputAction(click=>{
-  const picked=viewer.scene.pick(click.position);
-  if(Cesium.defined(picked)&&picked.id){const id=picked.id.properties?.id?.getValue();const t=terrasses.find(x=>String(x.id)===String(id));if(t){showTooltip(t,click.position.x,click.position.y);return;}}
+const slider = document.getElementById('timeSlider');
+slider.addEventListener('input', e => {
+  const val = parseFloat(e.target.value), h = Math.floor(val), m = Math.round((val-h)*60);
+  document.getElementById('heureAffichee').textContent = h + 'h' + (m < 10 ? '0'+m : m);
+  slider.style.setProperty('--pct', ((val-8)/13)*100+'%');
+  currentDate = new Date(); currentDate.setHours(h-2, m, 0, 0);
+  viewer.clock.currentTime = Cesium.JulianDate.fromDate(currentDate); currentHeure = val;
+});
+slider.addEventListener('touchend', e => { if(terrasses.length > 0) scheduleShadow(); });
+
+/* ===================== CLICK CARTE ===================== */
+const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+handler.setInputAction(click => {
+  const picked = viewer.scene.pick(click.position);
+  if (Cesium.defined(picked) && picked.id) {
+    const id = picked.id.properties?.id?.getValue();
+    const t = terrasses.find(x => String(x.id) === String(id));
+    if (t) { showTooltip(t, click.position.x, click.position.y); return; }
+  }
   hideTooltip();
-},Cesium.ScreenSpaceEventType.LEFT_CLICK);
+}, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
+/* ===================== CHARGEMENT ===================== */
 async function loadTerrasses(){
-  document.getElementById('loadingState').style.display='flex';
-  document.getElementById('terrasseList').style.display='none';
+  document.getElementById('loadingState').style.display = 'flex';
+  document.getElementById('terrasseList').style.display = 'none';
   try {
-    const data=await fetchTerrasses();
-    document.getElementById('loadingState').style.display='none';
-    document.getElementById('terrasseList').style.display='block';
-    terrasses=data;
-    terrasses.forEach(t=>{sunStates[t.id]=true;});
-    document.getElementById('footerText').textContent=`${terrasses.length} terrasses · ${currentCity.nom}`;
-    renderList(currentHeure,'');
-   const launch=()=>{
-  syncDots();
-  runShadow();
-};
-    if(splashDone) launch();
-    else{const w=setInterval(()=>{if(splashDone){clearInterval(w);launch();}},100);}
-  }catch(e){
-    document.getElementById('loadingState').style.display='none';
-    document.getElementById('terrasseList').style.display='block';
-    document.getElementById('terrasseList').innerHTML=`<div class="no-results">Impossible de charger les terrasses.<br><button onclick="loadTerrasses()" style="margin-top:8px;background:#FFD600;border:none;padding:10px 20px;border-radius:12px;font-weight:600;cursor:pointer;font-size:14px;">🔄 Réessayer</button></div>`;
+    const data = await fetchTerrasses();
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('terrasseList').style.display = 'block';
+    terrasses = data;
+    terrasses.forEach(t => { sunStates[t.id] = true; });
+    document.getElementById('footerText').textContent = `${terrasses.length} terrasses · ${currentCity.nom}`;
+    renderList(currentHeure, '');
+    const launch = () => {
+      syncDots();
+      if (viewer.scene.globe.tilesLoaded) runShadow();
+      else scheduleShadow();
+    };
+    if (splashDone) launch();
+    else { const w = setInterval(() => { if(splashDone){ clearInterval(w); launch(); } }, 100); }
+  } catch(e) {
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('terrasseList').style.display = 'block';
+    document.getElementById('terrasseList').innerHTML = `<div class="no-results">Impossible de charger les terrasses.<br><button onclick="loadTerrasses()" style="margin-top:8px;background:#FFD600;border:none;padding:10px 20px;border-radius:12px;font-weight:600;cursor:pointer;font-size:14px;">🔄 Réessayer</button></div>`;
   }
 }
 
-// ============================================================
-// PARTENAIRES — rendu et modal
-// ============================================================
-
-function renderFeatured() {
-  const section = document.getElementById('featuredSection');
-  const scroll = document.getElementById('featuredScroll');
-  const cityFeatured = FEATURED.filter(f => !f.city || f.city === currentCity.id);
-  if (!cityFeatured.length) { section.style.display = 'none'; return; }
-  section.style.display = '';
-  scroll.innerHTML = '';
-  cityFeatured.forEach(feat => {
-    const card = document.createElement('div');
-    card.className = 'featured-card';
-    card.innerHTML = `
-      <div class="featured-photo" id="fphoto_${feat.id}">${feat.emoji || '🌞'}</div>
-      <div class="featured-info">
-        <div class="featured-badge">⭐ Partenaire</div>
-        <div class="featured-name">${feat.nom}</div>
-        <div class="featured-meta">${feat.happyHour ? feat.happyHour.split('·')[0].trim() : feat.type}</div>
-      </div>`;
-    card.addEventListener('click', () => openPlaceModal(feat));
-    scroll.appendChild(card);
-    if (GOOGLE_PLACES_KEY !== 'AIzaSyCGvuqGpJNIcO5LQuv-doazgLtXzc6prnw') {
-      loadFeaturedPhoto(feat.placeId, `fphoto_${feat.id}`, feat.emoji);
-    }
-  });
-}
-
-async function loadFeaturedPhoto(placeId, containerId, fallback) {
-  try {
-    const res = await fetch(`https://places.googleapis.com/v1/places/${placeId}?fields=photos`, {
-      headers: { 'X-Goog-Api-Key': GOOGLE_PLACES_KEY, 'X-Goog-FieldMask': 'photos' }
-    });
-    const data = await res.json();
-    if (data.photos && data.photos.length) {
-      const url = `https://places.googleapis.com/v1/${data.photos[0].name}/media?maxWidthPx=320&key=${GOOGLE_PLACES_KEY}`;
-      const el = document.getElementById(containerId);
-      if (el) el.innerHTML = `<img src="${url}" alt="" onerror="this.parentElement.textContent='${fallback||'🌞'}'">`;
-    }
-  } catch(e) {}
-}
-
-function openPlaceModal(feat) {
-  const modal = document.getElementById('placeModal');
-  const content = document.getElementById('placeContent');
-  content.innerHTML = `<div class="place-loading"><div class="spinner"></div><span>Chargement…</span></div>`;
-  modal.classList.add('open');
-
-  if (GOOGLE_PLACES_KEY === 'VOTRE_CLE_API_ICI') {
-    renderPlaceStatic(feat); return;
-  }
-  const fields = 'displayName,photos,rating,userRatingCount,regularOpeningHours,formattedAddress,internationalPhoneNumber,websiteUri';
-  fetch(`https://places.googleapis.com/v1/places/${feat.placeId}`, {
-    headers: { 'X-Goog-Api-Key': GOOGLE_PLACES_KEY, 'X-Goog-FieldMask': fields }
-  })
-  .then(r => r.json())
-  .then(data => renderPlaceFull(data, feat))
-  .catch(() => renderPlaceStatic(feat));
-}
-
-function closePlaceModal() {
-  document.getElementById('placeModal').classList.remove('open');
-}
-
-function renderPlaceFull(data, feat) {
-  const content = document.getElementById('placeContent');
-  const photoUrl = data.photos && data.photos.length
-    ? `https://places.googleapis.com/v1/${data.photos[0].name}/media?maxWidthPx=600&key=${GOOGLE_PLACES_KEY}`
-    : null;
-  const mapsUrl = `https://www.google.com/maps/place/?q=place_id:${feat.placeId}`;
-  const appleMapsUrl = `https://maps.apple.com/?q=${encodeURIComponent(feat.nom)}&ll=${feat.lat},${feat.lng}`;
-  const today = (new Date().getDay() + 6) % 7;
-  let hoursHTML = '';
-  if (data.regularOpeningHours?.weekdayDescriptions) {
-    hoursHTML = '<ul class="place-hours-list">' + data.regularOpeningHours.weekdayDescriptions.map((d, i) =>
-      `<li class="${i === today ? 'today' : ''}">${d}</li>`).join('') + '</ul>';
-  }
-  content.innerHTML = `
-    <div class="place-hero">
-      ${photoUrl ? `<img src="${photoUrl}" alt="" onerror="this.remove()">` : `<span>${feat.emoji || '🌞'}</span>`}
-      <button class="place-close-btn" onclick="closePlaceModal()">✕</button>
-      <div class="place-partner-badge">⭐ Partenaire</div>
-    </div>
-    <div class="place-body">
-      <div class="place-name">${data.displayName?.text || feat.nom}</div>
-      <div class="place-type-row">
-        <span class="place-type">${feat.type}</span>
-        ${data.rating ? `<div class="place-rating"><span class="place-rating-num">★ ${data.rating.toFixed(1)}</span><span class="place-rating-count">(${data.userRatingCount} avis)</span></div>` : ''}
-      </div>
-      ${feat.happyHour ? `<div class="place-happy"><div class="place-happy-label">🍺 Happy Hour</div><div class="place-happy-text">${feat.happyHour}</div></div>` : ''}
-      <div class="place-divider"></div>
-      <div class="place-rows">
-        ${data.formattedAddress ? `<div class="place-row"><div class="place-row-icon">📍</div><div class="place-row-content"><div class="place-row-label">Adresse</div><div class="place-row-value">${data.formattedAddress}</div></div></div>` : ''}
-        ${hoursHTML ? `<div class="place-row"><div class="place-row-icon">🕐</div><div class="place-row-content"><div class="place-row-label">Horaires</div><div class="place-row-value">${hoursHTML}</div></div></div>` : ''}
-        ${data.internationalPhoneNumber ? `<div class="place-row"><div class="place-row-icon">📞</div><div class="place-row-content"><div class="place-row-label">Téléphone</div><div class="place-row-value"><a href="tel:${data.internationalPhoneNumber}">${data.internationalPhoneNumber}</a></div></div></div>` : ''}
-        ${data.websiteUri ? `<div class="place-row"><div class="place-row-icon">🌐</div><div class="place-row-content"><div class="place-row-label">Site web</div><div class="place-row-value"><a href="${data.websiteUri}" target="_blank">${data.websiteUri.replace(/^https?:\/\/(www\.)?/,'').split('/')[0]}</a></div></div></div>` : ''}
-      </div>
-    </div>
-    <div class="place-actions">
-      <button class="place-action-btn place-action-primary" onclick="window.open('${mapsUrl}','_blank')">🗺 Google Maps</button>
-      <button class="place-action-btn place-action-secondary" onclick="window.open('${appleMapsUrl}','_blank')">📍 Apple Maps</button>
-    </div>`;
-}
-
-function renderPlaceStatic(feat) {
-  const content = document.getElementById('placeContent');
-  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(feat.nom+' '+currentCity.nom)}`;
-  const appleMapsUrl = `https://maps.apple.com/?q=${encodeURIComponent(feat.nom)}&ll=${feat.lat},${feat.lng}`;
-  content.innerHTML = `
-    <div class="place-hero">
-      <span>${feat.emoji || '🌞'}</span>
-      <button class="place-close-btn" onclick="closePlaceModal()">✕</button>
-      <div class="place-partner-badge">⭐ Partenaire</div>
-    </div>
-    <div class="place-body">
-      <div class="place-name">${feat.nom}</div>
-      <div class="place-type-row"><span class="place-type">${feat.type}</span></div>
-      ${feat.happyHour ? `<div class="place-happy"><div class="place-happy-label">🍺 Happy Hour</div><div class="place-happy-text">${feat.happyHour}</div></div>` : ''}
-    </div>
-    <div class="place-actions">
-      <button class="place-action-btn place-action-primary" onclick="window.open('${mapsUrl}','_blank')">🗺 Google Maps</button>
-      <button class="place-action-btn place-action-secondary" onclick="window.open('${appleMapsUrl}','_blank')">📍 Apple Maps</button>
-    </div>`;
-}
-
-// Swipe bas pour fermer le modal
-(function(){
-  let startY = 0;
-  const sheet = document.querySelector('.place-sheet');
-  sheet.addEventListener('touchstart', e => { startY = e.touches[0].clientY; }, { passive: true });
-  sheet.addEventListener('touchend', e => { if (e.changedTouches[0].clientY - startY > 80) closePlaceModal(); }, { passive: true });
-})();
-
+/* ===================== INIT ===================== */
 async function init(){
-  const now=new Date();
-  const initH=Math.min(21,Math.max(8,now.getHours()+(Math.round(now.getMinutes()/15)*15/60)));
-  slider.value=initH;
+  const now = new Date();
+  const initH = Math.min(21, Math.max(8, now.getHours() + (Math.round(now.getMinutes()/15)*15/60)));
+  slider.value = initH;
   slider.dispatchEvent(new Event('input'));
   loadTerrasses();
-  renderFeatured();
 }
-
 init();
 </script>
-
 </body>
 </html>
