@@ -422,7 +422,7 @@ async function fetchTerrasses(){
         const name = f.properties?.name || f.tags?.name;
         return AMENITY_VALIDES.has(amenity) && name && !seen.has(name) && seen.add(name);
       })
-      .slice(0, 200)
+
       .map(f => {
         const isGeoJSON = !!f.geometry;
         return {
@@ -441,7 +441,7 @@ async function fetchTerrasses(){
     console.warn('JSON local non trouvé, fallback Overpass');
     const bbox=`${currentCity.lat-0.04},${currentCity.lng-0.06},${currentCity.lat+0.04},${currentCity.lng+0.06}`;
     const q=`[out:json][timeout:25];(node["amenity"~"bar|cafe|restaurant|pub|biergarten"](${bbox}););out body;`;
-    for(const url of OVERPASS){try{const r=await fetch(url,{method:'POST',body:'data='+encodeURIComponent(q)});if(!r.ok)throw new Error();const d=await r.json();const seen=new Set();return(d.elements||[]).filter(el=>el.lat&&el.lon&&el.tags?.name&&!seen.has(el.tags.name)&&seen.add(el.tags.name)).slice(0,150).map(el=>({id:el.id,nom:el.tags.name,adresse:el.tags['addr:street']?((el.tags['addr:housenumber']||'')+' '+el.tags['addr:street']).trim():'',type:typeLabel(el.tags.amenity),lng:el.lon,lat:el.lat}));}catch(e){}}
+    for(const url of OVERPASS){try{const r=await fetch(url,{method:'POST',body:'data='+encodeURIComponent(q)});if(!r.ok)throw new Error();const d=await r.json();const seen=new Set();return(d.elements||[]).filter(el=>el.lat&&el.lon&&el.tags?.name&&!seen.has(el.tags.name)&&seen.add(el.tags.name)).map(el=>({id:el.id,nom:el.tags.name,adresse:el.tags['addr:street']?((el.tags['addr:housenumber']||'')+' '+el.tags['addr:street']).trim():'',type:typeLabel(el.tags.amenity),lng:el.lon,lat:el.lat}));}catch(e){}}
     return [];
   }
 }
