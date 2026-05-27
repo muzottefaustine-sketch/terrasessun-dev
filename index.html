@@ -355,7 +355,6 @@ const osmBuildings = viewer.scene.primitives.add(Cesium.createOsmBuildings());
 osmBuildings.maximumScreenSpaceError = 2;
 viewer.scene.globe.tileLoadProgressEvent.addEventListener(remaining => {
   setProgress(Math.min(60, 10 + (1 - Math.min(remaining, 50) / 50) * 50), remaining === 0 ? 'Bâtiments…' : 'Chargement…');
-  // FIX 2 : relancer les ombres dès que les tuiles 3D sont chargées
   if (remaining === 0 && terrasses.length > 0 && !computing) {
     scheduleShadow();
   }
@@ -386,6 +385,7 @@ function placeUserDot(lng, lat) {
 const _origGPS = navigator.geolocation.getCurrentPosition.bind(navigator.geolocation);
 let _cachedPos = null;
 navigator.geolocation.getCurrentPosition = function(ok, err, opt) { if (_cachedPos) { ok(_cachedPos); return; } _origGPS(p => { _cachedPos = p; ok(p); }, err, opt); };
+
 function geolocate() {
   if (!navigator.geolocation) return;
   const btn = document.getElementById('btnGeo'); btn.classList.add('locating');
@@ -393,6 +393,19 @@ function geolocate() {
     btn.classList.remove('locating');
     const { longitude:lng, latitude:lat } = pos.coords;
     placeUserDot(lng, lat);
+    // Trouve la ville la plus proche et charge ses terrasses
+    const nearest = CITIES.reduce((best, city) => {
+      const d = Math.hypot(city.lat-lat, city.lng-lng);
+      return d < Math.hypot(best.lat-lat, best.lng-lng) ? city : best;
+    });
+    if (nearest.id !== currentCity.id) {
+      currentCity = nearest;
+      document.getElementById('villeLabel').textContent = nearest.nom;
+      document.querySelectorAll('.city-item').forEach(c => c.classList.toggle('active', c.dataset.id === nearest.id));
+      Object.keys(markerEntities).forEach(k => { viewer.entities.remove(markerEntities[k]); delete markerEntities[k]; });
+      terrasses = []; sunStates = {};
+      loadTerrasses();
+    }
     viewer.camera.flyTo({ destination:Cesium.Cartesian3.fromDegrees(lng,lat,400), orientation:{heading:0,pitch:Cesium.Math.toRadians(-50),roll:0}, duration:1.8 });
   }, ()=>btn.classList.remove('locating'), { enableHighAccuracy:true, timeout:8000 });
 }
@@ -400,7 +413,6 @@ function geolocate() {
 let terrasses=[], sunStates={}, searchQuery='', currentHeure=14, currentDate=new Date();
 const markerEntities={};
 
-// FIX 1 : liste des amenity valides pour filtrer les JSON locaux
 const AMENITY_VALIDES = new Set(['bar','cafe','restaurant','pub','biergarten']);
 
 function typeLabel(a){return{bar:'Bar',cafe:'Café',restaurant:'Restaurant',pub:'Pub',biergarten:'Brasserie'}[a]||'Terrasse';}
@@ -412,7 +424,6 @@ async function fetchTerrasses(){
     if(!res.ok) throw new Error();
     const data = await res.json();
     const seen = new Set();
-    // FIX 1 : filtrer par amenity valide
     return (data.features || data.elements || [])
       .filter(f => {
         const amenity = f.properties?.amenity || f.tags?.amenity;
@@ -449,7 +460,6 @@ function getSunDir(jd){
 }
 function checkSunny(t,sunDir){
   if(!sunDir) return false;
-  // Hauteur réelle du terrain au lieu d'un offset fixe au-dessus de l'ellipsoïde
   const carto=Cesium.Cartographic.fromDegrees(t.lng,t.lat);
   const terrainH=viewer.scene.globe.getHeight(carto)||0;
   const pos=Cesium.Cartesian3.fromDegrees(t.lng,t.lat,terrainH+2);
@@ -536,11 +546,10 @@ function renderList(h,query){
     const card=document.createElement('div'); card.className='card'; card.dataset.id=t.id;
     card.innerHTML=`<div class="card-icon sun">☀️</div><div class="card-body"><div class="card-name">${highlight(t.nom,query)}</div><div class="card-sub">${t.type}${t.adresse?' · '+t.adresse:''}</div></div>`;
     card.addEventListener('click',()=>{
-      shadowVersion++; // stoppe le runShadow en cours pour éviter le rebuild DOM
+      shadowVersion++;
       document.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));
       card.classList.add('active');
       closeDrawer();
-      // setView est instantané (pas de file d'animation comme flyTo)
       viewer.camera.setView({destination:Cesium.Cartesian3.fromDegrees(t.lng,t.lat,300),orientation:{heading:0,pitch:Cesium.Math.toRadians(-50),roll:0}});
     });
     list.appendChild(card);
@@ -583,7 +592,6 @@ async function loadTerrasses(){
     renderList(currentHeure,'');
     const launch=()=>{
       syncDots();
-      // FIX 2 : attendre que les tuiles soient chargées avant de calculer les ombres
       if (viewer.scene.globe.tilesLoaded) {
         runShadow();
       } else {
@@ -604,23 +612,23 @@ async function init(){
   const initH=Math.min(21,Math.max(6,now.getHours()+(Math.round(now.getMinutes()/15)*15/60)));
   slider.value=initH;
   slider.dispatchEvent(new Event('input'));
-  if(navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(pos => {
-      const {longitude:lng, latitude:lat} = pos.coords;
-      placeUserDot(lng, lat);
-      const nearest = CITIES.reduce((best, city) => {
-        const d = Math.hypot(city.lat-lat, city.lng-lng);
-        return d < Math.hypot(best.lat-lat, best.lng-lng) ? city : best;
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(pos=>{
+      const {longitude:lng,latitude:lat}=pos.coords;
+      placeUserDot(lng,lat);
+      const nearest=CITIES.reduce((best,city)=>{
+        const d=Math.hypot(city.lat-lat,city.lng-lng);
+        return d<Math.hypot(best.lat-lat,best.lng-lng)?city:best;
       });
-      currentCity = nearest;
-      document.getElementById('villeLabel').textContent = nearest.nom;
-      document.querySelectorAll('.city-item').forEach(c => c.classList.toggle('active', c.dataset.id === nearest.id));
-      viewer.camera.setView({ destination: Cesium.Cartesian3.fromDegrees(lng, lat, 450), orientation: { heading:0, pitch:Cesium.Math.toRadians(-50), roll:0 } });
+      currentCity=nearest;
+      document.getElementById('villeLabel').textContent=nearest.nom;
+      document.querySelectorAll('.city-item').forEach(c=>c.classList.toggle('active',c.dataset.id===nearest.id));
+      viewer.camera.setView({destination:Cesium.Cartesian3.fromDegrees(lng,lat,450),orientation:{heading:0,pitch:Cesium.Math.toRadians(-50),roll:0}});
       loadTerrasses();
-    }, () => {
-      loadTerrasses();
-    }, { enableHighAccuracy:false, timeout:5000 });
-  } else {
+    },()=>{
+      loadTerrasses(); // géoloc refusée → Bordeaux
+    },{enableHighAccuracy:false,timeout:5000});
+  }else{
     loadTerrasses();
   }
 }
