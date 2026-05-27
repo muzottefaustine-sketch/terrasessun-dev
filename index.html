@@ -220,7 +220,7 @@
   </button>
   <button id="btnVille" ontouchend="toggleCityMenu()">
     <span id="villeLabel">Bordeaux</span> ▾
-  </button>
+   </button>
 </div>
 
 <div id="cityMenu"></div>
@@ -355,6 +355,7 @@ const osmBuildings = viewer.scene.primitives.add(Cesium.createOsmBuildings());
 osmBuildings.maximumScreenSpaceError = 2;
 viewer.scene.globe.tileLoadProgressEvent.addEventListener(remaining => {
   setProgress(Math.min(60, 10 + (1 - Math.min(remaining, 50) / 50) * 50), remaining === 0 ? 'Bâtiments…' : 'Chargement…');
+  // FIX 2 : relancer les ombres dès que les tuiles 3D sont chargées
   if (remaining === 0 && terrasses.length > 0 && !computing) {
     scheduleShadow();
   }
@@ -385,15 +386,6 @@ function placeUserDot(lng, lat) {
 const _origGPS = navigator.geolocation.getCurrentPosition.bind(navigator.geolocation);
 let _cachedPos = null;
 navigator.geolocation.getCurrentPosition = function(ok, err, opt) { if (_cachedPos) { ok(_cachedPos); return; } _origGPS(p => { _cachedPos = p; ok(p); }, err, opt); };
-
-// Trouve la ville la plus proche d'une position GPS
-function nearestCity(lat, lng) {
-  return CITIES.reduce((best, city) => {
-    const d = Math.hypot(city.lat - lat, city.lng - lng);
-    return d < Math.hypot(best.lat - lat, best.lng - lng) ? city : best;
-  });
-}
-
 function geolocate() {
   if (!navigator.geolocation) return;
   const btn = document.getElementById('btnGeo'); btn.classList.add('locating');
@@ -401,16 +393,6 @@ function geolocate() {
     btn.classList.remove('locating');
     const { longitude:lng, latitude:lat } = pos.coords;
     placeUserDot(lng, lat);
-    // Change de ville si on est ailleurs
-    const city = nearestCity(lat, lng);
-    if (city.id !== currentCity.id) {
-      currentCity = city;
-      document.getElementById('villeLabel').textContent = city.nom;
-      document.querySelectorAll('.city-item').forEach(c => c.classList.toggle('active', c.dataset.id === city.id));
-      Object.keys(markerEntities).forEach(k => { viewer.entities.remove(markerEntities[k]); delete markerEntities[k]; });
-      terrasses = []; sunStates = {};
-      loadTerrasses();
-    }
     viewer.camera.flyTo({ destination:Cesium.Cartesian3.fromDegrees(lng,lat,400), orientation:{heading:0,pitch:Cesium.Math.toRadians(-50),roll:0}, duration:1.8 });
   }, ()=>btn.classList.remove('locating'), { enableHighAccuracy:true, timeout:8000 });
 }
@@ -418,6 +400,7 @@ function geolocate() {
 let terrasses=[], sunStates={}, searchQuery='', currentHeure=14, currentDate=new Date();
 const markerEntities={};
 
+// FIX 1 : liste des amenity valides pour filtrer les JSON locaux
 const AMENITY_VALIDES = new Set(['bar','cafe','restaurant','pub','biergarten']);
 
 function typeLabel(a){return{bar:'Bar',cafe:'Café',restaurant:'Restaurant',pub:'Pub',biergarten:'Brasserie'}[a]||'Terrasse';}
@@ -429,6 +412,7 @@ async function fetchTerrasses(){
     if(!res.ok) throw new Error();
     const data = await res.json();
     const seen = new Set();
+    // FIX 1 : filtrer par amenity valide
     return (data.features || data.elements || [])
       .filter(f => {
         const amenity = f.properties?.amenity || f.tags?.amenity;
@@ -465,6 +449,7 @@ function getSunDir(jd){
 }
 function checkSunny(t,sunDir){
   if(!sunDir) return false;
+  // Hauteur réelle du terrain au lieu d'un offset fixe au-dessus de l'ellipsoïde
   const carto=Cesium.Cartographic.fromDegrees(t.lng,t.lat);
   const terrainH=viewer.scene.globe.getHeight(carto)||0;
   const pos=Cesium.Cartesian3.fromDegrees(t.lng,t.lat,terrainH+2);
@@ -551,10 +536,11 @@ function renderList(h,query){
     const card=document.createElement('div'); card.className='card'; card.dataset.id=t.id;
     card.innerHTML=`<div class="card-icon sun">☀️</div><div class="card-body"><div class="card-name">${highlight(t.nom,query)}</div><div class="card-sub">${t.type}${t.adresse?' · '+t.adresse:''}</div></div>`;
     card.addEventListener('click',()=>{
-      shadowVersion++;
+      shadowVersion++; // stoppe le runShadow en cours pour éviter le rebuild DOM
       document.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));
       card.classList.add('active');
       closeDrawer();
+      // setView est instantané (pas de file d'animation comme flyTo)
       viewer.camera.setView({destination:Cesium.Cartesian3.fromDegrees(t.lng,t.lat,300),orientation:{heading:0,pitch:Cesium.Math.toRadians(-50),roll:0}});
     });
     list.appendChild(card);
@@ -597,6 +583,7 @@ async function loadTerrasses(){
     renderList(currentHeure,'');
     const launch=()=>{
       syncDots();
+      // FIX 2 : attendre que les tuiles soient chargées avant de calculer les ombres
       if (viewer.scene.globe.tilesLoaded) {
         runShadow();
       } else {
@@ -617,25 +604,22 @@ async function init(){
   const initH=Math.min(21,Math.max(6,now.getHours()+(Math.round(now.getMinutes()/15)*15/60)));
   slider.value=initH;
   slider.dispatchEvent(new Event('input'));
-
-  // Géolocalisation auto au démarrage
-  if (navigator.geolocation) {
-    const btn = document.getElementById('btnGeo'); btn.classList.add('locating');
+  if(navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(pos => {
-      btn.classList.remove('locating');
-      const { longitude:lng, latitude:lat } = pos.coords;
+      const {longitude:lng, latitude:lat} = pos.coords;
       placeUserDot(lng, lat);
-      const nearest = nearestCity(lat, lng);
+      const nearest = CITIES.reduce((best, city) => {
+        const d = Math.hypot(city.lat-lat, city.lng-lng);
+        return d < Math.hypot(best.lat-lat, best.lng-lng) ? city : best;
+      });
       currentCity = nearest;
       document.getElementById('villeLabel').textContent = nearest.nom;
       document.querySelectorAll('.city-item').forEach(c => c.classList.toggle('active', c.dataset.id === nearest.id));
       viewer.camera.setView({ destination: Cesium.Cartesian3.fromDegrees(lng, lat, 450), orientation: { heading:0, pitch:Cesium.Math.toRadians(-50), roll:0 } });
       loadTerrasses();
     }, () => {
-      // Géolocalisation refusée ou timeout → Bordeaux par défaut
-      btn.classList.remove('locating');
       loadTerrasses();
-    }, { enableHighAccuracy:false, timeout:5000, maximumAge:300000 });
+    }, { enableHighAccuracy:false, timeout:5000 });
   } else {
     loadTerrasses();
   }
@@ -643,7 +627,6 @@ async function init(){
 
 init();
 </script>
-
 <button id="btnGeo" onclick="geolocate()" style="position:fixed;bottom:calc(env(safe-area-inset-bottom,34px)+140px);right:16px;z-index:30;width:50px;height:50px;background:rgba(255,255,255,0.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.6);border-radius:15px;box-shadow:0 4px 24px rgba(0,0,0,0.12);cursor:pointer;display:flex;align-items:center;justify-content:center;">
   <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="3.5" fill="#007AFF"/><circle cx="10" cy="10" r="6" stroke="#007AFF" stroke-width="1.2" fill="none" opacity="0.35"/><path d="M10 2V4.5M10 15.5V18M2 10H4.5M15.5 10H18" stroke="#007AFF" stroke-width="1.5" stroke-linecap="round"/></svg>
 </button>
