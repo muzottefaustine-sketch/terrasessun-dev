@@ -75,8 +75,6 @@
       will-change: transform; isolation: isolate;
     }
     .icon-btn:active { transform: scale(0.94); background: rgba(255,255,255,0.98); }
-    #btnGeo.locating { animation: geo-pulse 1s ease-in-out infinite; }
-    @keyframes geo-pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
     #btnVille {
       flex-shrink: 0; height: 50px; padding: 0 14px;
@@ -89,6 +87,20 @@
       -webkit-transform: translate3d(0, 0, 0); will-change: transform; isolation: isolate;
     }
     #btnVille:active { transform: scale(0.94); background: rgba(255,255,255,0.98); }
+
+    /* Bouton géoloc flottant en bas à droite */
+    #btnGeo {
+      position: fixed; bottom: calc(env(safe-area-inset-bottom,34px) + 140px); right: 16px;
+      z-index: 31; width: 50px; height: 50px;
+      background: var(--glass); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255,255,255,0.6); border-radius: 15px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.8);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: transform 0.1s, background 0.15s;
+    }
+    #btnGeo:active { transform: scale(0.94); background: rgba(255,255,255,0.98); }
+    #btnGeo.locating { animation: geo-pulse 1s ease-in-out infinite; }
+    @keyframes geo-pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
     #cityMenu {
       position: fixed;
@@ -218,12 +230,16 @@
   <button class="icon-btn" id="btnListe" onclick="openDrawer()" title="Liste">
     <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><rect width="18" height="2" rx="1" fill="#1C1C1E"/><rect y="6" width="18" height="2" rx="1" fill="#1C1C1E"/><rect y="12" width="18" height="2" rx="1" fill="#1C1C1E"/></svg>
   </button>
-  <button id="btnVille" ontouchend="toggleCityMenu()">
+  <button id="btnVille" ontouchend="toggleCityMenu()" onclick="toggleCityMenu()">
     <span id="villeLabel">Bordeaux</span> ▾
-   </button>
+  </button>
 </div>
 
 <div id="cityMenu"></div>
+
+<button id="btnGeo" ontouchend="geolocate(event)" onclick="geolocate(event)" title="Ma position">
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="3.5" fill="#007AFF"/><circle cx="10" cy="10" r="6" stroke="#007AFF" stroke-width="1.2" fill="none" opacity="0.35"/><path d="M10 2V4.5M10 15.5V18M2 10H4.5M15.5 10H18" stroke="#007AFF" stroke-width="1.5" stroke-linecap="round"/></svg>
+</button>
 
 <div class="panel-map">
   <h3>☀️ <span class="heure" id="heureAffichee">14h00</span></h3>
@@ -261,15 +277,6 @@
 </div>
 
 <script>
-(function() {
-  const _orig = navigator.geolocation.getCurrentPosition.bind(navigator.geolocation);
-  let _pos = null;
-  navigator.geolocation.getCurrentPosition = function(ok, err, opt) {
-    if (_pos) { ok(_pos); return; }
-    _orig(p => { _pos = p; ok(p); }, err, { enableHighAccuracy: false, timeout: 6000, maximumAge: 300000 });
-  };
-})();
-
 const CITIES = [
   {id:'bordeaux',   nom:'Bordeaux',    lat:44.837789, lng:-0.57918 },
   {id:'marseille',  nom:'Marseille',   lat:43.296482, lng:5.381118 },
@@ -283,6 +290,7 @@ const CITIES = [
   {id:'lille',      nom:'Lille',       lat:50.629250, lng:3.057256 },
 ];
 let currentCity = CITIES[0];
+let userLat = null, userLng = null;
 
 const cityMenuEl = document.getElementById('cityMenu');
 CITIES.forEach(city => {
@@ -290,16 +298,19 @@ CITIES.forEach(city => {
   item.className = 'city-item' + (city.id === 'bordeaux' ? ' active' : '');
   item.dataset.id = city.id;
   item.textContent = city.nom;
-  item.addEventListener('touchend', () => {
+  const goCity = (e) => {
+    if(e) e.preventDefault();
     currentCity = city;
     document.getElementById('villeLabel').textContent = city.nom;
     document.querySelectorAll('.city-item').forEach(c => c.classList.toggle('active', c.dataset.id === city.id));
     cityMenuEl.classList.remove('open');
     Object.keys(markerEntities).forEach(k => { viewer.entities.remove(markerEntities[k]); delete markerEntities[k]; });
     terrasses = []; sunStates = {};
-    viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(city.lng, city.lat, 500), orientation: { heading: 0, pitch: Cesium.Math.toRadians(-50), roll: 0 }, duration: 0.2 });
+    viewer.camera.setView({ destination: Cesium.Cartesian3.fromDegrees(city.lng, city.lat, 500), orientation: { heading: 0, pitch: Cesium.Math.toRadians(-50), roll: 0 } });
     loadTerrasses();
-  });
+  };
+  item.addEventListener('touchend', goCity);
+  item.addEventListener('click', goCity);
   cityMenuEl.appendChild(item);
 });
 
@@ -355,9 +366,7 @@ const osmBuildings = viewer.scene.primitives.add(Cesium.createOsmBuildings());
 osmBuildings.maximumScreenSpaceError = 2;
 viewer.scene.globe.tileLoadProgressEvent.addEventListener(remaining => {
   setProgress(Math.min(60, 10 + (1 - Math.min(remaining, 50) / 50) * 50), remaining === 0 ? 'Bâtiments…' : 'Chargement…');
-  if (remaining === 0 && terrasses.length > 0 && !computing) {
-    scheduleShadow();
-  }
+  if (remaining === 0 && terrasses.length > 0 && !computing) { scheduleShadow(); }
 });
 let globeOk = false, buildingsOk = false;
 function tryOpen() {
@@ -372,29 +381,27 @@ osmBuildings.readyPromise.then(() => { buildingsOk = true; setProgress(85, 'Fina
 
 let userDot = null;
 function makeUserDot() {
-  const c = document.createElement('canvas'); c.width = 20; c.height = 20; const ctx = c.getContext('2d');
-  ctx.beginPath(); ctx.arc(10,10,9,0,Math.PI*2); ctx.fillStyle='rgba(0,122,255,0.18)'; ctx.fill();
-  ctx.beginPath(); ctx.arc(10,10,6,0,Math.PI*2); ctx.fillStyle='white'; ctx.fill();
-  ctx.beginPath(); ctx.arc(10,10,4,0,Math.PI*2); ctx.fillStyle='#007AFF'; ctx.fill();
+  const c = document.createElement('canvas'); c.width = 24; c.height = 24; const ctx = c.getContext('2d');
+  ctx.beginPath(); ctx.arc(12,12,11,0,Math.PI*2); ctx.fillStyle='rgba(0,122,255,0.18)'; ctx.fill();
+  ctx.beginPath(); ctx.arc(12,12,7,0,Math.PI*2); ctx.fillStyle='white'; ctx.fill();
+  ctx.beginPath(); ctx.arc(12,12,5,0,Math.PI*2); ctx.fillStyle='#007AFF'; ctx.fill();
   return c.toDataURL();
 }
 function placeUserDot(lng, lat) {
   if (userDot) viewer.entities.remove(userDot);
-  userDot = viewer.entities.add({ position: Cesium.Cartesian3.fromDegrees(lng, lat, 3), billboard: { image:makeUserDot(), verticalOrigin:Cesium.VerticalOrigin.CENTER, heightReference:Cesium.HeightReference.RELATIVE_TO_GROUND, width:20, height:20, disableDepthTestDistance:Number.POSITIVE_INFINITY } });
-  userLat=lat; userLng=lng;
+  userDot = viewer.entities.add({ position: Cesium.Cartesian3.fromDegrees(lng, lat, 3), billboard: { image:makeUserDot(), verticalOrigin:Cesium.VerticalOrigin.CENTER, heightReference:Cesium.HeightReference.RELATIVE_TO_GROUND, width:24, height:24, disableDepthTestDistance:Number.POSITIVE_INFINITY } });
+  userLat = lat; userLng = lng;
 }
-const _origGPS = navigator.geolocation.getCurrentPosition.bind(navigator.geolocation);
-let _cachedPos = null;
-navigator.geolocation.getCurrentPosition = function(ok, err, opt) { if (_cachedPos) { ok(_cachedPos); return; } _origGPS(p => { _cachedPos = p; ok(p); }, err, opt); };
 
-function geolocate() {
-  if (!navigator.geolocation) return;
+// Géolocalisation manuelle (bouton) — recentre sur la position réelle
+function geolocate(e) {
+  if(e) e.preventDefault();
+  if (!navigator.geolocation) { alert("Géolocalisation non disponible"); return; }
   const btn = document.getElementById('btnGeo'); btn.classList.add('locating');
   navigator.geolocation.getCurrentPosition(pos => {
     btn.classList.remove('locating');
     const { longitude:lng, latitude:lat } = pos.coords;
     placeUserDot(lng, lat);
-    // Trouve la ville la plus proche et charge ses terrasses
     const nearest = CITIES.reduce((best, city) => {
       const d = Math.hypot(city.lat-lat, city.lng-lng);
       return d < Math.hypot(best.lat-lat, best.lng-lng) ? city : best;
@@ -406,16 +413,20 @@ function geolocate() {
       Object.keys(markerEntities).forEach(k => { viewer.entities.remove(markerEntities[k]); delete markerEntities[k]; });
       terrasses = []; sunStates = {};
       loadTerrasses();
+    } else {
+      renderList(currentHeure, searchQuery);
     }
-    viewer.camera.flyTo({ destination:Cesium.Cartesian3.fromDegrees(lng,lat,400), orientation:{heading:0,pitch:Cesium.Math.toRadians(-50),roll:0}, duration:1.8 });
-  }, ()=>btn.classList.remove('locating'), { enableHighAccuracy:true, timeout:8000 });
+    viewer.camera.flyTo({ destination:Cesium.Cartesian3.fromDegrees(lng,lat,400), orientation:{heading:0,pitch:Cesium.Math.toRadians(-50),roll:0}, duration:1.2 });
+  }, err => {
+    btn.classList.remove('locating');
+    alert("Position introuvable. Vérifiez que la localisation est autorisée.");
+  }, { enableHighAccuracy:true, timeout:8000, maximumAge:60000 });
 }
 
 let terrasses=[], sunStates={}, searchQuery='', currentHeure=14, currentDate=new Date();
 const markerEntities={};
 
 const AMENITY_VALIDES = new Set(['bar','cafe','restaurant','pub','biergarten']);
-
 function typeLabel(a){return{bar:'Bar',cafe:'Café',restaurant:'Restaurant',pub:'Pub',biergarten:'Brasserie'}[a]||'Terrasse';}
 
 const OVERPASS=['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter'];
@@ -446,10 +457,9 @@ async function fetchTerrasses(){
       })
       .filter(f => f.lat && f.lng);
   } catch(e) {
-    console.warn('JSON local non trouvé, fallback Overpass');
     const bbox=`${currentCity.lat-0.04},${currentCity.lng-0.06},${currentCity.lat+0.04},${currentCity.lng+0.06}`;
     const q=`[out:json][timeout:25];(node["amenity"~"bar|cafe|restaurant|pub|biergarten"](${bbox}););out body;`;
-    for(const url of OVERPASS){try{const r=await fetch(url,{method:'POST',body:'data='+encodeURIComponent(q)});if(!r.ok)throw new Error();const d=await r.json();const seen=new Set();return(d.elements||[]).filter(el=>el.lat&&el.lon&&el.tags?.name&&!seen.has(el.tags.name)&&seen.add(el.tags.name)).map(el=>({id:el.id,nom:el.tags.name,adresse:el.tags['addr:street']?((el.tags['addr:housenumber']||'')+' '+el.tags['addr:street']).trim():'',type:typeLabel(el.tags.amenity),lng:el.lon,lat:el.lat}));}catch(e){}}
+    for(const url of OVERPASS){try{const r=await fetch(url,{method:'POST',body:'data='+encodeURIComponent(q)});if(!r.ok)throw new Error();const d=await r.json();const seen=new Set();return(d.elements||[]).filter(el=>el.lat&&el.lon&&el.tags?.name&&!seen.has(el.tags.name)&&seen.add(el.tags.name)).slice(0,150).map(el=>({id:el.id,nom:el.tags.name,adresse:el.tags['addr:street']?((el.tags['addr:housenumber']||'')+' '+el.tags['addr:street']).trim():'',type:typeLabel(el.tags.amenity),lng:el.lon,lat:el.lat}));}catch(e){}}
     return [];
   }
 }
@@ -533,20 +543,21 @@ function showTooltip(t,x,y){
 }
 function hideTooltip(){clearTimeout(ttTimeout);tooltip.classList.remove('visible');}
 
-function normalize(s){return(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');} 
-let userLat=null,userLng=null;
+function normalize(s){return(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
 function distKm(lat,lng){if(userLat===null)return '';const d=Math.hypot((lat-userLat)*111,(lng-userLng)*111*Math.cos(userLat*Math.PI/180));return d<1?Math.round(d*1000)+'m':d.toFixed(1)+'km';}
 function highlight(text,q){if(!q)return text;return text.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi'),'<mark style="background:#FFFBE0;color:#9A7E00;border-radius:3px;padding:0 2px">$1</mark>');}
+
 function renderList(h,query){
   const list=document.getElementById('terrasseList');
   const q=normalize(query||'');
   let filtered=terrasses; if(q) filtered=terrasses.filter(t=>normalize(t.nom).includes(q)||normalize(t.type).includes(q)||normalize(t.adresse).includes(q));
-  const sorted=[...filtered].sort((a,b)=>(sunStates[b.id]?1:0)-(sunStates[a.id]?1:0));
+  let sorted=[...filtered].sort((a,b)=>(sunStates[b.id]?1:0)-(sunStates[a.id]?1:0));
   list.innerHTML='';
   if(!sorted.length){list.innerHTML=`<div class="no-results">Aucun résultat${query?' pour <strong>"'+query+'"</strong>':''}</div>`;return;}
   sorted.forEach(t=>{
-   const card=document.createElement('div'); card.className='card'; card.dataset.id=t.id;
-card.innerHTML=`<div class="card-icon sun">☀️</div><div class="card-body"><div class="card-name">${highlight(t.nom,query)}</div><div class="card-sub">${t.type}${t.adresse?' · '+t.adresse:''}${distKm(t.lat,t.lng)?' · '+distKm(t.lat,t.lng):''}</div></div>`;
+    const card=document.createElement('div'); card.className='card'; card.dataset.id=t.id;
+    const dist=distKm(t.lat,t.lng);
+    card.innerHTML=`<div class="card-icon sun">☀️</div><div class="card-body"><div class="card-name">${highlight(t.nom,query)}</div><div class="card-sub">${t.type}${t.adresse?' · '+t.adresse:''}${dist?' · '+dist:''}</div></div>`;
     card.addEventListener('click',()=>{
       shadowVersion++;
       document.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));
@@ -572,7 +583,7 @@ slider.addEventListener('input',e=>{
   currentDate=new Date(); currentDate.setUTCHours(h-tzOffset,m,0,0);
   viewer.clock.currentTime=Cesium.JulianDate.fromDate(currentDate); currentHeure=val;
 });
-slider.addEventListener('touchend',e=>{if(terrasses.length>0)scheduleShadow();});
+slider.addEventListener('change',e=>{if(terrasses.length>0)scheduleShadow();});
 
 const handler=new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
 handler.setInputAction(click=>{
@@ -594,11 +605,7 @@ async function loadTerrasses(){
     renderList(currentHeure,'');
     const launch=()=>{
       syncDots();
-      if (viewer.scene.globe.tilesLoaded) {
-        runShadow();
-      } else {
-        scheduleShadow();
-      }
+      if (viewer.scene.globe.tilesLoaded) { runShadow(); } else { scheduleShadow(); }
     };
     if(splashDone) launch();
     else{const w=setInterval(()=>{if(splashDone){clearInterval(w);launch();}},100);}
@@ -614,6 +621,8 @@ async function init(){
   const initH=Math.min(21,Math.max(6,now.getHours()+(Math.round(now.getMinutes()/15)*15/60)));
   slider.value=initH;
   slider.dispatchEvent(new Event('input'));
+
+  // Géoloc auto au démarrage : zoom sur position réelle + ville la plus proche
   if(navigator.geolocation){
     navigator.geolocation.getCurrentPosition(pos=>{
       const {longitude:lng,latitude:lat}=pos.coords;
@@ -628,8 +637,8 @@ async function init(){
       viewer.camera.setView({destination:Cesium.Cartesian3.fromDegrees(lng,lat,450),orientation:{heading:0,pitch:Cesium.Math.toRadians(-50),roll:0}});
       loadTerrasses();
     },()=>{
-      loadTerrasses(); // géoloc refusée → Bordeaux
-    },{enableHighAccuracy:false,timeout:5000});
+      loadTerrasses();
+    },{enableHighAccuracy:true,timeout:8000,maximumAge:60000});
   }else{
     loadTerrasses();
   }
@@ -637,8 +646,6 @@ async function init(){
 
 init();
 </script>
-<button id="btnGeo" onclick="geolocate()" style="position:fixed;bottom:calc(env(safe-area-inset-bottom,34px)+140px);right:16px;z-index:30;width:50px;height:50px;background:rgba(255,255,255,0.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.6);border-radius:15px;box-shadow:0 4px 24px rgba(0,0,0,0.12);cursor:pointer;display:flex;align-items:center;justify-content:center;">
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="3.5" fill="#007AFF"/><circle cx="10" cy="10" r="6" stroke="#007AFF" stroke-width="1.2" fill="none" opacity="0.35"/><path d="M10 2V4.5M10 15.5V18M2 10H4.5M15.5 10H18" stroke="#007AFF" stroke-width="1.5" stroke-linecap="round"/></svg>
-</button>
+
 </body>
 </html>
