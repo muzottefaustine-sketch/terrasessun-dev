@@ -381,6 +381,7 @@ function makeUserDot() {
 function placeUserDot(lng, lat) {
   if (userDot) viewer.entities.remove(userDot);
   userDot = viewer.entities.add({ position: Cesium.Cartesian3.fromDegrees(lng, lat, 3), billboard: { image:makeUserDot(), verticalOrigin:Cesium.VerticalOrigin.CENTER, heightReference:Cesium.HeightReference.RELATIVE_TO_GROUND, width:20, height:20, disableDepthTestDistance:Number.POSITIVE_INFINITY } });
+  userLat=lat; userLng=lng;
 }
 const _origGPS = navigator.geolocation.getCurrentPosition.bind(navigator.geolocation);
 let _cachedPos = null;
@@ -532,9 +533,10 @@ function showTooltip(t,x,y){
 }
 function hideTooltip(){clearTimeout(ttTimeout);tooltip.classList.remove('visible');}
 
-function normalize(s){return(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');}
+function normalize(s){return(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');} 
+let userLat=null,userLng=null;
+function distKm(lat,lng){if(userLat===null)return '';const d=Math.hypot((lat-userLat)*111,(lng-userLng)*111*Math.cos(userLat*Math.PI/180));return d<1?Math.round(d*1000)+'m':d.toFixed(1)+'km';}
 function highlight(text,q){if(!q)return text;return text.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi'),'<mark style="background:#FFFBE0;color:#9A7E00;border-radius:3px;padding:0 2px">$1</mark>');}
-
 function renderList(h,query){
   const list=document.getElementById('terrasseList');
   const q=normalize(query||'');
@@ -543,8 +545,8 @@ function renderList(h,query){
   list.innerHTML='';
   if(!sorted.length){list.innerHTML=`<div class="no-results">Aucun résultat${query?' pour <strong>"'+query+'"</strong>':''}</div>`;return;}
   sorted.forEach(t=>{
-    const card=document.createElement('div'); card.className='card'; card.dataset.id=t.id;
-    card.innerHTML=`<div class="card-icon sun">☀️</div><div class="card-body"><div class="card-name">${highlight(t.nom,query)}</div><div class="card-sub">${t.type}${t.adresse?' · '+t.adresse:''}</div></div>`;
+   const card=document.createElement('div'); card.className='card'; card.dataset.id=t.id;
+card.innerHTML=`<div class="card-icon sun">☀️</div><div class="card-body"><div class="card-name">${highlight(t.nom,query)}</div><div class="card-sub">${t.type}${t.adresse?' · '+t.adresse:''}${distKm(t.lat,t.lng)?' · '+distKm(t.lat,t.lng):''}</div></div>`;
     card.addEventListener('click',()=>{
       shadowVersion++;
       document.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));
