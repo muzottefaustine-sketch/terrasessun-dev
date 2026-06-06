@@ -187,6 +187,29 @@
     .live-dot { width:6px; height:6px; border-radius:50%; background:#30D158; animation:blink 2s ease-in-out infinite; flex-shrink:0; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
     .privacy-link { margin-left:auto; font-size:10px; color:var(--text-3); cursor:pointer; text-decoration:none; }
+
+    /* ══ FICHE LIEU (bottom sheet Foursquare) ══ */
+    #psOverlay { position: fixed; inset: 0; z-index: 49; background: rgba(0,0,0,0.4); opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+    #psOverlay.open { opacity: 1; pointer-events: auto; }
+    #placeSheet { position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; background: var(--white); border-radius: 20px 20px 0 0; box-shadow: 0 -8px 40px rgba(0,0,0,0.18); transform: translateY(110%); transition: transform 0.38s cubic-bezier(0.32,0.72,0,1); overflow: hidden; max-height: 85vh; padding-bottom: env(safe-area-inset-bottom, 16px); }
+    #placeSheet.open { transform: translateY(0); }
+    .ps-handle { display: flex; justify-content: center; padding: 12px 0 6px; cursor: pointer; flex-shrink: 0; }
+    .ps-bar { width: 40px; height: 4px; background: #E0E0E5; border-radius: 2px; }
+    .ps-photo { width: 100%; height: 200px; object-fit: cover; display: block; background: var(--bg); }
+    .ps-photo-placeholder { width: 100%; height: 120px; background: linear-gradient(135deg,#FFFBE0,#FFE580); display: flex; align-items: center; justify-content: center; font-size: 48px; }
+    .ps-body { padding: 16px 20px 20px; }
+    .ps-sun { font-size: 13px; font-weight: 600; margin-bottom: 6px; font-family: Arial, sans-serif; }
+    .ps-sun.sun { color: #9A7200; }
+    .ps-sun.shade { color: var(--shade); }
+    .ps-name { font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 3px; line-height: 1.2; font-family: Arial, sans-serif; }
+    .ps-sub { font-size: 13px; color: var(--text-2); margin-bottom: 12px; font-family: Arial, sans-serif; }
+    .ps-rating { display: inline-flex; align-items: center; gap: 5px; background: var(--bg); border-radius: 20px; padding: 5px 12px; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 16px; }
+    .ps-btns { display: flex; gap: 10px; }
+    .ps-btn { flex: 1; padding: 14px; border: none; border-radius: 14px; font-size: 15px; font-weight: 600; cursor: pointer; text-align: center; font-family: Arial, sans-serif; }
+    .ps-btn:active { opacity: 0.75; }
+    .ps-btn.maps { background: #007AFF; color: white; }
+    .ps-btn.tel { background: #34C759; color: white; }
+    .ps-spinner-wrap { display: flex; align-items: center; justify-content: center; height: 80px; }
   </style>
 </head>
 <body>
@@ -252,6 +275,13 @@
   <div class="tt-type" id="ttType"></div>
   <div class="tt-sun" id="ttSun"></div>
   <a id="ttMaps" href="#" target="_blank" style="display:block;margin-top:8px;background:rgba(255,255,255,0.15);color:white;padding:6px 14px;border-radius:10px;font-size:12px;text-align:center;text-decoration:none;">Ouvrir dans Maps</a>
+</div>
+
+<!-- Fiche lieu Foursquare -->
+<div id="psOverlay" onclick="hidePlaceSheet()"></div>
+<div id="placeSheet">
+  <div class="ps-handle" onclick="hidePlaceSheet()"><div class="ps-bar"></div></div>
+  <div id="psContent"></div>
 </div>
 
 <div id="drawer">
@@ -543,6 +573,58 @@ function showTooltip(t,x,y){
 }
 function hideTooltip(){clearTimeout(ttTimeout);tooltip.classList.remove('visible');}
 
+// ══ FOURSQUARE — fiche lieu avec photo ══
+const FSQ_KEY = 'fsq3U6jVs4RSHJ3/wOVSue8lkB4wkF1myzD/sWavZLBtAkY=';
+const fsqCache = {};
+async function fetchFoursquare(t) {
+  if (fsqCache[t.id]) return fsqCache[t.id];
+  try {
+    const search = await fetch(`https://api.foursquare.com/v3/places/search?query=${encodeURIComponent(t.nom)}&ll=${t.lat},${t.lng}&limit=1&radius=100`, { headers: { Authorization: FSQ_KEY, Accept: 'application/json' } });
+    if (!search.ok) throw new Error();
+    const sd = await search.json();
+    const place = sd.results?.[0];
+    if (!place) throw new Error();
+    const fsq_id = place.fsq_id;
+    let photo = null, tel = null, rating = null;
+    try { const pr = await fetch(`https://api.foursquare.com/v3/places/${fsq_id}/photos?limit=1`, { headers: { Authorization: FSQ_KEY } }); const pd = await pr.json(); if (pd[0]) photo = `${pd[0].prefix}600x400${pd[0].suffix}`; } catch(e) {}
+    try { const dr = await fetch(`https://api.foursquare.com/v3/places/${fsq_id}?fields=tel,rating`, { headers: { Authorization: FSQ_KEY } }); const dd = await dr.json(); tel = dd.tel || null; rating = dd.rating ? (dd.rating / 2).toFixed(1) : null; } catch(e) {}
+    const result = { photo, tel, rating };
+    fsqCache[t.id] = result;
+    return result;
+  } catch(e) { fsqCache[t.id] = {}; return {}; }
+}
+function hidePlaceSheet() {
+  document.getElementById('placeSheet').classList.remove('open');
+  document.getElementById('psOverlay').classList.remove('open');
+}
+async function showPlaceSheet(t) {
+  if (navigator.vibrate) navigator.vibrate(10);
+  const isSun = sunStates[t.id] === true;
+  const mapsUrl = `https://maps.apple.com/?q=${encodeURIComponent(t.nom+', '+currentCity.nom)}&ll=${t.lat},${t.lng}`;
+  const content = document.getElementById('psContent');
+  content.innerHTML = `
+    <div class="ps-spinner-wrap"><div class="spinner"></div></div>
+    <div class="ps-body">
+      <div class="ps-sun ${isSun?'sun':'shade'}">${isSun?'☀️ En ce moment au soleil':'🌑 En ce moment à l\'ombre'}</div>
+      <div class="ps-name">${t.nom}</div>
+      <div class="ps-sub">${t.type}${t.adresse?' · '+t.adresse:''}</div>
+      <div class="ps-btns" style="margin-top:16px">
+        <button class="ps-btn maps" onclick="window.open('${mapsUrl}','_blank')">🗺 Itinéraire</button>
+        <button class="ps-btn tel" id="psTelBtn" style="display:none">📞 Appeler</button>
+      </div>
+    </div>`;
+  document.getElementById('placeSheet').classList.add('open');
+  document.getElementById('psOverlay').classList.add('open');
+  const fsq = await fetchFoursquare(t);
+  const spinnerWrap = content.querySelector('.ps-spinner-wrap');
+  if (spinnerWrap) {
+    if (fsq.photo) { const img = document.createElement('img'); img.className = 'ps-photo'; img.src = fsq.photo; img.alt = t.nom; spinnerWrap.replaceWith(img); }
+    else { spinnerWrap.outerHTML = `<div class="ps-photo-placeholder">☀️</div>`; }
+  }
+  if (fsq.rating) { const sub = content.querySelector('.ps-sub'); if (sub) sub.insertAdjacentHTML('afterend', `<div class="ps-rating">⭐ ${fsq.rating} / 5</div>`); }
+  if (fsq.tel) { const telBtn = document.getElementById('psTelBtn'); if (telBtn) { telBtn.style.display = 'block'; telBtn.onclick = () => { window.location.href = 'tel:' + fsq.tel; }; } }
+}
+
 function normalize(s){return(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
 function distKm(lat,lng){if(userLat===null)return '';const d=Math.hypot((lat-userLat)*111,(lng-userLng)*111*Math.cos(userLat*Math.PI/180));return d<1?Math.round(d*1000)+'m':d.toFixed(1)+'km';}
 function highlight(text,q){if(!q)return text;return text.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi'),'<mark style="background:#FFFBE0;color:#9A7E00;border-radius:3px;padding:0 2px">$1</mark>');}
@@ -564,6 +646,7 @@ function renderList(h,query){
       card.classList.add('active');
       closeDrawer();
       viewer.camera.setView({destination:Cesium.Cartesian3.fromDegrees(t.lng,t.lat,300),orientation:{heading:0,pitch:Cesium.Math.toRadians(-50),roll:0}});
+      showPlaceSheet(t);
     });
     list.appendChild(card);
   });
@@ -588,8 +671,8 @@ slider.addEventListener('change',e=>{if(terrasses.length>0)scheduleShadow();});
 const handler=new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
 handler.setInputAction(click=>{
   const picked=viewer.scene.pick(click.position);
-  if(Cesium.defined(picked)&&picked.id){const id=picked.id.properties?.id?.getValue();const t=terrasses.find(x=>String(x.id)===String(id));if(t){showTooltip(t,click.position.x,click.position.y);return;}}
-  hideTooltip();
+  if(Cesium.defined(picked)&&picked.id){const id=picked.id.properties?.id?.getValue();const t=terrasses.find(x=>String(x.id)===String(id));if(t){showPlaceSheet(t);return;}}
+  hidePlaceSheet();
 },Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
 async function loadTerrasses(){
@@ -649,3 +732,4 @@ init();
 
 </body>
 </html>
+
