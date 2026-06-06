@@ -573,24 +573,16 @@ function showTooltip(t,x,y){
 }
 function hideTooltip(){clearTimeout(ttTimeout);tooltip.classList.remove('visible');}
 
-// ══ FOURSQUARE — fiche lieu avec photo ══
-const FSQ_KEY = 'fsq3U6jVs4RSHJ3/wOVSue8lkB4wkF1myzD/sWavZLBtAkY=';
+// ══ FOURSQUARE — fiche lieu avec photo (via proxy Vercel /api/place) ══
 const fsqCache = {};
 async function fetchFoursquare(t) {
   if (fsqCache[t.id]) return fsqCache[t.id];
   try {
-    const search = await fetch(`https://api.foursquare.com/v3/places/search?query=${encodeURIComponent(t.nom)}&ll=${t.lat},${t.lng}&limit=1&radius=100`, { headers: { Authorization: FSQ_KEY, Accept: 'application/json' } });
-    if (!search.ok) throw new Error();
-    const sd = await search.json();
-    const place = sd.results?.[0];
-    if (!place) throw new Error();
-    const fsq_id = place.fsq_id;
-    let photo = null, tel = null, rating = null;
-    try { const pr = await fetch(`https://api.foursquare.com/v3/places/${fsq_id}/photos?limit=1`, { headers: { Authorization: FSQ_KEY } }); const pd = await pr.json(); if (pd[0]) photo = `${pd[0].prefix}600x400${pd[0].suffix}`; } catch(e) {}
-    try { const dr = await fetch(`https://api.foursquare.com/v3/places/${fsq_id}?fields=tel,rating`, { headers: { Authorization: FSQ_KEY } }); const dd = await dr.json(); tel = dd.tel || null; rating = dd.rating ? (dd.rating / 2).toFixed(1) : null; } catch(e) {}
-    const result = { photo, tel, rating };
-    fsqCache[t.id] = result;
-    return result;
+    const r = await fetch(`/api/place?name=${encodeURIComponent(t.nom)}&lat=${t.lat}&lng=${t.lng}`);
+    if (!r.ok) throw new Error();
+    const data = await r.json();
+    fsqCache[t.id] = data;
+    return data;
   } catch(e) { fsqCache[t.id] = {}; return {}; }
 }
 function hidePlaceSheet() {
