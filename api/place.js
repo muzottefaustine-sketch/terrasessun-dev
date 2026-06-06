@@ -11,7 +11,7 @@ export default async function handler(req, res) {
     return;
   }
 
-  const FSQ_KEY = 'fsq3U6jVs4RSHJ3/wOVSue8lkB4wkF1myzD/sWavZLBtAkY=';
+  const FSQ_KEY = 'HX4UIQJGDJS1LYB1BQSBCW3HQEWZGVIILWZTWCVTB5K1MSMH';
   // NOUVELLE API Foursquare (l'ancienne v3 est morte depuis le 15 mai 2026)
   const headers = {
     'Authorization': `Bearer ${FSQ_KEY}`,
