@@ -76,17 +76,13 @@
     }
     .icon-btn:active { transform: scale(0.94); background: rgba(255,255,255,0.98); }
 
-    #btnVille {
-      flex-shrink: 0; height: 50px; padding: 0 14px;
-      background: var(--glass); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(255,255,255,0.6); border-radius: 15px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.8);
-      cursor: pointer; display: flex; align-items: center; gap: 5px;
-      font-family: Arial, sans-serif; font-size: 13px; font-weight: 600; color: var(--text);
-      white-space: nowrap; transition: transform 0.1s, background 0.15s;
-      -webkit-transform: translate3d(0, 0, 0); will-change: transform; isolation: isolate;
+    #btnVille { display: none; }
+
+    @keyframes geo-ring-pulse {
+      0%   { transform: scale(1);   opacity: 0.55; }
+      70%  { transform: scale(2.8); opacity: 0; }
+      100% { transform: scale(2.8); opacity: 0; }
     }
-    #btnVille:active { transform: scale(0.94); background: rgba(255,255,255,0.98); }
 
     /* Bouton géoloc flottant en bas à droite */
     #btnGeo {
@@ -253,9 +249,9 @@
   <button class="icon-btn" id="btnListe" onclick="openDrawer()" title="Liste">
     <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><rect width="18" height="2" rx="1" fill="#1C1C1E"/><rect y="6" width="18" height="2" rx="1" fill="#1C1C1E"/><rect y="12" width="18" height="2" rx="1" fill="#1C1C1E"/></svg>
   </button>
-  <button id="btnVille" ontouchend="toggleCityMenu()" onclick="toggleCityMenu()">
-    <span id="villeLabel">Bordeaux</span> ▾
-  </button>
+  <div id="btnVille">
+    <span id="villeLabel"></span>
+  </div>
 </div>
 
 <div id="cityMenu"></div>
@@ -409,21 +405,79 @@ viewer.scene.postRender.addEventListener(function watchGlobe() {
 });
 osmBuildings.readyPromise.then(() => { buildingsOk = true; setProgress(85, 'Finalisation…'); tryOpen(); }).catch(() => { buildingsOk = true; tryOpen(); });
 
-let userDot = null;
-function makeUserDot() {
-  const c = document.createElement('canvas'); c.width = 24; c.height = 24; const ctx = c.getContext('2d');
-  ctx.beginPath(); ctx.arc(12,12,11,0,Math.PI*2); ctx.fillStyle='rgba(0,122,255,0.18)'; ctx.fill();
-  ctx.beginPath(); ctx.arc(12,12,7,0,Math.PI*2); ctx.fillStyle='white'; ctx.fill();
-  ctx.beginPath(); ctx.arc(12,12,5,0,Math.PI*2); ctx.fillStyle='#007AFF'; ctx.fill();
-  return c.toDataURL();
-}
+let userDot = null, userDotRing = null;
+
 function placeUserDot(lng, lat) {
   if (userDot) viewer.entities.remove(userDot);
-  userDot = viewer.entities.add({ position: Cesium.Cartesian3.fromDegrees(lng, lat, 3), billboard: { image:makeUserDot(), verticalOrigin:Cesium.VerticalOrigin.CENTER, heightReference:Cesium.HeightReference.RELATIVE_TO_GROUND, width:24, height:24, disableDepthTestDistance:Number.POSITIVE_INFINITY } });
+  if (userDotRing) viewer.entities.remove(userDotRing);
+
+  // Halo pulsant (grand disque bleu transparent animé via canvas)
+  function makeRingCanvas(scale) {
+    const size = 80;
+    const c = document.createElement('canvas'); c.width = size; c.height = size;
+    const ctx = c.getContext('2d');
+    const r = (size / 2) * scale;
+    ctx.beginPath(); ctx.arc(size/2, size/2, r, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(0,122,255,${0.18 * (1 - scale * 0.6)})`; ctx.fill();
+    return c.toDataURL();
+  }
+
+  // Point bleu principal (statique, bien visible)
+  const dotCanvas = document.createElement('canvas'); dotCanvas.width = 32; dotCanvas.height = 32;
+  const ctx = dotCanvas.getContext('2d');
+  // Halo extérieur doux
+  ctx.beginPath(); ctx.arc(16,16,14,0,Math.PI*2); ctx.fillStyle='rgba(0,122,255,0.22)'; ctx.fill();
+  // Bordure blanche
+  ctx.beginPath(); ctx.arc(16,16,9,0,Math.PI*2); ctx.fillStyle='white'; ctx.fill();
+  // Point bleu central
+  ctx.beginPath(); ctx.arc(16,16,6.5,0,Math.PI*2); ctx.fillStyle='#007AFF'; ctx.fill();
+
+  userDot = viewer.entities.add({
+    position: Cesium.Cartesian3.fromDegrees(lng, lat, 3),
+    billboard: {
+      image: dotCanvas.toDataURL(),
+      verticalOrigin: Cesium.VerticalOrigin.CENTER,
+      heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND,
+      width: 32, height: 32,
+      disableDepthTestDistance: Number.POSITIVE_INFINITY
+    }
+  });
+
+  // Animation de la pulsation via un interval qui recrée l'image
+  let pulsePhase = 0;
+  const PULSE_STEPS = 40;
+  function animatePulse() {
+    pulsePhase = (pulsePhase + 1) % PULSE_STEPS;
+    const scale = 0.15 + (pulsePhase / PULSE_STEPS) * 0.85; // 0.15 → 1.0 puis repart
+    const size = 80;
+    const c = document.createElement('canvas'); c.width = size; c.height = size;
+    const ctx2 = c.getContext('2d');
+    const r = (size / 2) * scale;
+    const alpha = 0.45 * (1 - scale);
+    ctx2.beginPath(); ctx2.arc(size/2, size/2, r, 0, Math.PI*2);
+    ctx2.fillStyle = `rgba(0,122,255,${alpha})`; ctx2.fill();
+    if (userDotRing) userDotRing.billboard.image = c.toDataURL();
+  }
+
+  userDotRing = viewer.entities.add({
+    position: Cesium.Cartesian3.fromDegrees(lng, lat, 2),
+    billboard: {
+      image: makeRingCanvas(0.15),
+      verticalOrigin: Cesium.VerticalOrigin.CENTER,
+      heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND,
+      width: 80, height: 80,
+      disableDepthTestDistance: Number.POSITIVE_INFINITY
+    }
+  });
+
+  const pulseInterval = setInterval(animatePulse, 40);
+  // Stocker l'interval sur l'entité pour pouvoir le nettoyer si besoin
+  userDotRing._pulseInterval = pulseInterval;
+
   userLat = lat; userLng = lng;
 }
 
-// Géolocalisation manuelle (bouton) — recentre sur la position réelle
+// Géolocalisation manuelle (bouton) — recentre sur la position réelle exacte
 function geolocate(e) {
   if(e) e.preventDefault();
   if (!navigator.geolocation) { alert("Géolocalisation non disponible"); return; }
@@ -432,6 +486,7 @@ function geolocate(e) {
     btn.classList.remove('locating');
     const { longitude:lng, latitude:lat } = pos.coords;
     placeUserDot(lng, lat);
+    // Ville la plus proche pour les terrasses
     const nearest = CITIES.reduce((best, city) => {
       const d = Math.hypot(city.lat-lat, city.lng-lng);
       return d < Math.hypot(best.lat-lat, best.lng-lng) ? city : best;
@@ -446,11 +501,12 @@ function geolocate(e) {
     } else {
       renderList(currentHeure, searchQuery);
     }
+    // Zoom sur la position EXACTE (pas le centre de la ville)
     viewer.camera.flyTo({ destination:Cesium.Cartesian3.fromDegrees(lng,lat,400), orientation:{heading:0,pitch:Cesium.Math.toRadians(-50),roll:0}, duration:1.2 });
   }, err => {
     btn.classList.remove('locating');
     alert("Position introuvable. Vérifiez que la localisation est autorisée.");
-  }, { enableHighAccuracy:true, timeout:8000, maximumAge:60000 });
+  }, { enableHighAccuracy:true, timeout:8000, maximumAge:0 });
 }
 
 let terrasses=[], sunStates={}, searchQuery='', currentHeure=14, currentDate=new Date();
@@ -697,11 +753,12 @@ async function init(){
   slider.value=initH;
   slider.dispatchEvent(new Event('input'));
 
-  // Géoloc auto au démarrage : zoom sur position réelle + ville la plus proche
+  // Géoloc auto au démarrage : zoom sur position EXACTE de l'utilisateur
   if(navigator.geolocation){
     navigator.geolocation.getCurrentPosition(pos=>{
       const {longitude:lng,latitude:lat}=pos.coords;
       placeUserDot(lng,lat);
+      // Ville la plus proche pour charger les terrasses
       const nearest=CITIES.reduce((best,city)=>{
         const d=Math.hypot(city.lat-lat,city.lng-lng);
         return d<Math.hypot(best.lat-lat,best.lng-lng)?city:best;
@@ -709,11 +766,14 @@ async function init(){
       currentCity=nearest;
       document.getElementById('villeLabel').textContent=nearest.nom;
       document.querySelectorAll('.city-item').forEach(c=>c.classList.toggle('active',c.dataset.id===nearest.id));
+      // Zoom sur la position exacte de l'utilisateur (pas le centre de la ville)
       viewer.camera.setView({destination:Cesium.Cartesian3.fromDegrees(lng,lat,450),orientation:{heading:0,pitch:Cesium.Math.toRadians(-50),roll:0}});
       loadTerrasses();
     },()=>{
+      // Géoloc refusée ou indisponible : vue par défaut sans ville marquée
+      viewer.camera.setView({destination:Cesium.Cartesian3.fromDegrees(2.3488,48.8534,8000000),orientation:{heading:0,pitch:Cesium.Math.toRadians(-90),roll:0}});
       loadTerrasses();
-    },{enableHighAccuracy:true,timeout:8000,maximumAge:60000});
+    },{enableHighAccuracy:true,timeout:8000,maximumAge:0});
   }else{
     loadTerrasses();
   }
@@ -724,4 +784,3 @@ init();
 
 </body>
 </html>
-
