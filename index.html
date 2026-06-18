@@ -186,6 +186,36 @@
     .card.partner { background:linear-gradient(135deg,#FFFDF5,#FFF8E0); border:1px solid #FFE58A; border-radius:var(--radius-md); margin-bottom:6px; }
     .card.partner .card-name::after { content:'⭐'; margin-left:5px; font-size:12px; }
     .partner-tag { font-size:10px; font-weight:700; color:#9A6B00; background:#FFE58A; padding:2px 7px; border-radius:10px; margin-left:6px; vertical-align:middle; }
+
+    /* Section "Sélection" — carrousel horizontal de cafés référencés */
+    .sel-wrap { padding: 6px 0 10px; }
+    .sel-head { padding: 6px 20px 10px; display:flex; align-items:center; gap:7px; }
+    .sel-head .sel-title { font-size:15px; font-weight:700; color:var(--text); }
+    .sel-head .sel-emoji { font-size:16px; }
+    .sel-scroll { display:flex; gap:12px; overflow-x:auto; padding:2px 16px 4px; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+    .sel-scroll::-webkit-scrollbar { display:none; }
+    .sel-card { flex:0 0 200px; background:var(--white); border:1px solid var(--divider); border-radius:16px; overflow:hidden; cursor:pointer; box-shadow:0 2px 12px rgba(0,0,0,0.06); transition:transform 0.12s; }
+    .sel-card:active { transform:scale(0.97); }
+    .sel-photo { width:100%; height:110px; object-fit:cover; display:block; background:var(--bg); }
+    .sel-photo-ph { width:100%; height:110px; background:linear-gradient(135deg,#FFFBE0,#FFE580); display:flex; align-items:center; justify-content:center; font-size:34px; }
+    .sel-info { padding:10px 12px 12px; }
+    .sel-name { font-size:14px; font-weight:700; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .sel-sub { font-size:11px; color:var(--text-3); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .sel-status { font-size:11px; font-weight:700; margin-top:6px; }
+    .sel-status.sun { color:#C99700; }
+    .sel-status.shade { color:var(--shade); }
+    .sel-happy { display:inline-block; margin-top:6px; font-size:10px; font-weight:600; color:#9A6B00; background:#FFF3D6; padding:2px 7px; border-radius:8px; }
+    .list-divider { padding: 10px 20px 6px; font-size:11px; font-weight:600; color:var(--text-3); text-transform:uppercase; letter-spacing:0.8px; }
+
+    /* Timeline soleil dans la fiche */
+    .ps-timeline-wrap { margin: 4px 0 16px; }
+    .ps-timeline-label { font-size:11px; color:var(--text-3); margin-bottom:6px; font-weight:600; }
+    .ps-timeline { display:flex; height:26px; border-radius:8px; overflow:hidden; border:1px solid var(--divider); }
+    .ps-tl-seg { flex:1; position:relative; }
+    .ps-tl-seg.sun { background:#FFE066; }
+    .ps-tl-seg.shade { background:#D9DEE6; }
+    .ps-tl-hours { display:flex; justify-content:space-between; margin-top:3px; font-size:9px; color:var(--text-3); }
+    .ps-desc { font-size:14px; color:var(--text-2); line-height:1.5; margin-bottom:16px; }
   </style>
 </head>
 <body>
@@ -606,29 +636,44 @@ function showTooltip(t,x,y){
 function hideTooltip(){clearTimeout(ttTimeout);tooltip.classList.remove('visible');}
 
 // ══════════════════════════════════════════════
-// PARTENAIRES — restos mis en avant (photo, réservation, happy hours)
-// Pour ajouter un partenaire : copie un bloc et remplis les champs.
-// match: nom exact (ou proche) de la terrasse tel qu'il apparaît dans les données.
+// CAFÉS RÉFÉRENCÉS — ta sélection mise en avant
+// Remplis un bloc par café. Seuls ceux listés ici apparaissent dans la
+// section "Sélection" et ont la fiche enrichie + bouton Réserver.
+// match: nom du café tel qu'il apparaît dans l'app (exact ou proche).
 // ══════════════════════════════════════════════
-const PARTNERS = [
-  // EXEMPLE (à remplacer par tes vrais partenaires) :
-  // {
-  //   match: "Le Café Français",
-  //   reservationUrl: "https://www.thefork.fr/restaurant/le-cafe-francais",
-  //   tel: "+33556000000",
-  //   happyHours: "Happy hour 17h-19h",
-  //   photo: "https://exemple.com/photo.jpg"  // optionnel : sinon photo Foursquare
-  // },
+const REFERENCED = [
+  {
+    match: "Michel's",
+    photo: "https://picsum.photos/seed/michels-bordeaux/600/400",  // ⚠️ photo de démo — remplace par la vraie photo du resto
+    description: "Brasserie bordelaise conviviale, cuisine française généreuse et terrasse couverte en plein centre, rue du Pas-Saint-Georges.",
+    type: "Brasserie · Bistrot",
+    happyHours: "",
+    reservationUrl: "",  // ajoute ici le lien TheFork si tu en as un
+    tel: "+33556813156",
+    priceLevel: "€€"
+  },
+  {
+    match: "Avant Comptoir",
+    photo: "https://picsum.photos/seed/avant-comptoir-bordeaux/600/400",  // ⚠️ photo de démo — remplace par la vraie photo du resto
+    description: "Bar à vin moderne signé Camdeborde, tapas créatives et plus de 1000 vins, face à la Porte Cailhau.",
+    type: "Bar à vin · Tapas",
+    happyHours: "",
+    reservationUrl: "",  // ajoute ici le lien TheFork si tu en as un
+    tel: "+33557149485",
+    priceLevel: "€€€"
+  },
 ];
-function findPartner(nom){
+function findReferenced(nom){
   const n=(nom||'').toLowerCase().trim();
-  return PARTNERS.find(p=>{
+  return REFERENCED.find(p=>{
     const pm=p.match.toLowerCase().trim();
     return n===pm || n.includes(pm) || pm.includes(n);
   })||null;
 }
+// alias pour compat
+function findPartner(nom){ return findReferenced(nom); }
 
-// ══ FOURSQUARE (via proxy Vercel /api/place) ══
+// ══ FOURSQUARE (via proxy Vercel /api/place) — bonus auto pour les non-référencés ══
 const fsqCache={};
 async function fetchFoursquare(t){
   if(fsqCache[t.id]) return fsqCache[t.id];
@@ -641,6 +686,19 @@ async function fetchFoursquare(t){
   }catch(e){ fsqCache[t.id]={}; return {}; }
 }
 
+// ══ Timeline soleil : pour 1 café, calcule l'ensoleillement heure par heure (6h→21h) ══
+function computeSunTimeline(t){
+  const base=new Date(currentDate); base.setHours(0,0,0,0);
+  const tzOffset=-(new Date().getTimezoneOffset())/60;
+  const segs=[];
+  for(let hour=6; hour<=21; hour++){
+    const d=new Date(base); d.setUTCHours(hour-tzOffset,0,0,0);
+    const dir=getSunDir(Cesium.JulianDate.fromDate(d));
+    segs.push(checkSunny(t,dir));
+  }
+  return segs; // tableau de 16 booléens (6h..21h)
+}
+
 function hidePlaceSheet(){
   document.getElementById('placeSheet').classList.remove('open');
   document.getElementById('psOverlay').classList.remove('open');
@@ -649,23 +707,43 @@ function hidePlaceSheet(){
 async function showPlaceSheet(t){
   if(navigator.vibrate) navigator.vibrate(10);
   const isSun=sunStates[t.id]===true;
-  const partner=findPartner(t.nom);
+  const ref=findReferenced(t.nom);
   const mapsUrl=`https://maps.apple.com/?q=${encodeURIComponent(t.nom+', '+currentCity.nom)}&ll=${t.lat},${t.lng}`;
   const content=document.getElementById('psContent');
+  const dur=formatDuration(sunChange[t.id]);
+  const dist=distKm(t.lat,t.lng);
 
-  // En-tête immédiat (spinner pour la photo) + infos de base
-  const badge = partner ? `<div class="ps-badge">⭐ Partenaire</div>` : '';
-  const happy = partner && partner.happyHours ? `<span class="ps-happy">🍹 ${partner.happyHours}</span>` : '';
+  // Compte à rebours détaillé
+  const countdown = isSun
+    ? (dur?`☀️ Encore ${dur} de soleil`:'☀️ En ce moment au soleil')
+    : (dur?`🌑 Soleil dans ${dur}`:'🌑 En ce moment à l’ombre');
+
+  // Timeline soleil de la journée
+  const tl=computeSunTimeline(t);
+  const tlSegs=tl.map(s=>`<div class="ps-tl-seg ${s?'sun':'shade'}"></div>`).join('');
+
+  const badge = ref ? `<div class="ps-badge">⭐ Sélection Soleilenterrasse</div>` : '';
+  const typeLine = (ref&&ref.type)||t.type;
+  const priceLine = ref&&ref.priceLevel ? ' · '+ref.priceLevel : '';
+  const desc = ref&&ref.description ? `<div class="ps-desc">${ref.description}</div>` : '';
+  const happy = ref&&ref.happyHours ? `<span class="ps-happy">🍹 Happy hour ${ref.happyHours}</span>` : '';
+
   content.innerHTML=`
     <div class="ps-spinner-wrap"><div class="spinner"></div></div>
     <div class="ps-body">
       ${badge}
-      <div class="ps-sun ${isSun?'sun':'shade'}">${isSun?'☀️ En ce moment au soleil':'🌑 En ce moment à l’ombre'}</div>
+      <div class="ps-sun ${isSun?'sun':'shade'}">${countdown}</div>
       <div class="ps-name">${t.nom}</div>
-      <div class="ps-sub">${t.type}${t.adresse?' · '+t.adresse:''}</div>
+      <div class="ps-sub">${typeLine}${priceLine}${dist?' · '+dist:''}${t.adresse?' · '+t.adresse:''}</div>
+      ${desc}
+      <div class="ps-timeline-wrap">
+        <div class="ps-timeline-label">Ensoleillement aujourd'hui</div>
+        <div class="ps-timeline">${tlSegs}</div>
+        <div class="ps-tl-hours"><span>6h</span><span>10h</span><span>14h</span><span>18h</span><span>21h</span></div>
+      </div>
       <div class="ps-meta" id="psMeta">${happy}</div>
       <div class="ps-btns" id="psBtns">
-        ${partner && partner.reservationUrl ? `<button class="ps-btn reserve" onclick="window.open('${partner.reservationUrl}','_blank')">🍽 Réserver une table</button>` : ''}
+        ${ref && ref.reservationUrl ? `<button class="ps-btn reserve" onclick="window.open('${ref.reservationUrl}','_blank')">🍽 Réserver une table</button>` : ''}
         <button class="ps-btn maps" onclick="window.open('${mapsUrl}','_blank')">🗺 Itinéraire</button>
         <button class="ps-btn tel" id="psTelBtn" style="display:none">📞 Appeler</button>
       </div>
@@ -673,18 +751,25 @@ async function showPlaceSheet(t){
   document.getElementById('placeSheet').classList.add('open');
   document.getElementById('psOverlay').classList.add('open');
 
-  // Photo : partenaire d'abord, sinon Foursquare
-  const fsq=await fetchFoursquare(t);
+  // Photo : référencé d'abord (fiable), sinon Foursquare
+  const photoRef=(ref&&ref.photo)||null;
   const spinnerWrap=content.querySelector('.ps-spinner-wrap');
-  const photo=(partner&&partner.photo)||fsq.photo;
-  if(spinnerWrap){
-    if(photo){ const img=document.createElement('img'); img.className='ps-photo'; img.src=photo; img.alt=t.nom; spinnerWrap.replaceWith(img); }
-    else { spinnerWrap.outerHTML=`<div class="ps-photo-placeholder">☀️</div>`; }
+  if(photoRef){
+    const img=document.createElement('img'); img.className='ps-photo'; img.src=photoRef; img.alt=t.nom;
+    img.onerror=()=>{ img.replaceWith(Object.assign(document.createElement('div'),{className:'ps-photo-placeholder',textContent:'☀️'})); };
+    if(spinnerWrap) spinnerWrap.replaceWith(img);
   }
-  // Note Foursquare
+  // Foursquare (photo de secours + note + tel)
+  const fsq=await fetchFoursquare(t);
+  if(!photoRef){
+    const sw=content.querySelector('.ps-spinner-wrap');
+    if(sw){
+      if(fsq.photo){ const img=document.createElement('img'); img.className='ps-photo'; img.src=fsq.photo; img.alt=t.nom; sw.replaceWith(img); }
+      else { sw.outerHTML=`<div class="ps-photo-placeholder">☀️</div>`; }
+    }
+  }
   if(fsq.rating){ const meta=document.getElementById('psMeta'); if(meta) meta.insertAdjacentHTML('afterbegin', `<span class="ps-rating">⭐ ${fsq.rating} / 5</span>`); }
-  // Téléphone : partenaire d'abord, sinon Foursquare
-  const tel=(partner&&partner.tel)||fsq.tel;
+  const tel=(ref&&ref.tel)||fsq.tel;
   if(tel){ const b=document.getElementById('psTelBtn'); if(b){ b.style.display='block'; b.onclick=()=>{ window.location.href='tel:'+tel; }; } }
 }
 
@@ -697,19 +782,42 @@ function renderList(h,query){
   const list=document.getElementById('terrasseList');
   const q=normalize(query||'');
   let filtered=terrasses; if(q) filtered=terrasses.filter(t=>normalize(t.nom).includes(q)||normalize(t.type).includes(q)||normalize(t.adresse).includes(q));
-  // Tri : partenaires d'abord, puis au soleil, puis par distance
+  // Tri : référencés d'abord, puis au soleil, puis par distance
   const sorted=[...filtered].sort((a,b)=>{
-    const pa=findPartner(a.nom)?1:0, pb=findPartner(b.nom)?1:0;
+    const pa=findReferenced(a.nom)?1:0, pb=findReferenced(b.nom)?1:0;
     if(pa!==pb) return pb-pa;
     const sun=(sunStates[b.id]?1:0)-(sunStates[a.id]?1:0);
     if(sun!==0) return sun;
     return distMeters(a.lat,a.lng)-distMeters(b.lat,b.lng);
   });
   list.innerHTML='';
-  if(!sorted.length){list.innerHTML=`<div class="no-results">Aucun résultat${query?' pour <strong>"'+query+'"</strong>':''}</div>`;return;}
+
+  // ── Section "Sélection" : uniquement les cafés référencés (avec photo) ──
+  const refTerrasses = terrasses.filter(t=>findReferenced(t.nom));
+  if(refTerrasses.length && !q){
+    const wrap=document.createElement('div'); wrap.className='sel-wrap';
+    wrap.innerHTML=`<div class="sel-head"><span class="sel-emoji">⭐</span><span class="sel-title">Notre sélection</span></div>`;
+    const scroll=document.createElement('div'); scroll.className='sel-scroll';
+    refTerrasses.forEach(t=>{
+      const ref=findReferenced(t.nom);
+      const isSun=sunStates[t.id]===true;
+      const photo=ref.photo?`<img class="sel-photo" src="${ref.photo}" alt="${t.nom}" onerror="this.outerHTML='<div class=\\'sel-photo-ph\\'>☀️</div>'">`:`<div class="sel-photo-ph">☀️</div>`;
+      const happy=ref.happyHours?`<span class="sel-happy">🍹 ${ref.happyHours}</span>`:'';
+      const c=document.createElement('div'); c.className='sel-card';
+      c.innerHTML=`${photo}<div class="sel-info"><div class="sel-name">${t.nom}</div><div class="sel-sub">${(ref.type||t.type)}${ref.priceLevel?' · '+ref.priceLevel:''}</div><div class="sel-status ${isSun?'sun':'shade'}">${isSun?'☀️ Au soleil':'🌑 À l’ombre'}</div>${happy}</div>`;
+      c.addEventListener('click',()=>{ closeDrawer(); viewer.camera.setView({destination:Cesium.Cartesian3.fromDegrees(t.lng,t.lat,300),orientation:{heading:0,pitch:Cesium.Math.toRadians(-50),roll:0}}); showPlaceSheet(t); });
+      scroll.appendChild(c);
+    });
+    wrap.appendChild(scroll);
+    list.appendChild(wrap);
+    const divider=document.createElement('div'); divider.className='list-divider'; divider.textContent='Toutes les terrasses';
+    list.appendChild(divider);
+  }
+
+  if(!sorted.length){const nr=document.createElement('div');nr.className='no-results';nr.innerHTML=`Aucun résultat${query?' pour <strong>"'+query+'"</strong>':''}`;list.appendChild(nr);return;}
   sorted.forEach(t=>{
-    const partner=findPartner(t.nom);
-    const card=document.createElement('div'); card.className='card'+(partner?' partner':''); card.dataset.id=t.id;
+    const ref=findReferenced(t.nom);
+    const card=document.createElement('div'); card.className='card'+(ref?' partner':''); card.dataset.id=t.id;
     const isSun=sunStates[t.id]===true;
     const dist=distKm(t.lat,t.lng);
     const dur=formatDuration(sunChange[t.id]);
@@ -719,7 +827,7 @@ function renderList(h,query){
     }else{
       timeLine=`<div class="card-time shade">🌑 ${dur?'soleil dans '+dur:'à l’ombre'}</div>`;
     }
-    const tag=partner?`<span class="partner-tag">Partenaire</span>`:'';
+    const tag=ref?`<span class="partner-tag">Sélection</span>`:'';
     card.innerHTML=`<div class="card-icon ${isSun?'sun':'shade'}">${isSun?'☀️':'🌑'}</div><div class="card-body"><div class="card-name">${highlight(t.nom,query)}${tag}</div><div class="card-sub">${t.type}${t.adresse?' · '+t.adresse:''}${dist?' · '+dist:''}</div>${timeLine}</div>`;
     card.addEventListener('click',()=>{
       shadowVersion++;
@@ -819,4 +927,5 @@ init();
 
 </body>
 </html>
+
 
