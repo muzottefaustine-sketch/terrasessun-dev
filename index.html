@@ -154,6 +154,38 @@
     .live-dot { width:6px; height:6px; border-radius:50%; background:#30D158; animation:blink 2s ease-in-out infinite; flex-shrink:0; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
     .privacy-link { margin-left:auto; font-size:10px; color:var(--text-3); cursor:pointer; text-decoration:none; }
+
+    /* ══ FICHE LIEU (bottom sheet) ══ */
+    #psOverlay { position: fixed; inset: 0; z-index: 49; background: rgba(0,0,0,0.4); opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+    #psOverlay.open { opacity: 1; pointer-events: auto; }
+    #placeSheet { position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; background: var(--white); border-radius: 20px 20px 0 0; box-shadow: 0 -8px 40px rgba(0,0,0,0.18); transform: translateY(110%); transition: transform 0.38s cubic-bezier(0.32,0.72,0,1); overflow: hidden; max-height: 88vh; padding-bottom: env(safe-area-inset-bottom, 16px); }
+    #placeSheet.open { transform: translateY(0); }
+    .ps-handle { display: flex; justify-content: center; padding: 12px 0 6px; cursor: pointer; flex-shrink: 0; }
+    .ps-bar { width: 40px; height: 4px; background: #E0E0E5; border-radius: 2px; }
+    .ps-photo { width: 100%; height: 200px; object-fit: cover; display: block; background: var(--bg); }
+    .ps-photo-placeholder { width: 100%; height: 130px; background: linear-gradient(135deg,#FFFBE0,#FFE580); display: flex; align-items: center; justify-content: center; font-size: 48px; }
+    .ps-body { padding: 16px 20px 20px; }
+    .ps-badge { display:inline-flex; align-items:center; gap:5px; background:linear-gradient(135deg,#FFD600,#FFB800); color:#7A5C00; font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px; margin-bottom:10px; text-transform:uppercase; letter-spacing:0.5px; }
+    .ps-sun { font-size: 13px; font-weight: 600; margin-bottom: 6px; font-family: Arial, sans-serif; }
+    .ps-sun.sun { color: #9A7200; }
+    .ps-sun.shade { color: var(--shade); }
+    .ps-name { font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 3px; line-height: 1.2; font-family: Arial, sans-serif; }
+    .ps-sub { font-size: 13px; color: var(--text-2); margin-bottom: 12px; font-family: Arial, sans-serif; }
+    .ps-meta { display:flex; gap:8px; flex-wrap:wrap; margin-bottom: 16px; }
+    .ps-rating { display: inline-flex; align-items: center; gap: 5px; background: var(--bg); border-radius: 20px; padding: 5px 12px; font-size: 13px; font-weight: 600; color: var(--text); }
+    .ps-happy { display:inline-flex; align-items:center; gap:5px; background:#FFF3D6; color:#9A6B00; border-radius:20px; padding:5px 12px; font-size:13px; font-weight:600; }
+    .ps-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+    .ps-btn { flex: 1; min-width: 0; padding: 14px; border: none; border-radius: 14px; font-size: 15px; font-weight: 600; cursor: pointer; text-align: center; font-family: Arial, sans-serif; white-space: nowrap; }
+    .ps-btn:active { opacity: 0.75; }
+    .ps-btn.reserve { background: #FF3B30; color: white; flex-basis: 100%; }
+    .ps-btn.maps { background: #007AFF; color: white; }
+    .ps-btn.tel { background: #34C759; color: white; }
+    .ps-spinner-wrap { display: flex; align-items: center; justify-content: center; height: 80px; }
+
+    /* Carte partenaire dans la liste */
+    .card.partner { background:linear-gradient(135deg,#FFFDF5,#FFF8E0); border:1px solid #FFE58A; border-radius:var(--radius-md); margin-bottom:6px; }
+    .card.partner .card-name::after { content:'⭐'; margin-left:5px; font-size:12px; }
+    .partner-tag { font-size:10px; font-weight:700; color:#9A6B00; background:#FFE58A; padding:2px 7px; border-radius:10px; margin-left:6px; vertical-align:middle; }
   </style>
 </head>
 <body>
@@ -214,6 +246,13 @@
   <div class="tt-type" id="ttType"></div>
   <div class="tt-sun" id="ttSun"></div>
   <a id="ttMaps" href="#" target="_blank" style="display:block;margin-top:8px;background:rgba(255,255,255,0.15);color:white;padding:6px 14px;border-radius:10px;font-size:12px;text-align:center;text-decoration:none;">Ouvrir dans Maps</a>
+</div>
+
+<!-- Fiche lieu (Foursquare + partenaires) -->
+<div id="psOverlay" onclick="hidePlaceSheet()"></div>
+<div id="placeSheet">
+  <div class="ps-handle" onclick="hidePlaceSheet()"><div class="ps-bar"></div></div>
+  <div id="psContent"></div>
 </div>
 
 <div id="drawer">
@@ -367,6 +406,14 @@ function placeUserDot(lng, lat, accuracy) {
   userLat = lat; userLng = lng;
 }
 
+// Centre la caméra EXACTEMENT sur la position (le rond bleu au centre de l'écran)
+// flyToBoundingSphere cale le centre de la sphère au centre de l'écran, même avec la vue inclinée
+function focusUser(lng, lat, animate) {
+  const sphere = new Cesium.BoundingSphere(Cesium.Cartesian3.fromDegrees(lng, lat, 0), 45);
+  const hpr = new Cesium.HeadingPitchRange(0, Cesium.Math.toRadians(-55), 300);
+  viewer.camera.flyToBoundingSphere(sphere, { offset: hpr, duration: animate ? 1.2 : 0 });
+}
+
 // Géolocalisation manuelle (bouton) — recentre sur la position réelle
 function geolocate(e) {
   if(e) e.preventDefault();
@@ -388,7 +435,7 @@ function geolocate(e) {
     } else {
       renderList(currentHeure, searchQuery);
     }
-    viewer.camera.flyTo({ destination:Cesium.Cartesian3.fromDegrees(lng,lat,280), orientation:{heading:0,pitch:Cesium.Math.toRadians(-55),roll:0}, duration:1.2 });
+    focusUser(lng, lat, true);
   }, err => {
     btn.classList.remove('locating');
     alert("Position introuvable. Vérifiez que la localisation est autorisée.");
@@ -462,14 +509,14 @@ function scheduleShadow(){
   shadowDebounce=setTimeout(()=>{
     if(cameraMoving) return;
     const unsub=viewer.scene.postRender.addEventListener(()=>{ unsub(); runShadow(); });
-  }, 500);
+  }, 150);
 }
 async function runShadow(){
   if(computing) return; computing=true; const version=++shadowVersion;
   const jd=viewer.clock.currentTime; const sunDir=getSunDir(jd);
-  for(let i=0;i<terrasses.length;i+=12){
+  for(let i=0;i<terrasses.length;i+=30){
     if(version!==shadowVersion||cameraMoving){computing=false;return;}
-    for(const t of terrasses.slice(i,i+12)) sunStates[t.id]=checkSunny(t,sunDir);
+    for(const t of terrasses.slice(i,i+30)) sunStates[t.id]=checkSunny(t,sunDir);
     syncDots();
     await new Promise(r=>setTimeout(r,0));
   }
@@ -480,25 +527,36 @@ async function runShadow(){
   computeCountdowns(version);
 }
 
+// Met à jour juste le texte "encore Xh" d'une carte, sans reconstruire la liste (zéro clignotement)
+function updateCardTime(t){
+  const card=document.querySelector(`.card[data-id="${CSS.escape(String(t.id))}"] .card-time`);
+  if(!card) return;
+  const isSun=sunStates[t.id]===true;
+  const dur=formatDuration(sunChange[t.id]);
+  card.className='card-time '+(isSun?'sun':'shade');
+  card.textContent=isSun?('☀️ '+(dur?'encore '+dur+' de soleil':'au soleil')):('🌑 '+(dur?'soleil dans '+dur:'à l’ombre'));
+}
+
 // Pour chaque terrasse, calcule dans combien de temps elle passe soleil<->ombre
 async function computeCountdowns(version){
   const base=currentDate.getTime();
-  for(let i=0;i<terrasses.length;i+=6){
-    if(version!==shadowVersion||cameraMoving) return;
-    for(const t of terrasses.slice(i,i+6)){
+  for(let i=0;i<terrasses.length;i+=8){
+    if(version!==shadowVersion) return; // on n'annule que si un nouveau calcul a démarré
+    const batch=terrasses.slice(i,i+8);
+    for(const t of batch){
       const now=sunStates[t.id]===true;
       let change=null;
-      for(let m=15;m<=300;m+=15){
+      for(let m=20;m<=300;m+=20){ // pas de 20 min jusqu'à 5h
         const future=new Date(base+m*60000);
-        const fjd=Cesium.JulianDate.fromDate(future);
-        const fdir=getSunDir(fjd);
+        const fdir=getSunDir(Cesium.JulianDate.fromDate(future));
         if(checkSunny(t,fdir)!==now){ change=m; break; }
       }
       sunChange[t.id]=change;
     }
+    // Mise à jour immédiate du texte des cartes de ce lot (sans rebuild → pas de clignotement)
+    batch.forEach(updateCardTime);
     await new Promise(r=>setTimeout(r,0));
   }
-  if(version===shadowVersion) renderList(currentHeure,searchQuery);
 }
 
 function formatDuration(min){
@@ -547,6 +605,89 @@ function showTooltip(t,x,y){
 }
 function hideTooltip(){clearTimeout(ttTimeout);tooltip.classList.remove('visible');}
 
+// ══════════════════════════════════════════════
+// PARTENAIRES — restos mis en avant (photo, réservation, happy hours)
+// Pour ajouter un partenaire : copie un bloc et remplis les champs.
+// match: nom exact (ou proche) de la terrasse tel qu'il apparaît dans les données.
+// ══════════════════════════════════════════════
+const PARTNERS = [
+  // EXEMPLE (à remplacer par tes vrais partenaires) :
+  // {
+  //   match: "Le Café Français",
+  //   reservationUrl: "https://www.thefork.fr/restaurant/le-cafe-francais",
+  //   tel: "+33556000000",
+  //   happyHours: "Happy hour 17h-19h",
+  //   photo: "https://exemple.com/photo.jpg"  // optionnel : sinon photo Foursquare
+  // },
+];
+function findPartner(nom){
+  const n=(nom||'').toLowerCase().trim();
+  return PARTNERS.find(p=>{
+    const pm=p.match.toLowerCase().trim();
+    return n===pm || n.includes(pm) || pm.includes(n);
+  })||null;
+}
+
+// ══ FOURSQUARE (via proxy Vercel /api/place) ══
+const fsqCache={};
+async function fetchFoursquare(t){
+  if(fsqCache[t.id]) return fsqCache[t.id];
+  try{
+    const r=await fetch(`/api/place?name=${encodeURIComponent(t.nom)}&lat=${t.lat}&lng=${t.lng}`);
+    if(!r.ok) throw new Error();
+    const data=await r.json();
+    fsqCache[t.id]=data;
+    return data;
+  }catch(e){ fsqCache[t.id]={}; return {}; }
+}
+
+function hidePlaceSheet(){
+  document.getElementById('placeSheet').classList.remove('open');
+  document.getElementById('psOverlay').classList.remove('open');
+}
+
+async function showPlaceSheet(t){
+  if(navigator.vibrate) navigator.vibrate(10);
+  const isSun=sunStates[t.id]===true;
+  const partner=findPartner(t.nom);
+  const mapsUrl=`https://maps.apple.com/?q=${encodeURIComponent(t.nom+', '+currentCity.nom)}&ll=${t.lat},${t.lng}`;
+  const content=document.getElementById('psContent');
+
+  // En-tête immédiat (spinner pour la photo) + infos de base
+  const badge = partner ? `<div class="ps-badge">⭐ Partenaire</div>` : '';
+  const happy = partner && partner.happyHours ? `<span class="ps-happy">🍹 ${partner.happyHours}</span>` : '';
+  content.innerHTML=`
+    <div class="ps-spinner-wrap"><div class="spinner"></div></div>
+    <div class="ps-body">
+      ${badge}
+      <div class="ps-sun ${isSun?'sun':'shade'}">${isSun?'☀️ En ce moment au soleil':'🌑 En ce moment à l’ombre'}</div>
+      <div class="ps-name">${t.nom}</div>
+      <div class="ps-sub">${t.type}${t.adresse?' · '+t.adresse:''}</div>
+      <div class="ps-meta" id="psMeta">${happy}</div>
+      <div class="ps-btns" id="psBtns">
+        ${partner && partner.reservationUrl ? `<button class="ps-btn reserve" onclick="window.open('${partner.reservationUrl}','_blank')">🍽 Réserver une table</button>` : ''}
+        <button class="ps-btn maps" onclick="window.open('${mapsUrl}','_blank')">🗺 Itinéraire</button>
+        <button class="ps-btn tel" id="psTelBtn" style="display:none">📞 Appeler</button>
+      </div>
+    </div>`;
+  document.getElementById('placeSheet').classList.add('open');
+  document.getElementById('psOverlay').classList.add('open');
+
+  // Photo : partenaire d'abord, sinon Foursquare
+  const fsq=await fetchFoursquare(t);
+  const spinnerWrap=content.querySelector('.ps-spinner-wrap');
+  const photo=(partner&&partner.photo)||fsq.photo;
+  if(spinnerWrap){
+    if(photo){ const img=document.createElement('img'); img.className='ps-photo'; img.src=photo; img.alt=t.nom; spinnerWrap.replaceWith(img); }
+    else { spinnerWrap.outerHTML=`<div class="ps-photo-placeholder">☀️</div>`; }
+  }
+  // Note Foursquare
+  if(fsq.rating){ const meta=document.getElementById('psMeta'); if(meta) meta.insertAdjacentHTML('afterbegin', `<span class="ps-rating">⭐ ${fsq.rating} / 5</span>`); }
+  // Téléphone : partenaire d'abord, sinon Foursquare
+  const tel=(partner&&partner.tel)||fsq.tel;
+  if(tel){ const b=document.getElementById('psTelBtn'); if(b){ b.style.display='block'; b.onclick=()=>{ window.location.href='tel:'+tel; }; } }
+}
+
 function normalize(s){return(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
 function distMeters(lat,lng){if(userLat===null)return Infinity;return Math.hypot((lat-userLat)*111320,(lng-userLng)*111320*Math.cos(userLat*Math.PI/180));}
 function distKm(lat,lng){if(userLat===null)return '';const d=distMeters(lat,lng)/1000;return d<1?Math.round(d*1000)+'m':d.toFixed(1)+'km';}
@@ -556,8 +697,10 @@ function renderList(h,query){
   const list=document.getElementById('terrasseList');
   const q=normalize(query||'');
   let filtered=terrasses; if(q) filtered=terrasses.filter(t=>normalize(t.nom).includes(q)||normalize(t.type).includes(q)||normalize(t.adresse).includes(q));
-  // Tri : d'abord au soleil, puis par distance (le plus proche en premier)
+  // Tri : partenaires d'abord, puis au soleil, puis par distance
   const sorted=[...filtered].sort((a,b)=>{
+    const pa=findPartner(a.nom)?1:0, pb=findPartner(b.nom)?1:0;
+    if(pa!==pb) return pb-pa;
     const sun=(sunStates[b.id]?1:0)-(sunStates[a.id]?1:0);
     if(sun!==0) return sun;
     return distMeters(a.lat,a.lng)-distMeters(b.lat,b.lng);
@@ -565,10 +708,10 @@ function renderList(h,query){
   list.innerHTML='';
   if(!sorted.length){list.innerHTML=`<div class="no-results">Aucun résultat${query?' pour <strong>"'+query+'"</strong>':''}</div>`;return;}
   sorted.forEach(t=>{
-    const card=document.createElement('div'); card.className='card'; card.dataset.id=t.id;
+    const partner=findPartner(t.nom);
+    const card=document.createElement('div'); card.className='card'+(partner?' partner':''); card.dataset.id=t.id;
     const isSun=sunStates[t.id]===true;
     const dist=distKm(t.lat,t.lng);
-    // Compte à rebours soleil / ombre
     const dur=formatDuration(sunChange[t.id]);
     let timeLine='';
     if(isSun){
@@ -576,13 +719,15 @@ function renderList(h,query){
     }else{
       timeLine=`<div class="card-time shade">🌑 ${dur?'soleil dans '+dur:'à l’ombre'}</div>`;
     }
-    card.innerHTML=`<div class="card-icon ${isSun?'sun':'shade'}">${isSun?'☀️':'🌑'}</div><div class="card-body"><div class="card-name">${highlight(t.nom,query)}</div><div class="card-sub">${t.type}${t.adresse?' · '+t.adresse:''}${dist?' · '+dist:''}</div>${timeLine}</div>`;
+    const tag=partner?`<span class="partner-tag">Partenaire</span>`:'';
+    card.innerHTML=`<div class="card-icon ${isSun?'sun':'shade'}">${isSun?'☀️':'🌑'}</div><div class="card-body"><div class="card-name">${highlight(t.nom,query)}${tag}</div><div class="card-sub">${t.type}${t.adresse?' · '+t.adresse:''}${dist?' · '+dist:''}</div>${timeLine}</div>`;
     card.addEventListener('click',()=>{
       shadowVersion++;
       document.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));
       card.classList.add('active');
       closeDrawer();
       viewer.camera.setView({destination:Cesium.Cartesian3.fromDegrees(t.lng,t.lat,300),orientation:{heading:0,pitch:Cesium.Math.toRadians(-50),roll:0}});
+      showPlaceSheet(t);
     });
     list.appendChild(card);
   });
@@ -607,8 +752,8 @@ slider.addEventListener('change',e=>{if(terrasses.length>0)scheduleShadow();});
 const handler=new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
 handler.setInputAction(click=>{
   const picked=viewer.scene.pick(click.position);
-  if(Cesium.defined(picked)&&picked.id){const id=picked.id.properties?.id?.getValue();const t=terrasses.find(x=>String(x.id)===String(id));if(t){showTooltip(t,click.position.x,click.position.y);return;}}
-  hideTooltip();
+  if(Cesium.defined(picked)&&picked.id){const id=picked.id.properties?.id?.getValue();const t=terrasses.find(x=>String(x.id)===String(id));if(t){showPlaceSheet(t);return;}}
+  hidePlaceSheet();
 },Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
 async function loadTerrasses(){
@@ -651,13 +796,16 @@ async function init(){
         return d<Math.hypot(best.lat-lat,best.lng-lng)?city:best;
       });
       currentCity=nearest;
-      viewer.camera.setView({destination:Cesium.Cartesian3.fromDegrees(lng,lat,280),orientation:{heading:0,pitch:Cesium.Math.toRadians(-55),roll:0}});
+      focusUser(lng,lat,false);
       loadTerrasses();
       // Affinage : une 2e mesure GPS plus précise arrive souvent après 1-2s
-      navigator.geolocation.watchPosition(p=>{
+      let refined=false;
+      const wid=navigator.geolocation.watchPosition(p=>{
         const {longitude:l2,latitude:la2,accuracy:a2}=p.coords;
         placeUserDot(l2,la2,a2);
+        if(!refined){ refined=true; focusUser(l2,la2,true); } // recadre une fois sur la position affinée
       },()=>{},{enableHighAccuracy:true,timeout:15000,maximumAge:0});
+      setTimeout(()=>navigator.geolocation.clearWatch(wid), 20000);
     },()=>{
       loadTerrasses();
     },{enableHighAccuracy:true,timeout:10000,maximumAge:0});
@@ -671,3 +819,4 @@ init();
 
 </body>
 </html>
+
