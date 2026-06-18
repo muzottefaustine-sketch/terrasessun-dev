@@ -211,6 +211,7 @@
     .ps-timeline-wrap { margin: 4px 0 16px; }
     .ps-timeline-label { font-size:11px; color:var(--text-3); margin-bottom:6px; font-weight:600; }
     .ps-timeline { display:flex; height:26px; border-radius:8px; overflow:hidden; border:1px solid var(--divider); }
+    .ps-tl-loading { flex:1; display:flex; align-items:center; justify-content:center; font-size:11px; color:var(--text-3); background:var(--bg); }
     .ps-tl-seg { flex:1; position:relative; }
     .ps-tl-seg.sun { background:#FFE066; }
     .ps-tl-seg.shade { background:#D9DEE6; }
@@ -699,6 +700,26 @@ function computeSunTimeline(t){
   return segs; // tableau de 16 booléens (6h..21h)
 }
 
+// Affiche la timeline UNE FOIS les bâtiments 3D autour du café chargés (sinon résultat faux)
+function renderTimelineWhenReady(t){
+  let tries=0;
+  const draw=()=>{
+    const wrap=document.getElementById('psTimeline');
+    if(!wrap) return false; // fiche fermée
+    const tl=computeSunTimeline(t);
+    wrap.innerHTML=tl.map(s=>`<div class="ps-tl-seg ${s?'sun':'shade'}"></div>`).join('');
+    return true;
+  };
+  const tick=()=>{
+    tries++;
+    const ready = viewer.scene.globe.tilesLoaded && osmBuildings.tilesLoaded;
+    if(!document.getElementById('psTimeline')) return; // fiche fermée, on arrête
+    if(ready || tries>=20){ draw(); }     // dès que prêt (ou au bout de ~6s) on dessine
+    if(!ready && tries<20){ setTimeout(tick, 300); }
+  };
+  tick();
+}
+
 function hidePlaceSheet(){
   document.getElementById('placeSheet').classList.remove('open');
   document.getElementById('psOverlay').classList.remove('open');
@@ -706,21 +727,10 @@ function hidePlaceSheet(){
 
 async function showPlaceSheet(t){
   if(navigator.vibrate) navigator.vibrate(10);
-  const isSun=sunStates[t.id]===true;
   const ref=findReferenced(t.nom);
   const mapsUrl=`https://maps.apple.com/?q=${encodeURIComponent(t.nom+', '+currentCity.nom)}&ll=${t.lat},${t.lng}`;
   const content=document.getElementById('psContent');
-  const dur=formatDuration(sunChange[t.id]);
   const dist=distKm(t.lat,t.lng);
-
-  // Compte à rebours détaillé
-  const countdown = isSun
-    ? (dur?`☀️ Encore ${dur} de soleil`:'☀️ En ce moment au soleil')
-    : (dur?`🌑 Soleil dans ${dur}`:'🌑 En ce moment à l’ombre');
-
-  // Timeline soleil de la journée
-  const tl=computeSunTimeline(t);
-  const tlSegs=tl.map(s=>`<div class="ps-tl-seg ${s?'sun':'shade'}"></div>`).join('');
 
   const badge = ref ? `<div class="ps-badge">⭐ Sélection Soleilenterrasse</div>` : '';
   const typeLine = (ref&&ref.type)||t.type;
@@ -732,13 +742,12 @@ async function showPlaceSheet(t){
     <div class="ps-spinner-wrap"><div class="spinner"></div></div>
     <div class="ps-body">
       ${badge}
-      <div class="ps-sun ${isSun?'sun':'shade'}">${countdown}</div>
       <div class="ps-name">${t.nom}</div>
       <div class="ps-sub">${typeLine}${priceLine}${dist?' · '+dist:''}${t.adresse?' · '+t.adresse:''}</div>
       ${desc}
       <div class="ps-timeline-wrap">
         <div class="ps-timeline-label">Ensoleillement aujourd'hui</div>
-        <div class="ps-timeline">${tlSegs}</div>
+        <div class="ps-timeline" id="psTimeline"><div class="ps-tl-loading">Calcul en cours…</div></div>
         <div class="ps-tl-hours"><span>6h</span><span>10h</span><span>14h</span><span>18h</span><span>21h</span></div>
       </div>
       <div class="ps-meta" id="psMeta">${happy}</div>
@@ -750,6 +759,9 @@ async function showPlaceSheet(t){
     </div>`;
   document.getElementById('placeSheet').classList.add('open');
   document.getElementById('psOverlay').classList.add('open');
+
+  // Timeline : calculée une fois que les bâtiments 3D autour du café sont chargés (sinon tout faux/jaune)
+  renderTimelineWhenReady(t);
 
   // Photo : référencé d'abord (fiable), sinon Foursquare
   const photoRef=(ref&&ref.photo)||null;
@@ -804,7 +816,7 @@ function renderList(h,query){
       const photo=ref.photo?`<img class="sel-photo" src="${ref.photo}" alt="${t.nom}" onerror="this.outerHTML='<div class=\\'sel-photo-ph\\'>☀️</div>'">`:`<div class="sel-photo-ph">☀️</div>`;
       const happy=ref.happyHours?`<span class="sel-happy">🍹 ${ref.happyHours}</span>`:'';
       const c=document.createElement('div'); c.className='sel-card';
-      c.innerHTML=`${photo}<div class="sel-info"><div class="sel-name">${t.nom}</div><div class="sel-sub">${(ref.type||t.type)}${ref.priceLevel?' · '+ref.priceLevel:''}</div><div class="sel-status ${isSun?'sun':'shade'}">${isSun?'☀️ Au soleil':'🌑 À l’ombre'}</div>${happy}</div>`;
+      c.innerHTML=`${photo}<div class="sel-info"><div class="sel-name">${t.nom}</div><div class="sel-sub">${(ref.type||t.type)}${ref.priceLevel?' · '+ref.priceLevel:''}</div>${happy}</div>`;
       c.addEventListener('click',()=>{ closeDrawer(); viewer.camera.setView({destination:Cesium.Cartesian3.fromDegrees(t.lng,t.lat,300),orientation:{heading:0,pitch:Cesium.Math.toRadians(-50),roll:0}}); showPlaceSheet(t); });
       scroll.appendChild(c);
     });
@@ -927,5 +939,4 @@ init();
 
 </body>
 </html>
-
 
