@@ -16,17 +16,20 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --yellow: #FFD600; --yellow-bg: #FFFBE0;
-      --shade: #8E9BAD; --shade-bg: #EEF1F5;
-      --text: #1C1C1E; --text-2: #6C6C70; --text-3: #AEAEB2;
-      --divider: #E5E5EA; --panel-w: 320px;
-      --radius-md: 14px; --radius-sm: 10px;
-      --glass: rgba(255,255,255,0.85);
-      --white: #FFFFFF; --bg: #F2F2F7;
+      --yellow: #F8C83E; --yellow-2: #FFE07A; --yellow-bg: #FFF7D6;
+      --shade: #7C8798; --shade-bg: #EDF1F6;
+      --blue: #1677FF; --green: #1FA774; --coral: #F05E4B;
+      --text: #15171A; --text-2: #5E6470; --text-3: #9AA1AD;
+      --divider: #E4E7EC; --panel-w: 380px;
+      --radius-md: 12px; --radius-sm: 8px;
+      --glass: rgba(255,255,255,0.9);
+      --white: #FFFFFF; --bg: #F6F7F9;
+      --shadow-soft: 0 14px 38px rgba(15, 23, 42, 0.13);
+      --shadow-card: 0 8px 24px rgba(15, 23, 42, 0.08);
     }
     .panel-map input[type=range] { touch-action: pan-x; }
     #cesiumContainer { touch-action: none; }
-    html, body { height: 100%; width: 100%; overflow: hidden; font-family: Arial, sans-serif; background: #000; position: fixed; inset: 0; }
+    html, body { height: 100%; width: 100%; overflow: hidden; font-family: Inter, -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif; background: #000; position: fixed; inset: 0; color: var(--text); }
 
     #splash { position: fixed; inset: 0; z-index: 1000; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.6s ease; }
     #splash.out { opacity: 0; pointer-events: none; }
@@ -55,34 +58,35 @@
     }
     .search-glass {
       flex: 1; display: flex; align-items: center; gap: 8px;
-      background: var(--glass); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-      border-radius: 16px; padding: 0 14px; height: 50px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.8);
-      border: 1px solid rgba(255,255,255,0.6);
+      background: var(--glass); backdrop-filter: blur(24px) saturate(1.15); -webkit-backdrop-filter: blur(24px) saturate(1.15);
+      border-radius: 16px; padding: 0 14px; height: 52px;
+      box-shadow: var(--shadow-soft), inset 0 1px 0 rgba(255,255,255,0.86);
+      border: 1px solid rgba(255,255,255,0.72);
     }
     .search-glass svg { flex-shrink: 0; opacity: 0.35; }
-    #searchInput { flex: 1; border: none; background: transparent; font-family: Arial, sans-serif; font-size: 15px; color: var(--text); outline: none; }
+    #searchInput { flex: 1; border: none; background: transparent; font: inherit; font-size: 15px; color: var(--text); outline: none; }
     #searchInput::placeholder { color: var(--text-3); }
     .search-clear-btn { background: none; border: none; cursor: pointer; color: var(--text-3); font-size: 16px; padding: 0; display: none; align-items: center; justify-content: center; width: 20px; height: 20px; }
     .search-clear-btn.visible { display: flex; }
     .icon-btn {
-      flex-shrink: 0; width: 50px; height: 50px; background: var(--glass);
-      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      flex-shrink: 0; width: 52px; height: 52px; background: var(--glass);
+      backdrop-filter: blur(24px) saturate(1.15); -webkit-backdrop-filter: blur(24px) saturate(1.15);
       border: 1px solid rgba(255,255,255,0.6); border-radius: 15px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.8);
+      box-shadow: var(--shadow-soft), inset 0 1px 0 rgba(255,255,255,0.86);
       cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: transform 0.1s, background 0.15s; -webkit-transform: translate3d(0, 0, 0);
+      transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.2s ease; -webkit-transform: translate3d(0, 0, 0);
       will-change: transform; isolation: isolate;
     }
+    .icon-btn:hover { transform: translateY(-1px); }
     .icon-btn:active { transform: scale(0.94); background: rgba(255,255,255,0.98); }
 
     /* Bouton géoloc flottant en bas à droite */
     #btnGeo {
       position: fixed; bottom: calc(env(safe-area-inset-bottom,34px) + 140px); right: 16px;
       z-index: 31; width: 50px; height: 50px;
-      background: var(--glass); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      background: var(--glass); backdrop-filter: blur(24px) saturate(1.15); -webkit-backdrop-filter: blur(24px) saturate(1.15);
       border: 1px solid rgba(255,255,255,0.6); border-radius: 15px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.8);
+      box-shadow: var(--shadow-soft), inset 0 1px 0 rgba(255,255,255,0.86);
       cursor: pointer; display: flex; align-items: center; justify-content: center;
       transition: transform 0.1s, background 0.15s;
     }
@@ -93,15 +97,15 @@
     .panel-map {
       position: fixed; bottom: calc(env(safe-area-inset-bottom, 34px) + 16px); left: 50%;
       transform: translateX(-50%); background: var(--glass);
-      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(255,255,255,0.6); padding: 16px 24px 14px; border-radius: 24px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.8);
+      backdrop-filter: blur(24px) saturate(1.15); -webkit-backdrop-filter: blur(24px) saturate(1.15);
+      border: 1px solid rgba(255,255,255,0.7); padding: 16px 24px 14px; border-radius: 22px;
+      box-shadow: var(--shadow-soft), inset 0 1px 0 rgba(255,255,255,0.86);
       text-align: center; z-index: 30; width: 82%; max-width: 400px;
     }
     .panel-map h3 { margin: 0 0 12px 0; font-size: 15px; font-weight: 600; color: var(--text); display: flex; align-items: center; justify-content: center; gap: 8px; }
-    .panel-map h3 .heure { font-size: 18px; font-weight: 700; color: var(--text); font-family: Arial, sans-serif; }
+    .panel-map h3 .heure { font-size: 18px; font-weight: 800; color: var(--text); font-family: inherit; }
     .panel-map input[type=range] { width: 100%; cursor: pointer; -webkit-appearance: none; height: 4px; border-radius: 2px; background: linear-gradient(to right, var(--yellow) var(--pct,46%), rgba(0,0,0,0.1) var(--pct,46%)); outline: none; }
-    .panel-map input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%; background: white; border: 3px solid var(--yellow); box-shadow: 0 2px 10px rgba(0,0,0,0.15); cursor: pointer; }
+    .panel-map input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%; background: white; border: 3px solid var(--yellow); box-shadow: 0 4px 16px rgba(0,0,0,0.18); cursor: pointer; }
     .panel-labels { display: flex; justify-content: space-between; margin-top: 6px; font-size: 10px; color: var(--text-3); font-weight: 500; }
 
     #tooltip { position: fixed; z-index: 50; background: rgba(20,20,22,0.93); color: white; padding: 12px 18px; border-radius: 16px; font-size: 15px; font-weight: 600; pointer-events: none; opacity: 0; transform: translateY(6px); transition: opacity 0.18s, transform 0.18s; backdrop-filter: blur(12px); max-width: 260px; text-align: center; border: 1px solid rgba(255,255,255,0.08); }
@@ -111,95 +115,111 @@
     #tooltip .tt-sun.sun { color: var(--yellow); }
     #tooltip .tt-sun.shade { color: #90CAF9; }
 
-    #drawer { position: fixed; z-index: 40; background: var(--white); display: flex; flex-direction: column; transition: transform 0.38s cubic-bezier(0.32,0.72,0,1); }
-    @media (min-width: 641px) { #drawer { top:0; right:0; width:var(--panel-w); height:100vh; border-left:1px solid var(--divider); transform:translateX(110%); } #drawer.open { transform:translateX(0); } }
-    @media (max-width: 640px) { #drawer { left:0; bottom:0; width:100%; height:80vh; border-radius:20px 20px 0 0; border-top:1px solid var(--divider); box-shadow:0 -8px 40px rgba(0,0,0,0.12); transform:translateY(110%); } #drawer.open { transform:translateY(0); } }
+    #drawer { position: fixed; z-index: 40; background: linear-gradient(180deg, rgba(255,255,255,0.98), #F8FAFC 46%, #F5F7FA); display: flex; flex-direction: column; transition: transform 0.42s cubic-bezier(0.22,0.9,0.18,1); box-shadow: -22px 0 48px rgba(15,23,42,0.16); }
+    @media (min-width: 641px) { #drawer { top:0; right:0; width:var(--panel-w); height:100vh; border-left:1px solid rgba(255,255,255,0.6); transform:translateX(110%); } #drawer.open { transform:translateX(0); } }
+    @media (max-width: 640px) { #drawer { left:0; bottom:0; width:100%; height:84vh; border-radius:20px 20px 0 0; border-top:1px solid rgba(255,255,255,0.75); box-shadow:0 -18px 52px rgba(15,23,42,0.2); transform:translateY(110%); } #drawer.open { transform:translateY(0); } }
     .drawer-handle { display:none; justify-content:center; padding:12px 0 4px; flex-shrink:0; cursor:pointer; }
     .drawer-bar { width:40px; height:4px; background:#E0E0E5; border-radius:2px; }
     @media (max-width:640px) { .drawer-handle { display:flex; } }
     .drawer-header { padding:20px 20px 0; flex-shrink:0; }
     .drawer-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
-    .drawer-title { font-size: 22px; font-weight: 700; color: var(--text); letter-spacing:-0.3px; }
-    .drawer-title em { font-family: Arial, sans-serif; font-style: italic; font-weight: 700; }
-    .drawer-title span { font-family: Arial, sans-serif; font-style: normal; color: var(--yellow); font-weight: 700; }
+    .drawer-title { font-size: 22px; font-weight: 800; color: var(--text); }
+    .drawer-title em { font-family: inherit; font-style: italic; font-weight: 800; }
+    .drawer-title span { font-family: inherit; font-style: normal; color: var(--yellow); font-weight: 800; }
     #btnClose { background: var(--bg); border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-2); transition: background 0.15s; }
     #btnClose:active { background: #E5E5EA; }
-    .drawer-search { display: flex; align-items: center; gap: 8px; background: var(--bg); border-radius: 12px; padding: 0 12px; height: 40px; margin-bottom: 12px; }
+    .drawer-search { display: flex; align-items: center; gap: 8px; background: var(--white); border:1px solid rgba(226,232,240,0.9); border-radius: 12px; padding: 0 12px; height: 42px; margin-bottom: 12px; box-shadow: 0 4px 14px rgba(15,23,42,0.05); }
     .drawer-search svg { flex-shrink: 0; opacity: 0.3; }
-    #drawerSearch { flex: 1; border: none; background: transparent; font-family: Arial, sans-serif; font-size: 15px; color: var(--text); outline: none; }
+    #drawerSearch { flex: 1; border: none; background: transparent; font: inherit; font-size: 15px; color: var(--text); outline: none; }
     #drawerSearch::placeholder { color: var(--text-3); }
-    .section-title { padding:4px 20px 8px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
-    .section-label { font-size:11px; font-weight:600; color:var(--text-3); text-transform:uppercase; letter-spacing:0.8px; }
-    .count-pill { font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; background:var(--yellow); color:#7A6000; }
+    .filter-chips { display:flex; gap:8px; overflow-x:auto; padding:0 20px 12px; flex-shrink:0; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
+    .filter-chips::-webkit-scrollbar { display:none; }
+    .filter-chip { flex:0 0 auto; border:1px solid var(--divider); background:rgba(255,255,255,0.78); color:var(--text-2); border-radius:999px; height:32px; padding:0 12px; font-size:12px; font-weight:750; cursor:pointer; box-shadow:0 3px 10px rgba(15,23,42,0.04); transition:background 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease; }
+    .filter-chip:hover { transform: translateY(-1px); }
+    .filter-chip.active { background:var(--text); color:#fff; border-color:var(--text); }
+    .section-title { padding:4px 20px 10px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+    .section-label { font-size:11px; font-weight:750; color:var(--text-3); text-transform:uppercase; letter-spacing:0.8px; }
+    .count-pill { font-size:11px; font-weight:800; padding:4px 10px; border-radius:20px; background:var(--text); color:#fff; }
     #loadingState { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; color:var(--text-3); font-size:13px; }
     .spinner { width:24px; height:24px; border:2.5px solid var(--divider); border-top-color:var(--yellow); border-radius:50%; animation:spin 0.8s linear infinite; }
     @keyframes spin { to { transform:rotate(360deg); } }
-    .list { flex:1; overflow-y:auto; padding:0 12px 32px; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+    .list { flex:1; overflow-y:auto; padding:0 12px 32px; -webkit-overflow-scrolling:touch; scrollbar-width:none; scroll-behavior:smooth; }
     .list::-webkit-scrollbar { display:none; }
-    .card { display:flex; align-items:center; gap:12px; padding:12px 8px; border-radius:var(--radius-md); cursor:pointer; transition: background 0.15s; border-bottom:1px solid var(--divider); }
-    .card:last-child { border-bottom:none; }
-    .card:active, .card.active { background:var(--bg); border-color:transparent; }
-    .card-icon { width:38px; height:38px; border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center; font-size:17px; flex-shrink:0; }
-    .card-icon.sun { background:var(--yellow-bg); }
-    .card-icon.shade { background:var(--shade-bg); }
-    .card-time { font-size:11px; font-weight:600; margin-top:2px; }
-    .card-time.sun { color:#C99700; }
+    .card { display:flex; align-items:center; gap:12px; padding:10px; border-radius:var(--radius-md); cursor:pointer; transition: transform 0.16s ease, background 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease; border:1px solid rgba(226,232,240,0.78); background:rgba(255,255,255,0.86); margin-bottom:9px; box-shadow:0 5px 18px rgba(15,23,42,0.055); }
+    .card:last-child { margin-bottom:0; }
+    .card:hover { transform: translateY(-1px); box-shadow: var(--shadow-card); }
+    .card:active, .card.active { transform: scale(0.985); background:var(--white); border-color:rgba(248,200,62,0.75); box-shadow:0 10px 28px rgba(248,200,62,0.16); }
+    .card-photo-wrap { position:relative; width:76px; height:76px; border-radius:10px; overflow:hidden; flex-shrink:0; background:linear-gradient(135deg,#FFF7D6,#E7EEF8); }
+    .card-photo { width:100%; height:100%; object-fit:cover; display:block; transform:scale(1.01); transition:transform 0.2s ease; }
+    .photo-error .card-photo, .photo-error .sel-photo, .photo-error .ps-photo { display:none; }
+    .photo-error::before { content:'☀️'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:26px; }
+    .card:hover .card-photo { transform:scale(1.06); }
+    .card-status { position:absolute; right:5px; bottom:5px; min-width:26px; height:24px; border-radius:999px; display:flex; align-items:center; justify-content:center; font-size:12px; background:rgba(255,255,255,0.9); box-shadow:0 4px 10px rgba(15,23,42,0.18); }
+    .card-status.sun { color:#9A7200; }
+    .card-status.shade { color:var(--shade); }
+    .card-time { font-size:11px; font-weight:750; margin-top:4px; }
+    .card-time.sun { color:#A17600; }
     .card-time.shade { color:var(--shade); }
     .card-body { flex:1; min-width:0; }
-    .card-name { font-size:15px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:2px; font-family: Arial, sans-serif; }
-    .card-sub { font-size:12px; color:var(--text-3); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-family: Arial, sans-serif; }
+    .card-name { font-size:15px; font-weight:800; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:3px; font-family: inherit; }
+    .card-sub { font-size:12px; color:var(--text-2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-family: inherit; }
     .no-results { padding:40px 20px; text-align:center; color:var(--text-3); font-size:13px; line-height:1.7; }
-    .drawer-footer { padding:12px 20px; border-top:1px solid var(--divider); display:flex; align-items:center; gap:6px; flex-shrink:0; }
+    .drawer-footer { padding:12px 20px; border-top:1px solid rgba(226,232,240,0.9); display:flex; align-items:center; gap:6px; flex-shrink:0; background:rgba(255,255,255,0.75); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
     .footer-text { font-size:10px; color:var(--text-3); }
     .live-dot { width:6px; height:6px; border-radius:50%; background:#30D158; animation:blink 2s ease-in-out infinite; flex-shrink:0; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
     .privacy-link { margin-left:auto; font-size:10px; color:var(--text-3); cursor:pointer; text-decoration:none; }
 
     /* ══ FICHE LIEU (bottom sheet) ══ */
-    #psOverlay { position: fixed; inset: 0; z-index: 49; background: rgba(0,0,0,0.4); opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+    #psOverlay { position: fixed; inset: 0; z-index: 49; background: rgba(10,14,20,0.48); opacity: 0; pointer-events: none; transition: opacity 0.3s; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); }
     #psOverlay.open { opacity: 1; pointer-events: auto; }
-    #placeSheet { position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; background: var(--white); border-radius: 20px 20px 0 0; box-shadow: 0 -8px 40px rgba(0,0,0,0.18); transform: translateY(110%); transition: transform 0.38s cubic-bezier(0.32,0.72,0,1); overflow: hidden; max-height: 88vh; padding-bottom: env(safe-area-inset-bottom, 16px); }
+    #placeSheet { position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; background: var(--white); border-radius: 22px 22px 0 0; box-shadow: 0 -24px 70px rgba(15,23,42,0.28); transform: translateY(110%); transition: transform 0.42s cubic-bezier(0.22,0.9,0.18,1); overflow: hidden; max-height: 90vh; padding-bottom: env(safe-area-inset-bottom, 16px); }
     #placeSheet.open { transform: translateY(0); }
     .ps-handle { display: flex; justify-content: center; padding: 12px 0 6px; cursor: pointer; flex-shrink: 0; }
     .ps-bar { width: 40px; height: 4px; background: #E0E0E5; border-radius: 2px; }
-    .ps-photo { width: 100%; height: 200px; object-fit: cover; display: block; background: var(--bg); }
-    .ps-photo-placeholder { width: 100%; height: 130px; background: linear-gradient(135deg,#FFFBE0,#FFE580); display: flex; align-items: center; justify-content: center; font-size: 48px; }
+    .ps-hero { position:relative; min-height:210px; background:linear-gradient(135deg,#1E293B,#475569); overflow:hidden; }
+    .ps-photo { width: 100%; height: 230px; object-fit: cover; display: block; background: var(--bg); }
+    .ps-hero::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg,rgba(5,10,18,0.02) 18%,rgba(5,10,18,0.5) 100%); pointer-events:none; }
+    .ps-photo-placeholder { width: 100%; height: 210px; background: linear-gradient(135deg,#FFF7D6,#DCEBFA); display: flex; align-items: center; justify-content: center; font-size: 48px; }
+    .ps-hero-chip { position:absolute; left:16px; bottom:14px; z-index:1; display:inline-flex; align-items:center; gap:6px; border-radius:999px; padding:7px 12px; background:rgba(255,255,255,0.9); color:var(--text); font-size:12px; font-weight:800; box-shadow:0 8px 24px rgba(15,23,42,0.18); }
     .ps-body { padding: 16px 20px 20px; }
-    .ps-badge { display:inline-flex; align-items:center; gap:5px; background:linear-gradient(135deg,#FFD600,#FFB800); color:#7A5C00; font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px; margin-bottom:10px; text-transform:uppercase; letter-spacing:0.5px; }
-    .ps-sun { font-size: 13px; font-weight: 600; margin-bottom: 6px; font-family: Arial, sans-serif; }
+    .ps-badge { display:inline-flex; align-items:center; gap:5px; background:linear-gradient(135deg,var(--yellow),var(--yellow-2)); color:#775400; font-size:11px; font-weight:800; padding:5px 10px; border-radius:20px; margin-bottom:10px; text-transform:uppercase; letter-spacing:0.5px; }
+    .ps-sun { font-size: 13px; font-weight: 700; margin-bottom: 6px; font-family: inherit; }
     .ps-sun.sun { color: #9A7200; }
     .ps-sun.shade { color: var(--shade); }
-    .ps-name { font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 3px; line-height: 1.2; font-family: Arial, sans-serif; }
-    .ps-sub { font-size: 13px; color: var(--text-2); margin-bottom: 12px; font-family: Arial, sans-serif; }
+    .ps-name { font-size: 24px; font-weight: 850; color: var(--text); margin-bottom: 4px; line-height: 1.14; font-family: inherit; }
+    .ps-sub { font-size: 13px; color: var(--text-2); margin-bottom: 12px; line-height:1.45; font-family: inherit; }
     .ps-meta { display:flex; gap:8px; flex-wrap:wrap; margin-bottom: 16px; }
-    .ps-rating { display: inline-flex; align-items: center; gap: 5px; background: var(--bg); border-radius: 20px; padding: 5px 12px; font-size: 13px; font-weight: 600; color: var(--text); }
-    .ps-happy { display:inline-flex; align-items:center; gap:5px; background:#FFF3D6; color:#9A6B00; border-radius:20px; padding:5px 12px; font-size:13px; font-weight:600; }
+    .ps-rating { display: inline-flex; align-items: center; gap: 5px; background: var(--bg); border-radius: 20px; padding: 6px 12px; font-size: 13px; font-weight: 750; color: var(--text); }
+    .ps-happy { display:inline-flex; align-items:center; gap:5px; background:#FFF3D6; color:#9A6B00; border-radius:20px; padding:6px 12px; font-size:13px; font-weight:750; }
     .ps-btns { display: flex; gap: 10px; flex-wrap: wrap; }
-    .ps-btn { flex: 1; min-width: 0; padding: 14px; border: none; border-radius: 14px; font-size: 15px; font-weight: 600; cursor: pointer; text-align: center; font-family: Arial, sans-serif; white-space: nowrap; }
-    .ps-btn:active { opacity: 0.75; }
-    .ps-btn.reserve { background: #FF3B30; color: white; flex-basis: 100%; }
-    .ps-btn.maps { background: #007AFF; color: white; }
-    .ps-btn.tel { background: #34C759; color: white; }
-    .ps-spinner-wrap { display: flex; align-items: center; justify-content: center; height: 80px; }
+    .ps-btn { flex: 1; min-width: 0; padding: 14px; border: none; border-radius: 12px; font-size: 15px; font-weight: 800; cursor: pointer; text-align: center; font-family: inherit; white-space: nowrap; transition: transform 0.14s ease, opacity 0.14s ease; }
+    .ps-btn:active { opacity: 0.82; transform:scale(0.98); }
+    .ps-btn.reserve { background: var(--coral); color: white; flex-basis: 100%; }
+    .ps-btn.maps { background: var(--blue); color: white; }
+    .ps-btn.tel { background: var(--green); color: white; }
+    .ps-spinner-wrap { display: flex; align-items: center; justify-content: center; height: 210px; background:linear-gradient(135deg,#FFF7D6,#DCEBFA); }
 
     /* Carte partenaire dans la liste */
-    .card.partner { background:linear-gradient(135deg,#FFFDF5,#FFF8E0); border:1px solid #FFE58A; border-radius:var(--radius-md); margin-bottom:6px; }
+    .card.partner { background:linear-gradient(135deg,#FFFFFF,#FFF9E8); border-color:#F6D86B; }
     .card.partner .card-name::after { content:'⭐'; margin-left:5px; font-size:12px; }
-    .partner-tag { font-size:10px; font-weight:700; color:#9A6B00; background:#FFE58A; padding:2px 7px; border-radius:10px; margin-left:6px; vertical-align:middle; }
+    .partner-tag { font-size:10px; font-weight:800; color:#8A6400; background:#FFE58A; padding:2px 7px; border-radius:10px; margin-left:6px; vertical-align:middle; }
 
     /* Section "Sélection" — carrousel horizontal de cafés référencés */
-    .sel-wrap { padding: 6px 0 10px; }
+    .sel-wrap { padding: 6px 0 12px; }
     .sel-head { padding: 6px 20px 10px; display:flex; align-items:center; gap:7px; }
     .sel-head .sel-title { font-size:15px; font-weight:700; color:var(--text); }
     .sel-head .sel-emoji { font-size:16px; }
     .sel-scroll { display:flex; gap:12px; overflow-x:auto; padding:2px 16px 4px; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
     .sel-scroll::-webkit-scrollbar { display:none; }
-    .sel-card { flex:0 0 200px; background:var(--white); border:1px solid var(--divider); border-radius:16px; overflow:hidden; cursor:pointer; box-shadow:0 2px 12px rgba(0,0,0,0.06); transition:transform 0.12s; }
-    .sel-card:active { transform:scale(0.97); }
-    .sel-photo { width:100%; height:110px; object-fit:cover; display:block; background:var(--bg); }
-    .sel-photo-ph { width:100%; height:110px; background:linear-gradient(135deg,#FFFBE0,#FFE580); display:flex; align-items:center; justify-content:center; font-size:34px; }
+    .sel-card { flex:0 0 218px; background:var(--white); border:1px solid rgba(226,232,240,0.86); border-radius:14px; overflow:hidden; cursor:pointer; box-shadow:var(--shadow-card); transition:transform 0.14s ease, box-shadow 0.14s ease; }
+    .sel-card:hover { transform:translateY(-1px); }
+    .sel-card:active { transform:scale(0.98); }
+    .sel-photo-wrap { position:relative; width:100%; height:118px; background:linear-gradient(135deg,#FFF7D6,#DCEBFA); overflow:hidden; }
+    .sel-photo { width:100%; height:118px; object-fit:cover; display:block; background:var(--bg); }
+    .sel-photo-ph { width:100%; height:118px; background:linear-gradient(135deg,#FFF7D6,#DCEBFA); display:flex; align-items:center; justify-content:center; font-size:34px; }
     .sel-info { padding:10px 12px 12px; }
-    .sel-name { font-size:14px; font-weight:700; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .sel-name { font-size:14px; font-weight:800; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .sel-sub { font-size:11px; color:var(--text-3); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .sel-status { font-size:11px; font-weight:700; margin-top:6px; }
     .sel-status.sun { color:#C99700; }
@@ -210,13 +230,20 @@
     /* Timeline soleil dans la fiche */
     .ps-timeline-wrap { margin: 4px 0 16px; }
     .ps-timeline-label { font-size:11px; color:var(--text-3); margin-bottom:6px; font-weight:600; }
-    .ps-timeline { display:flex; height:26px; border-radius:8px; overflow:hidden; border:1px solid var(--divider); }
+    .ps-timeline { display:flex; height:28px; border-radius:8px; overflow:hidden; border:1px solid var(--divider); }
     .ps-tl-loading { flex:1; display:flex; align-items:center; justify-content:center; font-size:11px; color:var(--text-3); background:var(--bg); }
     .ps-tl-seg { flex:1; position:relative; }
-    .ps-tl-seg.sun { background:#FFE066; }
+    .ps-tl-seg.sun { background:linear-gradient(180deg,#FFE783,#F8C83E); }
     .ps-tl-seg.shade { background:#D9DEE6; }
     .ps-tl-hours { display:flex; justify-content:space-between; margin-top:3px; font-size:9px; color:var(--text-3); }
-    .ps-desc { font-size:14px; color:var(--text-2); line-height:1.5; margin-bottom:16px; }
+    .ps-desc { font-size:14px; color:var(--text-2); line-height:1.55; margin-bottom:16px; }
+    @media (min-width: 700px) {
+      #placeSheet { left:50%; right:auto; width:min(520px, calc(100% - 32px)); transform:translate(-50%, 110%); border-radius:22px; bottom:18px; padding-bottom:0; }
+      #placeSheet.open { transform:translate(-50%, 0); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration:0.01ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important; transition-duration:0.01ms !important; }
+    }
   </style>
 </head>
 <body>
@@ -298,7 +325,14 @@
       <input type="text" id="drawerSearch" placeholder="Rechercher un établissement…">
     </div>
   </div>
-  <div class="section-title"><span class="section-label">Résultats</span></div>
+  <div class="filter-chips" id="filterChips" aria-label="Filtres de recherche">
+    <button class="filter-chip active" data-filter="all" type="button">Tous</button>
+    <button class="filter-chip" data-filter="sun" type="button">Au soleil</button>
+    <button class="filter-chip" data-filter="restaurant" type="button">Restaurants</button>
+    <button class="filter-chip" data-filter="cafe" type="button">Cafés</button>
+    <button class="filter-chip" data-filter="bar" type="button">Bars</button>
+  </div>
+  <div class="section-title"><span class="section-label">Résultats</span><span class="count-pill" id="resultCount">0</span></div>
   <div id="loadingState"><div class="spinner"></div><span>Chargement…</span></div>
   <div class="list" id="terrasseList" style="display:none;"></div>
   <div class="drawer-footer">
@@ -473,7 +507,7 @@ function geolocate(e) {
   }, { enableHighAccuracy:true, timeout:10000, maximumAge:0 });
 }
 
-let terrasses=[], sunStates={}, searchQuery='', currentHeure=14, currentDate=new Date();
+let terrasses=[], sunStates={}, searchQuery='', activeFilter='all', currentHeure=14, currentDate=new Date();
 const markerEntities={};
 
 const AMENITY_VALIDES = new Set(['bar','cafe','restaurant','pub','biergarten']);
@@ -645,7 +679,7 @@ function hideTooltip(){clearTimeout(ttTimeout);tooltip.classList.remove('visible
 const REFERENCED = [
   {
     match: "Michel's",
-    photo: "https://picsum.photos/seed/michels-bordeaux/600/400",  // ⚠️ photo de démo — remplace par la vraie photo du resto
+    photo: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=1100&q=82",
     description: "Brasserie bordelaise conviviale, cuisine française généreuse et terrasse couverte en plein centre, rue du Pas-Saint-Georges.",
     type: "Brasserie · Bistrot",
     happyHours: "",
@@ -655,7 +689,7 @@ const REFERENCED = [
   },
   {
     match: "Avant Comptoir",
-    photo: "https://picsum.photos/seed/avant-comptoir-bordeaux/600/400",  // ⚠️ photo de démo — remplace par la vraie photo du resto
+    photo: "https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1100&q=82",
     description: "Bar à vin moderne signé Camdeborde, tapas créatives et plus de 1000 vins, face à la Porte Cailhau.",
     type: "Bar à vin · Tapas",
     happyHours: "",
@@ -673,6 +707,50 @@ function findReferenced(nom){
 }
 // alias pour compat
 function findPartner(nom){ return findReferenced(nom); }
+
+const PHOTO_FALLBACKS = {
+  restaurant: [
+    "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&w=900&q=80"
+  ],
+  cafe: [
+    "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&fit=crop&w=900&q=80"
+  ],
+  bar: [
+    "https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=900&q=80"
+  ]
+};
+
+function hashString(str){
+  let h=0;
+  for(let i=0;i<str.length;i++) h=((h<<5)-h+str.charCodeAt(i))|0;
+  return Math.abs(h);
+}
+function photoKind(t){
+  const type=normalize((t&&t.type)||'');
+  if(type.includes('cafe')) return 'cafe';
+  if(type.includes('bar')||type.includes('pub')||type.includes('brasserie')) return 'bar';
+  return 'restaurant';
+}
+function fallbackPhotoForPlace(t){
+  const kind=photoKind(t);
+  const pool=PHOTO_FALLBACKS[kind]||PHOTO_FALLBACKS.restaurant;
+  return pool[hashString(`${currentCity.id}-${t.nom}-${t.type}`)%pool.length];
+}
+function placePhotoUrl(t, ref, fsq){
+  return (fsq&&fsq.photo) || (ref&&ref.photo) || fallbackPhotoForPlace(t);
+}
+function escapeHTML(value){
+  return String(value||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function escapeAttr(value){ return escapeHTML(value); }
+function markPhotoError(img){ if(img&&img.parentElement) img.parentElement.classList.add('photo-error'); }
 
 // ══ FOURSQUARE (via proxy Vercel /api/place) — bonus auto pour les non-référencés ══
 const fsqCache={};
@@ -731,19 +809,25 @@ async function showPlaceSheet(t){
   const mapsUrl=`https://maps.apple.com/?q=${encodeURIComponent(t.nom+', '+currentCity.nom)}&ll=${t.lat},${t.lng}`;
   const content=document.getElementById('psContent');
   const dist=distKm(t.lat,t.lng);
+  const isSun=sunStates[t.id]===true;
+  const initialPhoto=placePhotoUrl(t,ref,null);
 
   const badge = ref ? `<div class="ps-badge">⭐ Sélection Soleilenterrasse</div>` : '';
   const typeLine = (ref&&ref.type)||t.type;
   const priceLine = ref&&ref.priceLevel ? ' · '+ref.priceLevel : '';
-  const desc = ref&&ref.description ? `<div class="ps-desc">${ref.description}</div>` : '';
-  const happy = ref&&ref.happyHours ? `<span class="ps-happy">🍹 Happy hour ${ref.happyHours}</span>` : '';
+  const desc = ref&&ref.description ? `<div class="ps-desc">${escapeHTML(ref.description)}</div>` : '';
+  const happy = ref&&ref.happyHours ? `<span class="ps-happy">🍹 Happy hour ${escapeHTML(ref.happyHours)}</span>` : '';
+  const sunLabel = isSun ? 'Au soleil maintenant' : 'A l’ombre maintenant';
 
   content.innerHTML=`
-    <div class="ps-spinner-wrap"><div class="spinner"></div></div>
+    <div class="ps-hero" id="psHero">
+      <img class="ps-photo" id="psHeroPhoto" src="${escapeAttr(initialPhoto)}" alt="${escapeAttr(t.nom)}" decoding="async" onerror="markPhotoError(this)">
+      <div class="ps-hero-chip">${isSun?'☀️':'🌑'} ${sunLabel}</div>
+    </div>
     <div class="ps-body">
       ${badge}
-      <div class="ps-name">${t.nom}</div>
-      <div class="ps-sub">${typeLine}${priceLine}${dist?' · '+dist:''}${t.adresse?' · '+t.adresse:''}</div>
+      <div class="ps-name">${escapeHTML(t.nom)}</div>
+      <div class="ps-sub">${escapeHTML(typeLine)}${priceLine}${dist?' · '+escapeHTML(dist):''}${t.adresse?' · '+escapeHTML(t.adresse):''}</div>
       ${desc}
       <div class="ps-timeline-wrap">
         <div class="ps-timeline-label">Ensoleillement aujourd'hui</div>
@@ -752,7 +836,7 @@ async function showPlaceSheet(t){
       </div>
       <div class="ps-meta" id="psMeta">${happy}</div>
       <div class="ps-btns" id="psBtns">
-        ${ref && ref.reservationUrl ? `<button class="ps-btn reserve" onclick="window.open('${ref.reservationUrl}','_blank')">🍽 Réserver une table</button>` : ''}
+        ${ref && ref.reservationUrl ? `<button class="ps-btn reserve" onclick="window.open('${escapeAttr(ref.reservationUrl)}','_blank')">🍽 Réserver une table</button>` : ''}
         <button class="ps-btn maps" onclick="window.open('${mapsUrl}','_blank')">🗺 Itinéraire</button>
         <button class="ps-btn tel" id="psTelBtn" style="display:none">📞 Appeler</button>
       </div>
@@ -763,22 +847,11 @@ async function showPlaceSheet(t){
   // Timeline : calculée une fois que les bâtiments 3D autour du café sont chargés (sinon tout faux/jaune)
   renderTimelineWhenReady(t);
 
-  // Photo : référencé d'abord (fiable), sinon Foursquare
-  const photoRef=(ref&&ref.photo)||null;
-  const spinnerWrap=content.querySelector('.ps-spinner-wrap');
-  if(photoRef){
-    const img=document.createElement('img'); img.className='ps-photo'; img.src=photoRef; img.alt=t.nom;
-    img.onerror=()=>{ img.replaceWith(Object.assign(document.createElement('div'),{className:'ps-photo-placeholder',textContent:'☀️'})); };
-    if(spinnerWrap) spinnerWrap.replaceWith(img);
-  }
-  // Foursquare (photo de secours + note + tel)
+  // Foursquare peut remplacer la photo de secours par la vraie photo du lieu.
   const fsq=await fetchFoursquare(t);
-  if(!photoRef){
-    const sw=content.querySelector('.ps-spinner-wrap');
-    if(sw){
-      if(fsq.photo){ const img=document.createElement('img'); img.className='ps-photo'; img.src=fsq.photo; img.alt=t.nom; sw.replaceWith(img); }
-      else { sw.outerHTML=`<div class="ps-photo-placeholder">☀️</div>`; }
-    }
+  if(!ref&&fsq.photo){
+    const img=document.getElementById('psHeroPhoto');
+    if(img) img.src=fsq.photo;
   }
   if(fsq.rating){ const meta=document.getElementById('psMeta'); if(meta) meta.insertAdjacentHTML('afterbegin', `<span class="ps-rating">⭐ ${fsq.rating} / 5</span>`); }
   const tel=(ref&&ref.tel)||fsq.tel;
@@ -788,12 +861,45 @@ async function showPlaceSheet(t){
 function normalize(s){return(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
 function distMeters(lat,lng){if(userLat===null)return Infinity;return Math.hypot((lat-userLat)*111320,(lng-userLng)*111320*Math.cos(userLat*Math.PI/180));}
 function distKm(lat,lng){if(userLat===null)return '';const d=distMeters(lat,lng)/1000;return d<1?Math.round(d*1000)+'m':d.toFixed(1)+'km';}
-function highlight(text,q){if(!q)return text;return text.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi'),'<mark style="background:#FFFBE0;color:#9A7E00;border-radius:3px;padding:0 2px">$1</mark>');}
+function highlight(text,q){
+  const safe=escapeHTML(text);
+  if(!q) return safe;
+  const escaped=escapeHTML(q).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  return safe.replace(new RegExp(`(${escaped})`,'gi'),'<mark style="background:#FFF7D6;color:#8A6400;border-radius:4px;padding:0 2px">$1</mark>');
+}
+
+function matchesActiveFilter(t){
+  const type=normalize(t.type);
+  if(activeFilter==='sun') return sunStates[t.id]===true;
+  if(activeFilter==='restaurant') return type.includes('restaurant')||type.includes('brasserie')||type.includes('bistrot');
+  if(activeFilter==='cafe') return type.includes('cafe');
+  if(activeFilter==='bar') return type.includes('bar')||type.includes('pub');
+  return true;
+}
+
+function focusPlace(t,duration=0.75){
+  viewer.camera.flyTo({
+    destination: Cesium.Cartesian3.fromDegrees(t.lng,t.lat,300),
+    orientation: { heading:0, pitch:Cesium.Math.toRadians(-50), roll:0 },
+    duration,
+    easingFunction: Cesium.EasingFunction.CUBIC_OUT
+  });
+}
+
+function selectTerrasse(t,card){
+  shadowVersion++;
+  document.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));
+  if(card) card.classList.add('active');
+  closeDrawer();
+  focusPlace(t);
+  showPlaceSheet(t);
+}
 
 function renderList(h,query){
   const list=document.getElementById('terrasseList');
   const q=normalize(query||'');
-  let filtered=terrasses; if(q) filtered=terrasses.filter(t=>normalize(t.nom).includes(q)||normalize(t.type).includes(q)||normalize(t.adresse).includes(q));
+  let filtered=terrasses.filter(matchesActiveFilter);
+  if(q) filtered=filtered.filter(t=>normalize(t.nom).includes(q)||normalize(t.type).includes(q)||normalize(t.adresse).includes(q));
   // Tri : référencés d'abord, puis au soleil, puis par distance
   const sorted=[...filtered].sort((a,b)=>{
     const pa=findReferenced(a.nom)?1:0, pb=findReferenced(b.nom)?1:0;
@@ -802,10 +908,13 @@ function renderList(h,query){
     if(sun!==0) return sun;
     return distMeters(a.lat,a.lng)-distMeters(b.lat,b.lng);
   });
+  const counter=document.getElementById('resultCount');
+  if(counter) counter.textContent=String(sorted.length);
   list.innerHTML='';
+  const fragment=document.createDocumentFragment();
 
   // ── Section "Sélection" : uniquement les cafés référencés (avec photo) ──
-  const refTerrasses = terrasses.filter(t=>findReferenced(t.nom));
+  const refTerrasses = terrasses.filter(t=>findReferenced(t.nom)&&matchesActiveFilter(t));
   if(refTerrasses.length && !q){
     const wrap=document.createElement('div'); wrap.className='sel-wrap';
     wrap.innerHTML=`<div class="sel-head"><span class="sel-emoji">⭐</span><span class="sel-title">Notre sélection</span></div>`;
@@ -813,20 +922,20 @@ function renderList(h,query){
     refTerrasses.forEach(t=>{
       const ref=findReferenced(t.nom);
       const isSun=sunStates[t.id]===true;
-      const photo=ref.photo?`<img class="sel-photo" src="${ref.photo}" alt="${t.nom}" onerror="this.outerHTML='<div class=\\'sel-photo-ph\\'>☀️</div>'">`:`<div class="sel-photo-ph">☀️</div>`;
-      const happy=ref.happyHours?`<span class="sel-happy">🍹 ${ref.happyHours}</span>`:'';
+      const photo=`<div class="sel-photo-wrap"><img class="sel-photo" src="${escapeAttr(placePhotoUrl(t,ref,null))}" alt="${escapeAttr(t.nom)}" loading="lazy" decoding="async" onerror="markPhotoError(this)"></div>`;
+      const happy=ref.happyHours?`<span class="sel-happy">🍹 ${escapeHTML(ref.happyHours)}</span>`:'';
       const c=document.createElement('div'); c.className='sel-card';
-      c.innerHTML=`${photo}<div class="sel-info"><div class="sel-name">${t.nom}</div><div class="sel-sub">${(ref.type||t.type)}${ref.priceLevel?' · '+ref.priceLevel:''}</div>${happy}</div>`;
-      c.addEventListener('click',()=>{ closeDrawer(); viewer.camera.setView({destination:Cesium.Cartesian3.fromDegrees(t.lng,t.lat,300),orientation:{heading:0,pitch:Cesium.Math.toRadians(-50),roll:0}}); showPlaceSheet(t); });
+      c.innerHTML=`${photo}<div class="sel-info"><div class="sel-name">${escapeHTML(t.nom)}</div><div class="sel-sub">${escapeHTML(ref.type||t.type)}${ref.priceLevel?' · '+escapeHTML(ref.priceLevel):''}</div><div class="sel-status ${isSun?'sun':'shade'}">${isSun?'Au soleil':'A l’ombre'}</div>${happy}</div>`;
+      c.addEventListener('click',()=>{ closeDrawer(); focusPlace(t); showPlaceSheet(t); });
       scroll.appendChild(c);
     });
     wrap.appendChild(scroll);
-    list.appendChild(wrap);
+    fragment.appendChild(wrap);
     const divider=document.createElement('div'); divider.className='list-divider'; divider.textContent='Toutes les terrasses';
-    list.appendChild(divider);
+    fragment.appendChild(divider);
   }
 
-  if(!sorted.length){const nr=document.createElement('div');nr.className='no-results';nr.innerHTML=`Aucun résultat${query?' pour <strong>"'+query+'"</strong>':''}`;list.appendChild(nr);return;}
+  if(!sorted.length){const nr=document.createElement('div');nr.className='no-results';nr.innerHTML=`Aucun résultat${query?' pour <strong>"'+escapeHTML(query)+'"</strong>':''}`;fragment.appendChild(nr);list.appendChild(fragment);return;}
   sorted.forEach(t=>{
     const ref=findReferenced(t.nom);
     const card=document.createElement('div'); card.className='card'+(ref?' partner':''); card.dataset.id=t.id;
@@ -840,23 +949,25 @@ function renderList(h,query){
       timeLine=`<div class="card-time shade">🌑 ${dur?'soleil dans '+dur:'à l’ombre'}</div>`;
     }
     const tag=ref?`<span class="partner-tag">Sélection</span>`:'';
-    card.innerHTML=`<div class="card-icon ${isSun?'sun':'shade'}">${isSun?'☀️':'🌑'}</div><div class="card-body"><div class="card-name">${highlight(t.nom,query)}${tag}</div><div class="card-sub">${t.type}${t.adresse?' · '+t.adresse:''}${dist?' · '+dist:''}</div>${timeLine}</div>`;
-    card.addEventListener('click',()=>{
-      shadowVersion++;
-      document.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));
-      card.classList.add('active');
-      closeDrawer();
-      viewer.camera.setView({destination:Cesium.Cartesian3.fromDegrees(t.lng,t.lat,300),orientation:{heading:0,pitch:Cesium.Math.toRadians(-50),roll:0}});
-      showPlaceSheet(t);
-    });
-    list.appendChild(card);
+    const photo=placePhotoUrl(t,ref,null);
+    card.innerHTML=`<div class="card-photo-wrap"><img class="card-photo" src="${escapeAttr(photo)}" alt="${escapeAttr(t.nom)}" loading="lazy" decoding="async" onerror="markPhotoError(this)"><div class="card-status ${isSun?'sun':'shade'}">${isSun?'☀️':'🌑'}</div></div><div class="card-body"><div class="card-name">${highlight(t.nom,query)}${tag}</div><div class="card-sub">${escapeHTML(t.type)}${t.adresse?' · '+escapeHTML(t.adresse):''}${dist?' · '+escapeHTML(dist):''}</div>${timeLine}</div>`;
+    card.addEventListener('click',()=>selectTerrasse(t,card));
+    fragment.appendChild(card);
   });
+  list.appendChild(fragment);
 }
 
 const searchInput=document.getElementById('searchInput'),searchClear=document.getElementById('searchClear');
 searchInput.addEventListener('input',e=>{searchQuery=e.target.value;document.getElementById('drawerSearch').value=searchQuery;searchClear.classList.toggle('visible',searchQuery.length>0);renderList(currentHeure,searchQuery);if(searchQuery.length>0)openDrawer();});
 searchClear.addEventListener('click',()=>{searchInput.value='';searchQuery='';document.getElementById('drawerSearch').value='';searchClear.classList.remove('visible');renderList(currentHeure,'');});
 document.getElementById('drawerSearch').addEventListener('input',e=>{searchQuery=e.target.value;searchInput.value=searchQuery;searchClear.classList.toggle('visible',searchQuery.length>0);renderList(currentHeure,searchQuery);});
+document.getElementById('filterChips').addEventListener('click',e=>{
+  const chip=e.target.closest('.filter-chip');
+  if(!chip) return;
+  activeFilter=chip.dataset.filter||'all';
+  document.querySelectorAll('.filter-chip').forEach(c=>c.classList.toggle('active',c===chip));
+  renderList(currentHeure,searchQuery);
+});
 
 const slider=document.getElementById('timeSlider');
 slider.addEventListener('input',e=>{
