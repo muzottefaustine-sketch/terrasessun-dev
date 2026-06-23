@@ -196,6 +196,7 @@
     .ps-btn { flex: 1; min-width: 0; padding: 14px; border: none; border-radius: 12px; font-size: 15px; font-weight: 800; cursor: pointer; text-align: center; font-family: inherit; white-space: nowrap; transition: transform 0.14s ease, opacity 0.14s ease; }
     .ps-btn:active { opacity: 0.82; transform:scale(0.98); }
     .ps-btn.reserve { background: var(--coral); color: white; flex-basis: 100%; }
+    .ps-btn.site { background: #2D3340; color: white; flex-basis: 100%; }
     .ps-btn.maps { background: var(--blue); color: white; }
     .ps-btn.tel { background: var(--green); color: white; }
     .ps-spinner-wrap { display: flex; align-items: center; justify-content: center; height: 210px; background:linear-gradient(135deg,#FFF7D6,#DCEBFA); }
@@ -646,14 +647,39 @@ function makeSunIcon(sunny){
 }
 const DOT_SUN=makeSunIcon(true),DOT_SHADE=makeSunIcon(false);
 
+// Marqueur plus gros et mis en avant pour les cafés référencés
+function makeRefIcon(sunny){
+  const c=document.createElement('canvas'); c.width=46; c.height=46; const ctx=c.getContext('2d');
+  // halo doré
+  ctx.beginPath(); ctx.arc(23,23,21,0,Math.PI*2); ctx.fillStyle='rgba(248,200,62,0.28)'; ctx.fill();
+  // disque blanc + contour doré
+  ctx.shadowColor='rgba(0,0,0,0.3)'; ctx.shadowBlur=4; ctx.shadowOffsetY=1;
+  ctx.beginPath(); ctx.arc(23,23,15,0,Math.PI*2); ctx.fillStyle='white'; ctx.fill();
+  ctx.shadowColor='transparent';
+  ctx.lineWidth=2.5; ctx.strokeStyle=sunny?'#F5A700':'#9AA8BC'; ctx.beginPath(); ctx.arc(23,23,15,0,Math.PI*2); ctx.stroke();
+  if(sunny){
+    ctx.strokeStyle='#F5A700'; ctx.lineWidth=2.2; ctx.lineCap='round';
+    for(let i=0;i<8;i++){const a=i*Math.PI/4;ctx.beginPath();ctx.moveTo(23+Math.cos(a)*8.5,23+Math.sin(a)*8.5);ctx.lineTo(23+Math.cos(a)*11.5,23+Math.sin(a)*11.5);ctx.stroke();}
+    ctx.beginPath(); ctx.arc(23,23,6.5,0,Math.PI*2); ctx.fillStyle='#FFC400'; ctx.fill();
+  }else{
+    ctx.beginPath(); ctx.arc(23,23,7,0,Math.PI*2); ctx.fillStyle='#8E9BAD'; ctx.fill();
+  }
+  return c.toDataURL();
+}
+const REF_SUN=makeRefIcon(true),REF_SHADE=makeRefIcon(false);
+
 function syncDots(){
   terrasses.forEach(t=>{
     const s=sunStates[t.id]===true;
-    const img=s?DOT_SUN:DOT_SHADE;
+    const ref=findReferenced(t.nom);
+    const img = ref ? (s?REF_SUN:REF_SHADE) : (s?DOT_SUN:DOT_SHADE);
+    const size = ref ? 36 : 20;
     if(!markerEntities[t.id]){
-      markerEntities[t.id]=viewer.entities.add({position:Cesium.Cartesian3.fromDegrees(t.lng,t.lat,2),billboard:{image:img,verticalOrigin:Cesium.VerticalOrigin.CENTER,heightReference:Cesium.HeightReference.RELATIVE_TO_GROUND,width:20,height:20,disableDepthTestDistance:Number.POSITIVE_INFINITY},properties:{id:t.id}});
+      markerEntities[t.id]=viewer.entities.add({position:Cesium.Cartesian3.fromDegrees(t.lng,t.lat,2),billboard:{image:img,verticalOrigin:Cesium.VerticalOrigin.CENTER,heightReference:Cesium.HeightReference.RELATIVE_TO_GROUND,width:size,height:size,disableDepthTestDistance:Number.POSITIVE_INFINITY},properties:{id:t.id}});
     }else{
       markerEntities[t.id].billboard.image=img;
+      markerEntities[t.id].billboard.width=size;
+      markerEntities[t.id].billboard.height=size;
       markerEntities[t.id].show=true;
     }
   });
@@ -678,24 +704,48 @@ function hideTooltip(){clearTimeout(ttTimeout);tooltip.classList.remove('visible
 // ══════════════════════════════════════════════
 const REFERENCED = [
   {
-    match: "Michel's",
-    photo: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=1100&q=82",
-    description: "Brasserie bordelaise conviviale, cuisine française généreuse et terrasse couverte en plein centre, rue du Pas-Saint-Georges.",
-    type: "Brasserie · Bistrot",
+    match: "Saint Georges",
+    photo: "https://lecaferohan.com/wp-content/uploads/2023/10/le-st-georges-2.jpg",
+    description: "Brasserie historique de la place Camille Jullian, grande terrasse ensoleillée ouverte toute l'année, service continu 7j/7.",
+    type: "Brasserie · Bar",
     happyHours: "",
-    reservationUrl: "",  // ajoute ici le lien TheFork si tu en as un
-    tel: "+33556813156",
+    website: "https://www.lesaintgeorges33.fr/",
+    reservationUrl: "https://www.lesaintgeorges33.fr/",
+    tel: "+33556448633",
+    priceLevel: "€€"
+  },
+  {
+    match: "Chez Fred",
+    photo: "",
+    description: "Bar convivial bordelais, ambiance chaleureuse et terrasse animée.",
+    type: "Bar",
+    happyHours: "",
+    website: "https://www.google.com/maps/search/?api=1&query=Chez%20Fred%20Bordeaux",
+    reservationUrl: "",
+    tel: "",
     priceLevel: "€€"
   },
   {
     match: "Avant Comptoir",
-    photo: "https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1100&q=82",
+    photo: "",
     description: "Bar à vin moderne signé Camdeborde, tapas créatives et plus de 1000 vins, face à la Porte Cailhau.",
     type: "Bar à vin · Tapas",
     happyHours: "",
-    reservationUrl: "",  // ajoute ici le lien TheFork si tu en as un
+    website: "https://www.google.com/maps/search/?api=1&query=L%27Avant%20Comptoir%20du%20Palais%20Bordeaux",
+    reservationUrl: "",
     tel: "+33557149485",
     priceLevel: "€€€"
+  },
+  {
+    match: "Café Français",
+    photo: "https://static.wixstatic.com/media/a70fcd_dfc4e9cb90d647d4a267c110177e0b45~mv2.jpg/v1/fit/w_1200,h_700,al_c/a70fcd_dfc4e9cb90d647d4a267c110177e0b45~mv2.jpg",
+    description: "Brasserie traditionnelle depuis 1899, immense terrasse ensoleillée face à la cathédrale Saint-André, place Pey-Berland.",
+    type: "Brasserie · Bistrot",
+    happyHours: "",
+    website: "https://www.le-cafe-francais.com/fr",
+    reservationUrl: "https://bookings.zenchef.com/results?rid=373877&pid=1001",
+    tel: "+33556529669",
+    priceLevel: "€€"
   },
 ];
 function findReferenced(nom){
@@ -744,7 +794,7 @@ function fallbackPhotoForPlace(t){
   return pool[hashString(`${currentCity.id}-${t.nom}-${t.type}`)%pool.length];
 }
 function placePhotoUrl(t, ref, fsq){
-  return (fsq&&fsq.photo) || (ref&&ref.photo) || fallbackPhotoForPlace(t);
+  return (ref&&ref.photo) || (fsq&&fsq.photo) || fallbackPhotoForPlace(t);
 }
 function escapeHTML(value){
   return String(value||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -837,6 +887,7 @@ async function showPlaceSheet(t){
       <div class="ps-meta" id="psMeta">${happy}</div>
       <div class="ps-btns" id="psBtns">
         ${ref && ref.reservationUrl ? `<button class="ps-btn reserve" onclick="window.open('${escapeAttr(ref.reservationUrl)}','_blank')">🍽 Réserver une table</button>` : ''}
+        ${ref && ref.website ? `<button class="ps-btn site" onclick="window.open('${escapeAttr(ref.website)}','_blank')">🌐 Voir le site / Google</button>` : ''}
         <button class="ps-btn maps" onclick="window.open('${mapsUrl}','_blank')">🗺 Itinéraire</button>
         <button class="ps-btn tel" id="psTelBtn" style="display:none">📞 Appeler</button>
       </div>
@@ -847,9 +898,9 @@ async function showPlaceSheet(t){
   // Timeline : calculée une fois que les bâtiments 3D autour du café sont chargés (sinon tout faux/jaune)
   renderTimelineWhenReady(t);
 
-  // Foursquare peut remplacer la photo de secours par la vraie photo du lieu.
+  // Foursquare peut remplacer la photo de secours par la vraie photo du lieu (seulement si pas de photo référencée).
   const fsq=await fetchFoursquare(t);
-  if(!ref&&fsq.photo){
+  if(!(ref&&ref.photo)&&fsq.photo){
     const img=document.getElementById('psHeroPhoto');
     if(img) img.src=fsq.photo;
   }
