@@ -378,7 +378,7 @@ const GOOGLE_NEARBY_RADIUS_METERS = 3500;
 const GOOGLE_NEARBY_TYPES = ['restaurant', 'cafe', 'bar'];
 const PERFORMANCE_MODE = false;
 const ENABLE_GOOGLE_3D_TEST = false;
-const ENABLE_SHADOW_RAYCASTS = true;
+const ENABLE_SHADOW_RAYCASTS = false;
 const MAX_RENDERED_LIST_ITEMS = 280;
 const MAX_MARKERS_ON_MAP = 950;
 const MARKER_RENDER_BATCH = 180;
@@ -836,8 +836,8 @@ function checkSunnyPoint(lng,lat,sunDir){
   return false;
 }
 function checkSunny(t,sunDir,relaxed=false){
-  if(!ENABLE_SHADOW_RAYCASTS) return null;
   if(!sunDir) return null;
+  if(!ENABLE_SHADOW_RAYCASTS) return sunAboveHorizon(t.lng,t.lat,sunDir);
   if(!sceneReadyForShadows(relaxed)) return sunAboveHorizon(t.lng,t.lat,sunDir);
   const latMeter=1/111320;
   const lngMeter=1/(111320*Math.max(0.2,Math.cos(t.lat*Math.PI/180)));
@@ -859,14 +859,19 @@ function checkSunny(t,sunDir,relaxed=false){
 
 let cameraMoving=false;
 viewer.camera.moveStart.addEventListener(()=>{cameraMoving=true;});
-viewer.camera.moveEnd.addEventListener(()=>{cameraMoving=false;if(terrasses.length && ENABLE_SHADOW_RAYCASTS)scheduleShadow();});
+viewer.camera.moveEnd.addEventListener(()=>{cameraMoving=false;});
 
 let shadowDebounce=null,computing=false,shadowVersion=0,shadowPending=false;
+function computeFastSunStates(){
+  const sunDir=getSunDir(viewer.clock.currentTime);
+  terrasses.forEach(t=>{sunStates[t.id]=sunAboveHorizon(t.lng,t.lat,sunDir);});
+}
 function scheduleShadow(){
   if(!ENABLE_SHADOW_RAYCASTS){
     shadowPending = false;
     clearTimeout(shadowDebounce);
-    requestAnimationFrame(()=>syncDots());
+    computeFastSunStates();
+    requestAnimationFrame(()=>{syncDots(); refreshActivePlaceSunStatus();});
     return;
   }
   shadowPending = true;
@@ -880,7 +885,9 @@ async function runShadow(){
   if(!ENABLE_SHADOW_RAYCASTS){
     computing=false;
     shadowPending=false;
+    computeFastSunStates();
     syncDots();
+    refreshActivePlaceSunStatus();
     return;
   }
   if(computing || cameraMoving) return;
@@ -960,7 +967,7 @@ function syncDots(items=terrasses){
       const t=targets[index];
       const s=sunStates[t.id];
       const ref=findReferenced(t.nom);
-      const img=ref?DOT_FEATURED:(ENABLE_SHADOW_RAYCASTS && s===true)?DOT_SUN:(ENABLE_SHADOW_RAYCASTS && s===false)?DOT_SHADE:DOT_UNKNOWN;
+      const img=ref?DOT_FEATURED:s===true?DOT_SUN:s===false?DOT_SHADE:DOT_UNKNOWN;
       const size=ref?34:18;
       if(!markerEntities[t.id]){
         markerEntities[t.id]=viewer.entities.add({position:Cesium.Cartesian3.fromDegrees(t.lng,t.lat,2),billboard:{image:img,verticalOrigin:Cesium.VerticalOrigin.CENTER,heightReference:Cesium.HeightReference.RELATIVE_TO_GROUND,width:size,height:size,disableDepthTestDistance:Number.POSITIVE_INFINITY},properties:{id:t.id}});
@@ -1441,7 +1448,7 @@ async function showPlaceSheet(t){
   const content=document.getElementById('psContent');
   const dist=distKm(t.lat,t.lng);
   const initialPhoto=placePhotoUrl(t,ref,null);
-  if(ENABLE_SHADOW_RAYCASTS && (sunStates[t.id]===null || sunStates[t.id]===undefined)){
+  if(sunStates[t.id]===null || sunStates[t.id]===undefined){
     const immediate=checkSunny(t,getSunDir(viewer.clock.currentTime),true);
     if(immediate!==null) sunStates[t.id]=immediate;
   }
@@ -1508,12 +1515,7 @@ function sunStatusHTML(t, extraClass='card-sun', id=''){
   return `<span${idAttr} class="sun-status ${sunStateClass(state)} ${extraClass}">${escapeHTML(compactSunStateLabel(state))}</span>`;
 }
 function primeSunStates(){
-  if(!ENABLE_SHADOW_RAYCASTS){
-    terrasses.forEach(t=>{sunStates[t.id]=null;});
-    return;
-  }
-  const sunDir=getSunDir(viewer.clock.currentTime);
-  terrasses.forEach(t=>{sunStates[t.id]=sunAboveHorizon(t.lng,t.lat,sunDir);});
+  computeFastSunStates();
 }
 function refreshActivePlaceSunStatus(){
   if(!activePlaceId) return;
@@ -1645,19 +1647,33 @@ slider.addEventListener('input',e=>{
   slider.style.setProperty('--pct',((val-6)/15)*100+'%');
   currentDate=new Date(); currentDate.setHours(h,m,0,0);
   viewer.clock.currentTime=Cesium.JulianDate.fromDate(currentDate); currentHeure=val;
-  if(terrasses.length>0 && ENABLE_SHADOW_RAYCASTS){
+  if(terrasses.length>0){
     shadowVersion++;
-    terrasses.forEach(t=>{sunStates[t.id]=null;});
-    clearTimeout(sliderUiTimer);
-    sliderUiTimer=setTimeout(()=>{
+    if(ENABLE_SHADOW_RAYCASTS){
+      terrasses.forEach(t=>{sunStates[t.id]=null;});
+      clearTimeout(sliderUiTimer);
+      sliderUiTimer=setTimeout(()=>{
+        syncDots();
+        renderList(currentHeure,searchQuery);
+        refreshActivePlaceSunStatus();
+      }, 90);
+      scheduleShadow();
+    }else{
+      computeFastSunStates();
       syncDots();
-      renderList(currentHeure,searchQuery);
       refreshActivePlaceSunStatus();
-    }, 90);
-    scheduleShadow();
+      clearTimeout(sliderUiTimer);
+      sliderUiTimer=setTimeout(()=>renderList(currentHeure,searchQuery), 80);
+    }
   }
 });
-slider.addEventListener('change',e=>{if(terrasses.length>0 && ENABLE_SHADOW_RAYCASTS){shadowVersion++;scheduleShadow();}});
+slider.addEventListener('change',e=>{
+  if(terrasses.length>0){
+    shadowVersion++;
+    if(ENABLE_SHADOW_RAYCASTS) scheduleShadow();
+    else { computeFastSunStates(); syncDots(); renderList(currentHeure,searchQuery); refreshActivePlaceSunStatus(); }
+  }
+});
 
 const handler=new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
 handler.setInputAction(click=>{
