@@ -106,7 +106,7 @@
     .location-dot { width: 8px; height: 8px; border-radius: 50%; background: #007AFF; box-shadow: 0 0 0 4px rgba(0,122,255,0.14); flex-shrink: 0; }
     #mode3dPill {
       position: fixed; top: calc(env(safe-area-inset-top, 44px) + 114px); left: 50%; transform: translateX(-50%);
-      z-index: 29; display: flex; align-items: center; justify-content: center; min-height: 32px; max-width: calc(100% - 40px);
+      z-index: 29; display: none; align-items: center; justify-content: center; min-height: 32px; max-width: calc(100% - 40px);
       padding: 7px 12px; border-radius: 999px; background: rgba(20,22,26,0.82); color: #fff;
       backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); font-size: 11px; font-weight: 800; text-align: center;
       box-shadow: 0 8px 24px rgba(15,23,42,0.18);
@@ -316,6 +316,7 @@
 <div id="tooltip">
   <div id="ttName"></div>
   <div class="tt-type" id="ttType"></div>
+  <div class="tt-sun" id="ttSun"></div>
   <a id="ttMaps" href="#" target="_blank" style="display:block;margin-top:8px;background:rgba(255,255,255,0.15);color:white;padding:6px 14px;border-radius:10px;font-size:12px;text-align:center;text-decoration:none;">Ouvrir dans Maps</a>
 </div>
 
@@ -369,15 +370,15 @@ const CITIES = [
 ];
 // Colle ta cle Google Maps ici pour activer les vraies photos, liens Google,
 // telephones et sites en local. APIs a activer: Maps JavaScript API + Places API.
-const GOOGLE_MAPS_API_KEY = "AIzaSyDGy4xByAiogyUgUcvJCTQlxehhUpdlwSk ";
+const GOOGLE_MAPS_API_KEY = "";
 // Test 3D Google photorealiste: colle ici une cle avec Map Tiles API activee.
 // Si cette valeur reste vide, l'app garde la 3D OpenStreetMap normale.
 const GOOGLE_MAP_TILES_API_KEY = "AIzaSyA2qaFERG7pF-uHHwgIA2upLxZxoWqlNDs";
 const GOOGLE_NEARBY_RADIUS_METERS = 3500;
 const GOOGLE_NEARBY_TYPES = ['restaurant', 'cafe', 'bar'];
-const PERFORMANCE_MODE = true;
+const PERFORMANCE_MODE = false;
 const ENABLE_GOOGLE_3D_TEST = false;
-const ENABLE_SHADOW_RAYCASTS = false;
+const ENABLE_SHADOW_RAYCASTS = true;
 const MAX_RENDERED_LIST_ITEMS = 280;
 const MAX_MARKERS_ON_MAP = 950;
 const MARKER_RENDER_BATCH = 180;
@@ -979,6 +980,11 @@ const tooltip=document.getElementById('tooltip'); let ttTimeout=null;
 function showTooltip(t,x,y){
   document.getElementById('ttName').textContent=t.nom;
   document.getElementById('ttType').textContent=t.type+(t.adresse?' · '+t.adresse:'');
+  const ttSun=document.getElementById('ttSun');
+  if(ttSun){
+    ttSun.className='tt-sun '+sunStateClass(sunStates[t.id]);
+    ttSun.textContent=sunStateLabel(sunStates[t.id]);
+  }
   const w=260; tooltip.style.left=Math.min(Math.max(x-w/2,10),window.innerWidth-w-10)+'px'; tooltip.style.top=Math.max(y-130,10)+'px';
   tooltip.classList.add('visible'); if(navigator.vibrate) navigator.vibrate(10);
   const ml=document.getElementById('ttMaps'); if(ml) ml.href=`https://maps.apple.com/?q=${encodeURIComponent(t.nom+', '+currentCity.nom)}&ll=${t.lat},${t.lng}`;
@@ -1445,6 +1451,7 @@ async function showPlaceSheet(t){
   const priceLine = ref&&ref.priceLevel ? ' · '+ref.priceLevel : '';
   const desc = ref&&ref.description ? `<div class="ps-desc">${escapeHTML(ref.description)}</div>` : '';
   const happy = ref&&ref.happyHours ? `<span class="ps-happy">🍹 Happy hour ${escapeHTML(ref.happyHours)}</span>` : '';
+  const sheetSun = sunStatusHTML(t,'ps-sun','psSunStatus').replace(compactSunStateLabel(sunStates[t.id]), sunStateLabel(sunStates[t.id]));
 
   content.innerHTML=`
     <div class="ps-hero" id="psHero">
@@ -1452,6 +1459,7 @@ async function showPlaceSheet(t){
     </div>
     <div class="ps-body">
       ${badge}
+      ${sheetSun}
       <div class="ps-name">${escapeHTML(t.nom)}</div>
       <div class="ps-sub">${escapeHTML(typeLine)}${priceLine}${dist?' · '+escapeHTML(dist):''}${t.adresse?' · '+escapeHTML(t.adresse):''}</div>
       ${desc}
@@ -1489,12 +1497,16 @@ function distMeters(lat,lng){if(userLat===null)return Infinity;return Math.hypot
 function distKm(lat,lng){if(userLat===null)return '';const d=distMeters(lat,lng)/1000;return d<1?`à ${Math.round(d*1000)} m`:`à ${d.toFixed(1)} km`;}
 function sunStateClass(state){return state===true?'sun':state===false?'shade':'unknown';}
 function sunStateLabel(state){
-  return '';
+  return state===true?'☀️ Au soleil':state===false?'À l’ombre':'Calcul…';
 }
 function compactSunStateLabel(state){
-  return '';
+  return state===true?'☀️ Soleil':state===false?'Ombre':'Calcul…';
 }
-function sunStatusHTML(t){ return ''; }
+function sunStatusHTML(t, extraClass='card-sun', id=''){
+  const state=sunStates[t.id];
+  const idAttr=id?` id="${escapeAttr(id)}"`:'';
+  return `<span${idAttr} class="sun-status ${sunStateClass(state)} ${extraClass}">${escapeHTML(compactSunStateLabel(state))}</span>`;
+}
 function primeSunStates(){
   if(!ENABLE_SHADOW_RAYCASTS){
     terrasses.forEach(t=>{sunStates[t.id]=null;});
@@ -1504,7 +1516,13 @@ function primeSunStates(){
   terrasses.forEach(t=>{sunStates[t.id]=sunAboveHorizon(t.lng,t.lat,sunDir);});
 }
 function refreshActivePlaceSunStatus(){
-  return;
+  if(!activePlaceId) return;
+  const t=terrasses.find(x=>String(x.id)===String(activePlaceId));
+  const el=document.getElementById('psSunStatus');
+  if(!t || !el) return;
+  const state=sunStates[t.id];
+  el.className=`sun-status ${sunStateClass(state)} ps-sun`;
+  el.textContent=sunStateLabel(state);
 }
 function highlight(text,q){
   const safe=escapeHTML(text);
@@ -1589,9 +1607,9 @@ function renderList(h,query){
     const tag=ref?`<span class="partner-tag">Sélection</span>`:'';
     if(ref){
       const photo=placePhotoUrl(t,ref,null);
-      card.innerHTML=`<div class="card-photo-wrap"><img class="card-photo" data-place-id="${escapeAttr(t.id)}" src="${escapeAttr(photo)}" alt="${escapeAttr(t.nom)}" loading="lazy" decoding="async" onerror="markPhotoError(this)"><span class="partner-sun">☀️</span></div><div class="card-body"><div class="card-name">${highlight(t.nom,query)}${tag}</div><div class="card-sub">${escapeHTML(t.type)}${t.adresse?' · '+escapeHTML(t.adresse):''}${dist?' · '+escapeHTML(dist):''}</div></div>`;
+      card.innerHTML=`<div class="card-photo-wrap"><img class="card-photo" data-place-id="${escapeAttr(t.id)}" src="${escapeAttr(photo)}" alt="${escapeAttr(t.nom)}" loading="lazy" decoding="async" onerror="markPhotoError(this)"><span class="partner-sun">☀️</span></div><div class="card-body"><div class="card-name">${highlight(t.nom,query)}${tag}</div><div class="card-sub">${escapeHTML(t.type)}${t.adresse?' · '+escapeHTML(t.adresse):''}${dist?' · '+escapeHTML(dist):''}</div><div class="card-meta">${sunStatusHTML(t)}</div></div>`;
     }else{
-      card.innerHTML=`<div class="card-body"><div class="card-name">${highlight(t.nom,query)}</div><div class="card-sub">${escapeHTML(t.type)}${t.adresse?' · '+escapeHTML(t.adresse):''}${dist?' · '+escapeHTML(dist):''}</div></div>`;
+      card.innerHTML=`<div class="card-body"><div class="card-name">${highlight(t.nom,query)}</div><div class="card-sub">${escapeHTML(t.type)}${t.adresse?' · '+escapeHTML(t.adresse):''}${dist?' · '+escapeHTML(dist):''}</div><div class="card-meta">${sunStatusHTML(t)}</div></div>`;
     }
     card.addEventListener('click',()=>selectTerrasse(t,card));
     fragment.appendChild(card);
