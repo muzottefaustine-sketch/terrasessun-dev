@@ -464,8 +464,8 @@ const viewer = new Cesium.Viewer('cesiumContainer', {
   navigationHelpButton: false, sceneModePicker: false, animation: false, timeline: false,
   fullscreenButton: false, geocoder: false, scene3DOnly: true,
 });
-viewer.scene.globe.maximumScreenSpaceError = 0.75;
-viewer.scene.globe.tileCacheSize = 750;
+viewer.scene.globe.maximumScreenSpaceError = 1;
+viewer.scene.globe.tileCacheSize = 650;
 viewer.scene.globe.preloadAncestors = true;
 viewer.scene.globe.preloadSiblings = true;
 viewer.scene.globe.enableLighting = true;
@@ -473,12 +473,11 @@ viewer.scene.globe.depthTestAgainstTerrain = true;
 viewer.scene.fog.enabled = true;
 viewer.scene.fog.density = 0.00018;
 viewer.shadows = true;
-viewer.resolutionScale = Math.min(window.devicePixelRatio || 1, 2);
+viewer.resolutionScale = Math.min(window.devicePixelRatio || 1, 1.6);
 viewer.scene.globe.showWaterEffect = false;
 viewer.scene.postProcessStages.fxaa.enabled = true;
 viewer.scene.highDynamicRange = true;
 if (viewer.scene.shadowMap) {
-  viewer.scene.shadowMap.enabled = true;
   viewer.scene.shadowMap.softShadows = true;
   viewer.scene.shadowMap.darkness = 0.28;
   viewer.scene.shadowMap.maximumDistance = 2600;
@@ -515,7 +514,7 @@ if (useGoogle3D) {
   setProgress(18, 'Google 3D…');
 } else {
   osmBuildings = viewer.scene.primitives.add(Cesium.createOsmBuildings());
-  osmBuildings.maximumScreenSpaceError = 1.0;
+  osmBuildings.maximumScreenSpaceError = 1.35;
   osmBuildings.dynamicScreenSpaceError = true;
 }
 
@@ -539,7 +538,7 @@ buildingsReadyPromise.then(() => { if(useGoogle3D) setMode3DLabel('Test 3D: Goog
     viewer.scene.globe.show = true;
     try { viewer.scene.primitives.remove(cityTiles); } catch(e) {}
     osmBuildings = viewer.scene.primitives.add(Cesium.createOsmBuildings());
-    osmBuildings.maximumScreenSpaceError = 1.0;
+    osmBuildings.maximumScreenSpaceError = 1.35;
     osmBuildings.dynamicScreenSpaceError = true;
     osmBuildings.readyPromise.finally(() => { buildingsOk = true; tryOpen(); });
     return;
