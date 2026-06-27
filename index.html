@@ -212,6 +212,14 @@
     .ps-meta { display:flex; gap:8px; flex-wrap:wrap; margin-bottom: 16px; }
     .ps-rating { display: inline-flex; align-items: center; gap: 5px; background: var(--bg); border-radius: 20px; padding: 6px 12px; font-size: 13px; font-weight: 750; color: var(--text); }
     .ps-happy { display:inline-flex; align-items:center; gap:5px; background:#FFF3D6; color:#9A6B00; border-radius:20px; padding:6px 12px; font-size:13px; font-weight:750; }
+    .ps-insights { display:grid; gap:10px; margin: 0 0 16px; }
+    .ps-insight { border:1px solid rgba(226,232,240,0.95); background:#F8FAFC; border-radius:12px; padding:10px 12px; }
+    .ps-insight-title { font-size:11px; font-weight:850; color:var(--text-3); text-transform:uppercase; letter-spacing:0.6px; margin-bottom:8px; }
+    .sun-hours { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; }
+    .sun-hour { min-width:0; text-align:center; border-radius:10px; padding:7px 2px; background:#EDF1F6; color:#667085; font-size:10px; font-weight:850; }
+    .sun-hour.sun { background:#FFF3B8; color:#7A5200; box-shadow: inset 0 0 0 1px rgba(242,203,69,0.5); }
+    .weather-line { display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:13px; font-weight:800; color:var(--text); }
+    .weather-sub { margin-top:3px; font-size:11px; color:var(--text-2); line-height:1.35; }
     .ps-btns { display: flex; gap: 10px; flex-wrap: wrap; }
     .ps-btn { flex: 1; min-width: 0; padding: 14px; border: none; border-radius: 12px; font-size: 15px; font-weight: 800; cursor: pointer; text-align: center; font-family: inherit; white-space: nowrap; transition: transform 0.14s ease, opacity 0.14s ease; }
     .ps-btn:active { opacity: 0.82; transform:scale(0.98); }
@@ -219,6 +227,8 @@
     .ps-btn.maps { background: var(--blue); color: white; }
     .ps-btn.site { background: var(--text); color: white; display:none; }
     .ps-btn.tel { background: var(--green); color: white; }
+    .ps-btn.fav { background:#FFF3B8; color:#7A5200; border:1px solid rgba(242,203,69,0.7); }
+    .ps-btn.fav.active { background:linear-gradient(135deg,var(--yellow),var(--yellow-2)); color:#6B4A00; }
     .ps-spinner-wrap { display: flex; align-items: center; justify-content: center; height: 210px; background:linear-gradient(135deg,#FFF7D6,#DCEBFA); }
 
     /* Carte partenaire dans la liste */
@@ -344,6 +354,7 @@
     <button class="filter-chip" data-filter="restaurant" type="button">Restaurants</button>
     <button class="filter-chip" data-filter="cafe" type="button">Cafés</button>
     <button class="filter-chip" data-filter="bar" type="button">Bars</button>
+    <button class="filter-chip" data-filter="favorite" type="button">Favoris</button>
   </div>
   <div class="section-title"><span class="section-label">Résultats</span><span class="count-pill" id="resultCount">0</span></div>
   <div id="loadingState"><div class="spinner"></div><span>Chargement…</span></div>
@@ -1430,6 +1441,68 @@ async function hydrateVisiblePhotos(items){
 }
 
 let activePlaceId=null;
+const FAVORITES_KEY='soleilenterrasse:favorites:v1';
+let favoriteIds=new Set(JSON.parse(localStorage.getItem(FAVORITES_KEY)||'[]'));
+function placeKey(t){
+  return `${normalize(t.nom)}:${Number(t.lat).toFixed(4)}:${Number(t.lng).toFixed(4)}`;
+}
+function isFavorite(t){ return favoriteIds.has(placeKey(t)); }
+function saveFavorites(){ localStorage.setItem(FAVORITES_KEY, JSON.stringify([...favoriteIds])); }
+function toggleFavorite(t){
+  const key=placeKey(t);
+  if(favoriteIds.has(key)) favoriteIds.delete(key);
+  else favoriteIds.add(key);
+  saveFavorites();
+  return favoriteIds.has(key);
+}
+
+function buildSunTimeline(t){
+  const hours=[8,10,12,14,16,18,20];
+  return `<div class="sun-hours">${hours.map(hour=>{
+    const d=new Date(currentDate);
+    d.setHours(hour,0,0,0);
+    const sunny=sunAboveHorizon(t.lng,t.lat,getSunDir(Cesium.JulianDate.fromDate(d)));
+    return `<div class="sun-hour ${sunny?'sun':'shade'}"><div>${hour}h</div><div>${sunny?'☀️':'•'}</div></div>`;
+  }).join('')}</div>`;
+}
+
+function weatherLabel(code){
+  if([0,1].includes(code)) return 'Ciel dégagé';
+  if([2,3].includes(code)) return 'Nuageux';
+  if([45,48].includes(code)) return 'Brouillard';
+  if([51,53,55,61,63,65,80,81,82].includes(code)) return 'Pluie';
+  if([71,73,75,77,85,86].includes(code)) return 'Neige';
+  if([95,96,99].includes(code)) return 'Orage';
+  return 'Météo disponible';
+}
+function terraceWeatherScore(weather, sunny){
+  if(!weather) return 'Conditions en attente';
+  if(weather.weathercode>=51) return 'Pas idéal en terrasse';
+  if(weather.windspeed>=32) return 'Vent fort';
+  if(sunny && weather.temperature>=16 && weather.temperature<=29) return 'Très bon moment terrasse';
+  if(weather.temperature>=13 && weather.temperature<=31) return 'Correct pour dehors';
+  return 'Conditions moyennes';
+}
+const weatherCache={};
+async function hydrateWeatherForPlace(t){
+  const box=document.getElementById('psWeatherBox');
+  if(!box) return;
+  const cacheKey=`${Number(t.lat).toFixed(2)},${Number(t.lng).toFixed(2)}`;
+  try{
+    if(!weatherCache[cacheKey]){
+      const url=`https://api.open-meteo.com/v1/forecast?latitude=${encodeURIComponent(t.lat)}&longitude=${encodeURIComponent(t.lng)}&current_weather=true&timezone=auto`;
+      const r=await fetchWithTimeout(url,{headers:{Accept:'application/json'}},5000);
+      if(!r.ok) throw new Error();
+      weatherCache[cacheKey]=(await r.json()).current_weather;
+    }
+    if(activePlaceId!==String(t.id)) return;
+    const w=weatherCache[cacheKey];
+    const sunny=sunStates[t.id]===true;
+    box.innerHTML=`<div class="weather-line"><span>${Math.round(w.temperature)}°C · ${weatherLabel(w.weathercode)}</span><span>${Math.round(w.windspeed)} km/h</span></div><div class="weather-sub">${terraceWeatherScore(w,sunny)}</div>`;
+  }catch(e){
+    if(box) box.innerHTML='<div class="weather-line"><span>Météo indisponible</span></div><div class="weather-sub">La fiche reste utilisable sans météo.</div>';
+  }
+}
 function hidePlaceSheet(){
   activePlaceId=null;
   document.getElementById('placeSheet').classList.remove('open');
@@ -1458,6 +1531,7 @@ async function showPlaceSheet(t){
   const desc = ref&&ref.description ? `<div class="ps-desc">${escapeHTML(ref.description)}</div>` : '';
   const happy = ref&&ref.happyHours ? `<span class="ps-happy">🍹 Happy hour ${escapeHTML(ref.happyHours)}</span>` : '';
   const sheetSun = sunStatusHTML(t,'ps-sun','psSunStatus').replace(compactSunStateLabel(sunStates[t.id]), sunStateLabel(sunStates[t.id]));
+  const favActive=isFavorite(t);
 
   content.innerHTML=`
     <div class="ps-hero" id="psHero">
@@ -1470,7 +1544,18 @@ async function showPlaceSheet(t){
       <div class="ps-sub">${escapeHTML(typeLine)}${priceLine}${dist?' · '+escapeHTML(dist):''}${t.adresse?' · '+escapeHTML(t.adresse):''}</div>
       ${desc}
       <div class="ps-meta" id="psMeta">${happy}</div>
+      <div class="ps-insights">
+        <div class="ps-insight">
+          <div class="ps-insight-title">Soleil aujourd’hui</div>
+          ${buildSunTimeline(t)}
+        </div>
+        <div class="ps-insight">
+          <div class="ps-insight-title">Météo terrasse</div>
+          <div id="psWeatherBox"><div class="weather-line"><span>Chargement météo…</span></div></div>
+        </div>
+      </div>
       <div class="ps-btns" id="psBtns">
+        <button class="ps-btn fav ${favActive?'active':''}" id="psFavBtn">${favActive?'Favori enregistré':'Ajouter aux favoris'}</button>
         ${ref ? '<button class="ps-btn reserve" id="psReserveBtn">Réserver</button>' : ''}
         <button class="ps-btn maps" id="psGoogleBtn">Google</button>
         <button class="ps-btn site" id="psSiteBtn" style="${siteUrl?'display:block':''}">Site</button>
@@ -1480,6 +1565,14 @@ async function showPlaceSheet(t){
   document.getElementById('placeSheet').classList.add('open');
   document.getElementById('psOverlay').classList.add('open');
 
+  hydrateWeatherForPlace(t);
+  const favBtn=document.getElementById('psFavBtn');
+  if(favBtn) favBtn.onclick=()=>{
+    const active=toggleFavorite(t);
+    favBtn.classList.toggle('active',active);
+    favBtn.textContent=active?'Favori enregistré':'Ajouter aux favoris';
+    renderList(currentHeure,searchQuery);
+  };
   const reserveBtn=document.getElementById('psReserveBtn');
   if(reserveBtn && reservationUrl) reserveBtn.onclick=()=>window.open(reservationUrl,'_blank');
   const googleBtn=document.getElementById('psGoogleBtn');
@@ -1534,6 +1627,7 @@ function highlight(text,q){
 
 function matchesActiveFilter(t){
   const type=normalize(t.type);
+  if(activeFilter==='favorite') return isFavorite(t);
   if(activeFilter==='restaurant') return type.includes('restaurant')||type.includes('brasserie')||type.includes('bistrot');
   if(activeFilter==='cafe') return type.includes('cafe');
   if(activeFilter==='bar') return type.includes('bar')||type.includes('pub');
@@ -1568,6 +1662,8 @@ function renderList(h,query){
     const pa=findReferenced(a.nom)?1:0, pb=findReferenced(b.nom)?1:0;
     if(pa!==pb) return pb-pa;
     if(pa&&pb) return referencedRank(a.nom)-referencedRank(b.nom);
+    const fa=isFavorite(a)?1:0, fb=isFavorite(b)?1:0;
+    if(fa!==fb) return fb-fa;
     return distMeters(a.lat,a.lng)-distMeters(b.lat,b.lng);
   });
   const counter=document.getElementById('resultCount');
