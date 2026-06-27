@@ -350,7 +350,7 @@
   <div class="list" id="terrasseList" style="display:none;"></div>
   <div class="drawer-footer">
     <div class="live-dot"></div>
-    <span class="footer-text" id="footerText">Ombres 3D · OpenStreetMap</span>
+    <span class="footer-text" id="footerText">OpenStreetMap</span>
     <a class="privacy-link" href="https://soleil-bordeaux.vercel.app/privacy.html" target="_blank">Confidentialité</a>
   </div>
 </div>
@@ -464,24 +464,24 @@ const viewer = new Cesium.Viewer('cesiumContainer', {
   navigationHelpButton: false, sceneModePicker: false, animation: false, timeline: false,
   fullscreenButton: false, geocoder: false, scene3DOnly: true,
 });
-viewer.scene.globe.maximumScreenSpaceError = PERFORMANCE_MODE ? 2.2 : 1;
-viewer.scene.globe.tileCacheSize = PERFORMANCE_MODE ? 220 : 650;
+viewer.scene.globe.maximumScreenSpaceError = 0.75;
+viewer.scene.globe.tileCacheSize = 750;
 viewer.scene.globe.preloadAncestors = true;
-viewer.scene.globe.preloadSiblings = !PERFORMANCE_MODE;
-viewer.scene.globe.enableLighting = !PERFORMANCE_MODE;
+viewer.scene.globe.preloadSiblings = true;
+viewer.scene.globe.enableLighting = true;
 viewer.scene.globe.depthTestAgainstTerrain = true;
 viewer.scene.fog.enabled = true;
 viewer.scene.fog.density = 0.00018;
-viewer.shadows = !PERFORMANCE_MODE;
-viewer.resolutionScale = PERFORMANCE_MODE ? 1 : Math.min(window.devicePixelRatio || 1, 1.6);
+viewer.shadows = true;
+viewer.resolutionScale = Math.min(window.devicePixelRatio || 1, 2);
 viewer.scene.globe.showWaterEffect = false;
 viewer.scene.postProcessStages.fxaa.enabled = true;
-viewer.scene.highDynamicRange = !PERFORMANCE_MODE;
+viewer.scene.highDynamicRange = true;
 if (viewer.scene.shadowMap) {
-  viewer.scene.shadowMap.enabled = !PERFORMANCE_MODE;
-  viewer.scene.shadowMap.softShadows = !PERFORMANCE_MODE;
+  viewer.scene.shadowMap.enabled = true;
+  viewer.scene.shadowMap.softShadows = true;
   viewer.scene.shadowMap.darkness = 0.28;
-  viewer.scene.shadowMap.maximumDistance = PERFORMANCE_MODE ? 700 : 2600;
+  viewer.scene.shadowMap.maximumDistance = 2600;
 }
 viewer.scene.screenSpaceCameraController.inertiaSpin = 0.9;
 viewer.scene.screenSpaceCameraController.inertiaTranslate = 0.9;
@@ -515,7 +515,7 @@ if (useGoogle3D) {
   setProgress(18, 'Google 3D…');
 } else {
   osmBuildings = viewer.scene.primitives.add(Cesium.createOsmBuildings());
-  osmBuildings.maximumScreenSpaceError = PERFORMANCE_MODE ? 2.35 : 1.35;
+  osmBuildings.maximumScreenSpaceError = 1.0;
   osmBuildings.dynamicScreenSpaceError = true;
 }
 
@@ -539,7 +539,7 @@ buildingsReadyPromise.then(() => { if(useGoogle3D) setMode3DLabel('Test 3D: Goog
     viewer.scene.globe.show = true;
     try { viewer.scene.primitives.remove(cityTiles); } catch(e) {}
     osmBuildings = viewer.scene.primitives.add(Cesium.createOsmBuildings());
-    osmBuildings.maximumScreenSpaceError = 1.35;
+    osmBuildings.maximumScreenSpaceError = 1.0;
     osmBuildings.dynamicScreenSpaceError = true;
     osmBuildings.readyPromise.finally(() => { buildingsOk = true; tryOpen(); });
     return;
@@ -1609,9 +1609,9 @@ function renderList(h,query){
     const tag=ref?`<span class="partner-tag">Sélection</span>`:'';
     if(ref){
       const photo=placePhotoUrl(t,ref,null);
-      card.innerHTML=`<div class="card-photo-wrap"><img class="card-photo" data-place-id="${escapeAttr(t.id)}" src="${escapeAttr(photo)}" alt="${escapeAttr(t.nom)}" loading="lazy" decoding="async" onerror="markPhotoError(this)"><span class="partner-sun">☀️</span></div><div class="card-body"><div class="card-name">${highlight(t.nom,query)}${tag}</div><div class="card-sub">${escapeHTML(t.type)}${t.adresse?' · '+escapeHTML(t.adresse):''}${dist?' · '+escapeHTML(dist):''}</div><div class="card-meta">${sunStatusHTML(t)}</div></div>`;
+      card.innerHTML=`<div class="card-photo-wrap"><img class="card-photo" data-place-id="${escapeAttr(t.id)}" src="${escapeAttr(photo)}" alt="${escapeAttr(t.nom)}" loading="lazy" decoding="async" onerror="markPhotoError(this)"><span class="partner-sun">☀️</span></div><div class="card-body"><div class="card-name">${highlight(t.nom,query)}${tag}</div><div class="card-sub">${escapeHTML(t.type)}${t.adresse?' · '+escapeHTML(t.adresse):''}${dist?' · '+escapeHTML(dist):''}</div></div>`;
     }else{
-      card.innerHTML=`<div class="card-body"><div class="card-name">${highlight(t.nom,query)}</div><div class="card-sub">${escapeHTML(t.type)}${t.adresse?' · '+escapeHTML(t.adresse):''}${dist?' · '+escapeHTML(dist):''}</div><div class="card-meta">${sunStatusHTML(t)}</div></div>`;
+      card.innerHTML=`<div class="card-body"><div class="card-name">${highlight(t.nom,query)}</div><div class="card-sub">${escapeHTML(t.type)}${t.adresse?' · '+escapeHTML(t.adresse):''}${dist?' · '+escapeHTML(dist):''}</div></div>`;
     }
     card.addEventListener('click',()=>selectTerrasse(t,card));
     fragment.appendChild(card);
