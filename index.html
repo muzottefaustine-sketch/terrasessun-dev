@@ -501,34 +501,9 @@ viewer.scene.screenSpaceCameraController.minimumZoomDistance = 28;
 viewer.camera.setView({ destination: Cesium.Cartesian3.fromDegrees(-0.57918, 44.837789, 450), orientation: { heading: 0, pitch: Cesium.Math.toRadians(-50), roll: 0 } });
 
 setProgress(10, 'Chargement…');
-function setMode3DLabel(text){
-  const pill=document.getElementById('mode3dPill');
-  if(pill) pill.textContent=text;
-}
-const useGoogle3D = ENABLE_GOOGLE_3D_TEST && (GOOGLE_MAP_TILES_API_KEY || '').trim().length > 8;
-setMode3DLabel(useGoogle3D ? 'Test 3D: chargement Google 3D…' : 'Mode fluide: 3D OpenStreetMap');
-let osmBuildings = null;
-let cityTiles = null;
-
-if (useGoogle3D) {
-  cityTiles = viewer.scene.primitives.add(new Cesium.Cesium3DTileset({
-    url: `https://tile.googleapis.com/v1/3dtiles/root.json?key=${encodeURIComponent(GOOGLE_MAP_TILES_API_KEY.trim())}`,
-    showCreditsOnScreen: true,
-    maximumScreenSpaceError: 2.2,
-    dynamicScreenSpaceError: true,
-    dynamicScreenSpaceErrorDensity: 0.0026,
-    dynamicScreenSpaceErrorFactor: 4.0
-  }));
-  viewer.scene.globe.show = false;
-  viewer.scene.skyAtmosphere.show = true;
-  viewer.scene.fog.enabled = false;
-  setProgress(18, 'Google 3D…');
-} else {
-  osmBuildings = viewer.scene.primitives.add(Cesium.createOsmBuildings());
-  osmBuildings.maximumScreenSpaceError = 1.35;
-  osmBuildings.dynamicScreenSpaceError = true;
-}
-
+const osmBuildings = viewer.scene.primitives.add(Cesium.createOsmBuildings());
+osmBuildings.maximumScreenSpaceError = 1.35;
+osmBuildings.dynamicScreenSpaceError = true;
 viewer.scene.globe.tileLoadProgressEvent.addEventListener(remaining => {
   setProgress(Math.min(60, 10 + (1 - Math.min(remaining, 50) / 50) * 50), remaining === 0 ? 'Bâtiments…' : 'Chargement…');
   if (remaining === 0 && terrasses.length > 0 && !computing && ENABLE_SHADOW_RAYCASTS) { scheduleShadow(); }
@@ -540,23 +515,9 @@ function tryOpen() {
   viewer.scene.postRender.addEventListener(function waitRender() { if (++f >= 6) { viewer.scene.postRender.removeEventListener(waitRender); completeSplash(); } });
 }
 viewer.scene.postRender.addEventListener(function watchGlobe() {
-  if ((useGoogle3D || viewer.scene.globe.tilesLoaded) && !globeOk) { globeOk = true; setProgress(70, useGoogle3D ? 'Google 3D…' : 'Bâtiments…'); viewer.scene.postRender.removeEventListener(watchGlobe); tryOpen(); }
+  if (viewer.scene.globe.tilesLoaded && !globeOk) { globeOk = true; setProgress(70, 'Bâtiments…'); viewer.scene.postRender.removeEventListener(watchGlobe); tryOpen(); }
 });
-const buildingsReadyPromise = useGoogle3D ? cityTiles.readyPromise : osmBuildings.readyPromise;
-buildingsReadyPromise.then(() => { if(useGoogle3D) setMode3DLabel('Test 3D: Google 3D actif'); buildingsOk = true; setProgress(85, 'Finalisation…'); tryOpen(); }).catch(() => {
-  if (useGoogle3D) {
-    setMode3DLabel('Test 3D: Google 3D refusé, retour OpenStreetMap');
-    viewer.scene.globe.show = true;
-    try { viewer.scene.primitives.remove(cityTiles); } catch(e) {}
-    osmBuildings = viewer.scene.primitives.add(Cesium.createOsmBuildings());
-    osmBuildings.maximumScreenSpaceError = 1.35;
-    osmBuildings.dynamicScreenSpaceError = true;
-    osmBuildings.readyPromise.finally(() => { buildingsOk = true; tryOpen(); });
-    return;
-  }
-  buildingsOk = true;
-  tryOpen();
-});
+osmBuildings.readyPromise.then(() => { buildingsOk = true; setProgress(85, 'Finalisation…'); tryOpen(); }).catch(() => { buildingsOk = true; tryOpen(); });
 
 let userDot = null, userHalo = null, userPulse = null, pulseT = 0, pulseStarted = false;
 function makeUserDot() {
@@ -823,8 +784,7 @@ function getSunDir(jd){
   const d=new Cesium.Cartesian3(); Cesium.Matrix3.multiplyByVector(m,s,d); return Cesium.Cartesian3.normalize(d,d);
 }
 function sceneReadyForShadows(relaxed=false){
-  const tilesReady = useGoogle3D ? cityTiles?.tilesLoaded : osmBuildings?.tilesLoaded;
-  return !cameraMoving && (useGoogle3D || viewer.scene.globe.tilesLoaded) && (relaxed || tilesReady) && typeof viewer.scene.pickFromRay==='function';
+  return !cameraMoving && viewer.scene.globe.tilesLoaded && (relaxed || osmBuildings.tilesLoaded) && typeof viewer.scene.pickFromRay==='function';
 }
 function sunAboveHorizon(lng,lat,sunDir){
   if(!sunDir) return null;
@@ -1017,17 +977,17 @@ function hideTooltip(){clearTimeout(ttTimeout);tooltip.classList.remove('visible
 // ══════════════════════════════════════════════
 const REFERENCED = [
   {
-    match: "Le Saint Georges",
-    aliases: ["Saint Georges", "Saint-Georges", "Le Saint-Georges", "Saint George"],
-    lat: 44.8391,
-    lng: -0.5735,
-    adresse: "Rue du Pas-Saint-Georges",
+    match: "La Pointe",
+    aliases: ["La Pointe Bordeaux", "Restaurant La Pointe"],
+    lat: 44.8521264,
+    lng: -0.5729091,
+    adresse: "10 Rue Sicard",
     photo: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1100&q=82",
-    description: "Favori Soleilenterrasse dans le quartier Saint-Pierre, parfait pour comparer vite terrasse, ambiance et ensoleillement.",
-    type: "Brasserie · Bistrot",
+    description: "Adresse référencée depuis les données locales, ajoutée à la sélection pour remplacer le doublon Saint Georges.",
+    type: "Restaurant",
     happyHours: "",
-    reservationUrl: "https://www.google.com/maps/search/?api=1&query=Le%20Saint%20Georges%20Bordeaux",
-    googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=Le%20Saint%20Georges%20Bordeaux",
+    reservationUrl: "https://www.google.com/maps/search/?api=1&query=La%20Pointe%20Bordeaux",
+    googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=La%20Pointe%20Bordeaux",
     priceLevel: "€€"
   },
   {
