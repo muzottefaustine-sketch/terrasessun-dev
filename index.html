@@ -1077,6 +1077,34 @@ const REFERENCED = [
     googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=Le%20Caf%C3%A9%20Fran%C3%A7ais%20Bordeaux",
     priceLevel: "€€"
   },
+  {
+    match: "Hôtel de la Plage",
+    aliases: ["Hotel de la Plage", "Hôtel de la Plage Cap Ferret", "Hotel de la Plage Cap Ferret"],
+    lat: 44.6439,
+    lng: -1.2526,
+    adresse: "Cap Ferret",
+    photo: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1100&q=82",
+    description: "Adresse iconique du Cap Ferret, ambiance plage et table de vacances à garder en haut de la sélection.",
+    type: "Hôtel · Restaurant",
+    happyHours: "",
+    reservationUrl: "https://www.google.com/maps/search/?api=1&query=H%C3%B4tel%20de%20la%20Plage%20Cap%20Ferret",
+    googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=H%C3%B4tel%20de%20la%20Plage%20Cap%20Ferret",
+    priceLevel: "€€€"
+  },
+  {
+    match: "Le Monte à Bord",
+    aliases: ["Le Monte a Bord", "Monte à Bord", "Monte a Bord", "Le Monte à Bord Cap Ferret", "Le Monte à Bord L'Herbe"],
+    lat: 44.6947,
+    lng: -1.2326,
+    adresse: "Village de L'Herbe",
+    photo: "https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&w=1100&q=82",
+    description: "Cabane conviviale côté bassin, parfaite pour une sélection Cap Ferret avec esprit huîtres et terrasse.",
+    type: "Cabane ostréicole · Terrasse",
+    happyHours: "",
+    reservationUrl: "https://www.google.com/maps/search/?api=1&query=Le%20Monte%20%C3%A0%20Bord%20Cap%20Ferret",
+    googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=Le%20Monte%20%C3%A0%20Bord%20Cap%20Ferret",
+    priceLevel: "€€"
+  },
 ];
 const FEATURED_RADIUS_METERS = 12000;
 function findReferenced(nom){
@@ -1620,7 +1648,7 @@ function highlight(text,q){
 
 function matchesActiveFilter(t){
   const type=normalize(t.type);
-  if(activeFilter==='favorite') return isFavorite(t);
+  if(activeFilter==='favorite') return isFavorite(t)||!!findReferenced(t.nom);
   if(activeFilter==='restaurant') return type.includes('restaurant')||type.includes('brasserie')||type.includes('bistrot');
   if(activeFilter==='cafe') return type.includes('cafe');
   if(activeFilter==='bar') return type.includes('bar')||type.includes('pub');
