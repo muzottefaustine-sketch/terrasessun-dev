@@ -212,6 +212,10 @@
     .ps-meta { display:flex; gap:8px; flex-wrap:wrap; margin-bottom: 16px; }
     .ps-rating { display: inline-flex; align-items: center; gap: 5px; background: var(--bg); border-radius: 20px; padding: 6px 12px; font-size: 13px; font-weight: 750; color: var(--text); }
     .ps-happy { display:inline-flex; align-items:center; gap:5px; background:#FFF3D6; color:#9A6B00; border-radius:20px; padding:6px 12px; font-size:13px; font-weight:750; }
+    .ps-facts { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin:0 0 14px; }
+    .ps-fact { min-width:0; border:1px solid rgba(226,232,240,0.92); background:rgba(248,250,252,0.92); border-radius:14px; padding:10px 11px; }
+    .ps-fact-label { font-size:10px; font-weight:850; color:var(--text-3); text-transform:uppercase; letter-spacing:0.55px; margin-bottom:3px; }
+    .ps-fact-value { font-size:13px; font-weight:800; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .ps-insights { display:grid; gap:10px; margin: 0 0 16px; }
     .ps-insight { border:1px solid rgba(226,232,240,0.95); background:#F8FAFC; border-radius:12px; padding:10px 12px; }
     .ps-insight-title { font-size:11px; font-weight:850; color:var(--text-3); text-transform:uppercase; letter-spacing:0.6px; margin-bottom:8px; }
@@ -221,7 +225,7 @@
     .weather-line { display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:13px; font-weight:800; color:var(--text); }
     .weather-sub { margin-top:3px; font-size:11px; color:var(--text-2); line-height:1.35; }
     .ps-btns { display: flex; gap: 10px; flex-wrap: wrap; }
-    .ps-btn { flex: 1; min-width: 0; padding: 14px; border: none; border-radius: 12px; font-size: 15px; font-weight: 800; cursor: pointer; text-align: center; font-family: inherit; white-space: nowrap; transition: transform 0.14s ease, opacity 0.14s ease; }
+    .ps-btn { flex: 1; min-width: 0; padding: 13px 12px; border: none; border-radius: 14px; font-size: 14px; font-weight: 820; cursor: pointer; text-align: center; font-family: inherit; white-space: nowrap; transition: transform 0.14s ease, opacity 0.14s ease, box-shadow 0.14s ease; box-shadow: inset 0 1px 0 rgba(255,255,255,0.22); }
     .ps-btn:active { opacity: 0.82; transform:scale(0.98); }
     .ps-btn.reserve { background: var(--coral); color: white; flex-basis: 100%; }
     .ps-btn.maps { background: var(--blue); color: white; }
@@ -355,6 +359,8 @@
     <button class="filter-chip" data-filter="cafe" type="button">Cafés</button>
     <button class="filter-chip" data-filter="bar" type="button">Bars</button>
     <button class="filter-chip" data-filter="favorite" type="button">Favoris</button>
+    <button class="filter-chip" data-city="bordeaux" type="button">Bordeaux</button>
+    <button class="filter-chip" data-city="cap-ferret" type="button">Cap Ferret</button>
   </div>
   <div class="section-title"><span class="section-label">Résultats</span><span class="count-pill" id="resultCount">0</span></div>
   <div id="loadingState"><div class="spinner"></div><span>Chargement…</span></div>
@@ -378,6 +384,7 @@ const CITIES = [
   {id:'strasbourg', nom:'Strasbourg',  lat:48.573405, lng:7.752111 },
   {id:'montpellier',nom:'Montpellier', lat:43.610769, lng:3.876716 },
   {id:'lille',      nom:'Lille',       lat:50.629250, lng:3.057256 },
+  {id:'cap-ferret', nom:'Cap Ferret',  lat:44.65090,  lng:-1.24920 },
 ];
 // Colle ta cle Google Maps ici pour activer les vraies photos, liens Google,
 // telephones et sites en local. APIs a activer: Maps JavaScript API + Places API.
@@ -436,6 +443,14 @@ function updateLocationPill(accuracy){
   pill.classList.add('visible');
 }
 
+function showAreaPill(label){
+  const pill = document.getElementById('locationPill');
+  const text = document.getElementById('locationPillText');
+  if(!pill || !text) return;
+  text.textContent = label;
+  pill.classList.add('visible');
+}
+
 function metersBetween(lat1,lng1,lat2,lng2){
   return Math.hypot((lat1-lat2)*111320,(lng1-lng2)*111320*Math.cos(((lat1+lat2)/2)*Math.PI/180));
 }
@@ -444,6 +459,30 @@ function clearPlaces(){
   Object.keys(markerEntities).forEach(k => { viewer.entities.remove(markerEntities[k]); delete markerEntities[k]; });
   terrasses = [];
   sunStates = {};
+}
+
+async function switchCity(cityId){
+  const city = CITIES.find(c => c.id === cityId);
+  if(!city) return;
+  currentCity = {...city};
+  userLat = null;
+  userLng = null;
+  lastLoadedArea = null;
+  searchQuery = '';
+  activeFilter = 'all';
+  document.getElementById('searchInput').value = '';
+  document.getElementById('drawerSearch').value = '';
+  document.getElementById('searchClear').classList.remove('visible');
+  document.querySelectorAll('[data-filter]').forEach(c => c.classList.toggle('active', c.dataset.filter === 'all'));
+  showAreaPill(currentCity.nom);
+  clearPlaces();
+  viewer.camera.flyTo({
+    destination: Cesium.Cartesian3.fromDegrees(city.lng, city.lat, 560),
+    orientation: { heading:0, pitch:Cesium.Math.toRadians(-52), roll:0 },
+    duration:0.9,
+    easingFunction: Cesium.EasingFunction.CUBIC_OUT
+  });
+  await loadTerrasses();
 }
 
 const drawer = document.getElementById('drawer');
@@ -1462,6 +1501,22 @@ function isFeaturedOrFavorite(t){
   return !!findReferenced(t.nom) || isFavorite(t);
 }
 
+function placeFact(label,value){
+  if(!value) return '';
+  return `<div class="ps-fact"><div class="ps-fact-label">${escapeHTML(label)}</div><div class="ps-fact-value">${escapeHTML(value)}</div></div>`;
+}
+
+function placeFactsHTML(t,ref,dist){
+  const address=(ref&&ref.adresse)||t.adresse||currentCity.nom;
+  const facts=[
+    placeFact('Style',(ref&&ref.type)||t.type),
+    placeFact('Distance',dist||'Autour de vous'),
+    placeFact('Budget',ref&&ref.priceLevel),
+    placeFact('Adresse',address)
+  ].filter(Boolean).join('');
+  return facts ? `<div class="ps-facts">${facts}</div>` : '';
+}
+
 async function showPlaceSheet(t){
   if(navigator.vibrate) navigator.vibrate(10);
   activePlaceId=String(t.id);
@@ -1479,6 +1534,7 @@ async function showPlaceSheet(t){
   const priceLine = ref&&ref.priceLevel ? ' · '+ref.priceLevel : '';
   const desc = ref&&ref.description ? `<div class="ps-desc">${escapeHTML(ref.description)}</div>` : '';
   const happy = ref&&ref.happyHours ? `<span class="ps-happy">🍹 Happy hour ${escapeHTML(ref.happyHours)}</span>` : '';
+  const facts = placeFactsHTML(t,ref,dist);
   const favActive=isFavorite(t);
 
   content.innerHTML=`
@@ -1490,6 +1546,7 @@ async function showPlaceSheet(t){
       <div class="ps-name">${escapeHTML(t.nom)}</div>
       <div class="ps-sub">${escapeHTML(typeLine)}${priceLine}${dist?' · '+escapeHTML(dist):''}${t.adresse?' · '+escapeHTML(t.adresse):''}</div>
       ${desc}
+      ${facts}
       <div class="ps-meta" id="psMeta">${happy}</div>
       <div class="ps-btns" id="psBtns">
         <button class="ps-btn fav ${favActive?'active':''}" id="psFavBtn">${favActive?'Favori enregistré':'Ajouter aux favoris'}</button>
@@ -1666,6 +1723,10 @@ document.getElementById('drawerSearch').addEventListener('input',e=>{searchQuery
 document.getElementById('filterChips').addEventListener('click',e=>{
   const chip=e.target.closest('.filter-chip');
   if(!chip) return;
+  if(chip.dataset.city){
+    switchCity(chip.dataset.city);
+    return;
+  }
   activeFilter=chip.dataset.filter||'all';
   document.querySelectorAll('.filter-chip').forEach(c=>c.classList.toggle('active',c===chip));
   renderList(currentHeure,searchQuery);
