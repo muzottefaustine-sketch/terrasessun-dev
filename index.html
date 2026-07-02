@@ -504,7 +504,7 @@ function completeSplash() {
   if (splashDone) return; splashDone = true; setProgress(100, 'Prêt !');
   setTimeout(() => { document.getElementById('splash').classList.add('out'); setTimeout(() => { document.getElementById('splash').style.display = 'none'; }, 650); }, 300);
 }
-setTimeout(completeSplash, 8000);
+setTimeout(completeSplash, 1200);
 
 Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIwM2M0Njk1Yi1iYzI1LTQ3MzAtOGU1MS1iNzU4MTRiNWVkY2QiLCJpZCI6Mzk5MDg5LCJpYXQiOjE3NzI3ODI3NTh9.aGJt8zcDKPwk-pJsAcp0egE1wgJ5Vg41y_yQKNfUtYw';
 
@@ -1183,8 +1183,12 @@ function fallbackPhotoForPlace(t){
   const pool=PHOTO_FALLBACKS[kind]||PHOTO_FALLBACKS.restaurant;
   return pool[hashString(`${currentCity.id}-${t.nom}-${t.type}`)%pool.length];
 }
+function cachedDetailsForPlace(t){
+  return t?.googleDetails || googlePlaceCache[t?.id] || googlePlaceCache[placeKey(t)] || {};
+}
 function placePhotoUrl(t, ref, details){
-  return (details&&details.photo) || (ref&&ref.photo) || fallbackPhotoForPlace(t);
+  const cached=cachedDetailsForPlace(t);
+  return (details&&details.photo) || (cached&&cached.photo) || (ref&&ref.photo) || fallbackPhotoForPlace(t);
 }
 function escapeHTML(value){
   return String(value||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -1375,17 +1379,22 @@ function mergePlacesByIdentity(items){
 const googlePlaceCache={};
 async function fetchGooglePlace(t){
   if(Object.prototype.hasOwnProperty.call(googlePlaceCache,t.id)) return googlePlaceCache[t.id];
+  const key=placeKey(t);
+  if(Object.prototype.hasOwnProperty.call(googlePlaceCache,key)) return googlePlaceCache[key];
   if(t.googleDetails){
     googlePlaceCache[t.id]=t.googleDetails;
+    googlePlaceCache[key]=t.googleDetails;
     return googlePlaceCache[t.id];
   }
   const browserDetails = await findGooglePlaceInBrowser(t);
   if(browserDetails.photo || browserDetails.rating || browserDetails.tel || browserDetails.googleMapsUrl || browserDetails.websiteUrl){
     googlePlaceCache[t.id]=browserDetails;
+    googlePlaceCache[key]=browserDetails;
     return googlePlaceCache[t.id];
   }
   if(!/^https?:$/.test(location.protocol)){
     googlePlaceCache[t.id]={};
+    googlePlaceCache[key]={};
     return {};
   }
   try{
@@ -1393,9 +1402,11 @@ async function fetchGooglePlace(t){
     if(!r.ok) throw new Error();
     const data=await r.json();
     googlePlaceCache[t.id]=data||{};
+    googlePlaceCache[key]=googlePlaceCache[t.id];
     return googlePlaceCache[t.id];
   }catch(e){
     googlePlaceCache[t.id]={};
+    googlePlaceCache[key]={};
     return {};
   }
 }
@@ -1446,6 +1457,25 @@ async function hydrateVisiblePhotos(items){
     if(version!==photoHydrationVersion) return;
     results.forEach(([t,details])=>applyGooglePhoto(t,details));
   }
+}
+
+function timeoutAfter(ms){
+  return new Promise(resolve=>setTimeout(resolve,ms));
+}
+
+async function preloadGooglePhotosForFeatured(items, timeoutMs=2200){
+  const targets=(items||[]).filter(t=>findReferenced(t.nom)).slice(0,10);
+  if(!targets.length || !hasGoogleMapsKey()) return;
+  await Promise.race([
+    (async()=>{
+      await loadGooglePlacesLibrary();
+      for(let i=0;i<targets.length;i+=2){
+        const batch=targets.slice(i,i+2);
+        await Promise.all(batch.map(t=>fetchGooglePlace(t)));
+      }
+    })(),
+    timeoutAfter(timeoutMs)
+  ]);
 }
 
 let activePlaceId=null;
@@ -1733,7 +1763,7 @@ function renderList(h,query){
   }
   list.appendChild(fragment);
   const hydrateTargets=[...refTerrasses,...listItems.filter(t=>findReferenced(t.nom))].filter((item,index,self)=>self.findIndex(other=>String(other.id)===String(item.id))===index);
-  requestAnimationFrame(()=>hydrateVisiblePhotos(hydrateTargets));
+  setTimeout(()=>hydrateVisiblePhotos(hydrateTargets), 80);
 }
 
 const searchInput=document.getElementById('searchInput'),searchClear=document.getElementById('searchClear');
@@ -1838,23 +1868,26 @@ async function hydrateNearbyInBackground(signature){
   }catch(e){}
 }
 
+let terraceLoadVersion=0;
 async function loadTerrasses(){
   document.getElementById('loadingState').style.display='flex';
   document.getElementById('terrasseList').style.display='none';
-  try {
-    const signature=areaSignature();
-    const quick=mergeFeaturedPlaces(mergePlacesByIdentity([...localFallbackTerrasses()])).slice(0,MAX_TERRASSES);
-    if(quick.length) paintTerrasses(quick,' · chargement…');
-    const data=await fetchTerrasses();
-    if(signature!==areaSignature()) return;
+  const signature=areaSignature();
+  const version=++terraceLoadVersion;
+  const quick=mergeFeaturedPlaces(mergePlacesByIdentity([...localFallbackTerrasses()])).slice(0,MAX_TERRASSES);
+  await preloadGooglePhotosForFeatured(quick);
+  paintTerrasses(quick,' · chargement…');
+
+  fetchTerrasses().then(data=>{
+    if(version!==terraceLoadVersion || signature!==areaSignature()) return;
     paintTerrasses(data);
-    hydrateNearbyInBackground(signature);
-  }catch(e){
-    if(terrasses.length) return;
+    setTimeout(()=>hydrateNearbyInBackground(signature), 3500);
+  }).catch(()=>{
+    if(version!==terraceLoadVersion || terrasses.length) return;
     document.getElementById('loadingState').style.display='none';
     document.getElementById('terrasseList').style.display='block';
-    document.getElementById('terrasseList').innerHTML=`<div class="no-results">Impossible de charger les terrasses.<br><button onclick="loadTerrasses()" style="margin-top:8px;background:#FFD600;border:none;padding:10px 20px;border-radius:12px;font-weight:600;cursor:pointer;font-size:14px;">🔄 Réessayer</button></div>`;
-  }
+    document.getElementById('terrasseList').innerHTML=`<div class="no-results">Impossible de charger les terrasses.<br><button onclick="loadTerrasses()" style="margin-top:8px;background:#FFD600;border:none;padding:10px 20px;border-radius:12px;font-weight:600;cursor:pointer;font-size:14px;">Réessayer</button></div>`;
+  });
 }
 
 async function init(){
@@ -1862,15 +1895,17 @@ async function init(){
   const initH=Math.min(21,Math.max(6,now.getHours()+(Math.round(now.getMinutes()/15)*15/60)));
   slider.value=initH;
   slider.dispatchEvent(new Event('input'));
+  loadGooglePlacesLibrary();
+  loadTerrasses();
 
-  // Géoloc auto au démarrage : zoom précis sur la position + rond bleu
+  // Géoloc auto ensuite : l'app reste utilisable pendant que le GPS répond.
   if(navigator.geolocation){
     navigator.geolocation.getCurrentPosition(async pos=>{
       const {longitude:lng,latitude:lat,accuracy}=pos.coords;
       placeUserDot(lng,lat,accuracy);
       await setCurrentArea(lat,lng);
       focusUser(lng,lat,false);
-      await loadTerrasses();
+      loadTerrasses();
       // Affinage : une 2e mesure GPS plus précise arrive souvent après 1-2s
       let refined=false;
       const wid=navigator.geolocation.watchPosition(async p=>{
@@ -1882,15 +1917,11 @@ async function init(){
           await setCurrentArea(la2,l2);
           clearPlaces();
           focusUser(l2,la2,true);
-          await loadTerrasses();
+          loadTerrasses();
         }
       },()=>{},{enableHighAccuracy:true,timeout:15000,maximumAge:0});
       setTimeout(()=>navigator.geolocation.clearWatch(wid), 20000);
-    },()=>{
-      loadTerrasses();
-    },{enableHighAccuracy:true,timeout:10000,maximumAge:0});
-  }else{
-    loadTerrasses();
+    },()=>{}, {enableHighAccuracy:true,timeout:4500,maximumAge:15000});
   }
 }
 
