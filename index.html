@@ -998,10 +998,10 @@ const REFERENCED = [
   {
     match: "Les Frères Cailloux",
     aliases: ["Freres Cailloux", "Frères Cailloux", "Les Freres Cailloux"],
-    lat: 44.8396,
-    lng: -0.5692,
-    adresse: "Bordeaux centre",
-    photo: "https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&w=1100&q=82",
+    lat: 44.83949,
+    lng: -0.56948,
+    adresse: "24 Place du Palais",
+    photo: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=1100&q=82",
     description: "Favori à garder en haut de la sélection pour retrouver rapidement la fiche et les infos Google.",
     type: "Restaurant",
     happyHours: "",
@@ -1458,6 +1458,10 @@ function hidePlaceSheet(){
   document.getElementById('psOverlay').classList.remove('open');
 }
 
+function isFeaturedOrFavorite(t){
+  return !!findReferenced(t.nom) || isFavorite(t);
+}
+
 async function showPlaceSheet(t){
   if(navigator.vibrate) navigator.vibrate(10);
   activePlaceId=String(t.id);
@@ -1469,17 +1473,12 @@ async function showPlaceSheet(t){
   const content=document.getElementById('psContent');
   const dist=distKm(t.lat,t.lng);
   const initialPhoto=placePhotoUrl(t,ref,null);
-  if(sunStates[t.id]===null || sunStates[t.id]===undefined){
-    const immediate=checkSunny(t,getSunDir(viewer.clock.currentTime),true);
-    if(immediate!==null) sunStates[t.id]=immediate;
-  }
 
   const badge = ref ? `<div class="ps-badge">⭐ Sélection Soleilenterrasse</div>` : '';
   const typeLine = (ref&&ref.type)||t.type;
   const priceLine = ref&&ref.priceLevel ? ' · '+ref.priceLevel : '';
   const desc = ref&&ref.description ? `<div class="ps-desc">${escapeHTML(ref.description)}</div>` : '';
   const happy = ref&&ref.happyHours ? `<span class="ps-happy">🍹 Happy hour ${escapeHTML(ref.happyHours)}</span>` : '';
-  const sheetSun = sunStatusHTML(t,'ps-sun','psSunStatus').replace(compactSunStateLabel(sunStates[t.id]), sunStateLabel(sunStates[t.id]));
   const favActive=isFavorite(t);
 
   content.innerHTML=`
@@ -1488,21 +1487,10 @@ async function showPlaceSheet(t){
     </div>
     <div class="ps-body">
       ${badge}
-      ${sheetSun}
       <div class="ps-name">${escapeHTML(t.nom)}</div>
       <div class="ps-sub">${escapeHTML(typeLine)}${priceLine}${dist?' · '+escapeHTML(dist):''}${t.adresse?' · '+escapeHTML(t.adresse):''}</div>
       ${desc}
       <div class="ps-meta" id="psMeta">${happy}</div>
-      <div class="ps-insights">
-        <div class="ps-insight">
-          <div class="ps-insight-title">Soleil aujourd’hui</div>
-          ${buildSunTimeline(t)}
-        </div>
-        <div class="ps-insight">
-          <div class="ps-insight-title">Météo terrasse</div>
-          <div id="psWeatherBox"><div class="weather-line"><span>Chargement météo…</span></div></div>
-        </div>
-      </div>
       <div class="ps-btns" id="psBtns">
         <button class="ps-btn fav ${favActive?'active':''}" id="psFavBtn">${favActive?'Favori enregistré':'Ajouter aux favoris'}</button>
         ${ref ? '<button class="ps-btn reserve" id="psReserveBtn">Réserver</button>' : ''}
@@ -1514,7 +1502,6 @@ async function showPlaceSheet(t){
   document.getElementById('placeSheet').classList.add('open');
   document.getElementById('psOverlay').classList.add('open');
 
-  hydrateWeatherForPlace(t);
   const favBtn=document.getElementById('psFavBtn');
   if(favBtn) favBtn.onclick=()=>{
     const active=toggleFavorite(t);
@@ -1598,7 +1585,8 @@ function selectTerrasse(t,card){
   if(card) card.classList.add('active');
   closeDrawer();
   focusPlace(t);
-  showPlaceSheet(t);
+  if(isFeaturedOrFavorite(t)) showPlaceSheet(t);
+  else hidePlaceSheet();
 }
 
 function renderList(h,query){
@@ -1722,7 +1710,15 @@ slider.addEventListener('change',e=>{
 const handler=new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
 handler.setInputAction(click=>{
   const picked=viewer.scene.pick(click.position);
-  if(Cesium.defined(picked)&&picked.id){const id=picked.id.properties?.id?.getValue();const t=terrasses.find(x=>String(x.id)===String(id));if(t){showPlaceSheet(t);return;}}
+  if(Cesium.defined(picked)&&picked.id){
+    const id=picked.id.properties?.id?.getValue();
+    const t=terrasses.find(x=>String(x.id)===String(id));
+    if(t){
+      if(isFeaturedOrFavorite(t)) showPlaceSheet(t);
+      else showTooltip(t,click.position.x,click.position.y);
+      return;
+    }
+  }
   hidePlaceSheet();
 },Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
