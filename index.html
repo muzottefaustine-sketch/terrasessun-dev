@@ -203,7 +203,7 @@
     .ps-photo { width: 100%; height: 230px; object-fit: cover; display: block; background: var(--bg); }
     .ps-hero::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg,rgba(5,10,18,0.02) 18%,rgba(5,10,18,0.5) 100%); pointer-events:none; }
     .ps-photo-placeholder { width: 100%; height: 210px; background: linear-gradient(135deg,#FFF7D6,#DCEBFA); display: flex; align-items: center; justify-content: center; font-size: 48px; }
-    .photo-credit { position:absolute; right:8px; bottom:7px; z-index:2; max-width:calc(100% - 16px); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; border-radius:6px; padding:3px 6px; background:rgba(15,23,42,0.68); color:#fff; font-size:8px; font-weight:650; }
+    .photo-credit { display:none !important; }
     .ps-body { padding: 16px 20px 20px; }
     .ps-badge { display:inline-flex; align-items:center; gap:5px; background:linear-gradient(135deg,var(--yellow),var(--yellow-2)); color:#775400; font-size:11px; font-weight:800; padding:5px 10px; border-radius:20px; margin-bottom:10px; text-transform:uppercase; letter-spacing:0.5px; }
     .ps-sun { font-size: 13px; padding:7px 11px; margin-bottom: 10px; font-family: inherit; }
@@ -754,6 +754,8 @@ async function fetchLocalCityData(id){
 
 const OVERPASS=['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter'];
 const OVERPASS_RADIUS_METERS = 12000;
+const OVERPASS_TIMEOUT_MS = 8500;
+const OVERPASS_QUERY_TIMEOUT_SECONDS = 14;
 const MAX_TERRASSES = 1800;
 async function fetchTerrasses(){
   let local = [];
@@ -769,9 +771,9 @@ async function fetchTerrasses(){
     return merged.slice(0, MAX_TERRASSES);
   }
 
-  const q=`[out:json][timeout:35];nwr["amenity"~"^(bar|cafe|restaurant|pub|biergarten)$"](around:${OVERPASS_RADIUS_METERS},${currentCity.lat},${currentCity.lng});out center tags;`;
+  const q=`[out:json][timeout:${OVERPASS_QUERY_TIMEOUT_SECONDS}];nwr["amenity"~"^(bar|cafe|restaurant|pub|biergarten)$"](around:${OVERPASS_RADIUS_METERS},${currentCity.lat},${currentCity.lng});out center tags;`;
   const overpassRequests=OVERPASS.map(async url=>{
-      const r=await fetchWithTimeout(url,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},body:'data='+encodeURIComponent(q)},24000);
+      const r=await fetchWithTimeout(url,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},body:'data='+encodeURIComponent(q)},OVERPASS_TIMEOUT_MS);
       if(!r.ok) throw new Error();
       const d=await r.json();
       if(!(d.elements||[]).length) throw new Error();
@@ -795,10 +797,9 @@ async function fetchTerrasses(){
         .sort((a,b)=>metersBetween(currentCity.lat,currentCity.lng,a.lat,a.lng)-metersBetween(currentCity.lat,currentCity.lng,b.lat,b.lng));
   });
   const overpassPromise = Promise.any(overpassRequests).catch(()=>[]);
-  const googlePromise = fetchGoogleNearbyTerrasses().catch(()=>[]);
   try{
-    const [overpassPlaces, googlePlaces] = await Promise.all([overpassPromise, googlePromise]);
-    const merged = mergeFeaturedPlaces(mergePlacesByIdentity([...local, ...overpassPlaces, ...googlePlaces, ...fallback]));
+    const overpassPlaces = await overpassPromise;
+    const merged = mergeFeaturedPlaces(mergePlacesByIdentity([...local, ...overpassPlaces, ...fallback]));
     return merged.slice(0, MAX_TERRASSES);
   }catch(e){
     const merged = mergeFeaturedPlaces(mergePlacesByIdentity([...local, ...fallback]));
@@ -1431,16 +1432,7 @@ function applyGooglePhoto(t,details){
   document.querySelectorAll(selector).forEach(img=>{
     img.src=details.photo;
     img.closest('.photo-error')?.classList.remove('photo-error');
-    if(details.photoAttribution){
-      const wrap=img.parentElement;
-      let credit=wrap.querySelector('.photo-credit');
-      if(!credit){
-        credit=document.createElement('span');
-        credit.className='photo-credit';
-        wrap.appendChild(credit);
-      }
-      credit.textContent=`Photo ${details.photoAttribution}`;
-    }
+    img.parentElement?.querySelector('.photo-credit')?.remove();
   });
 }
 
@@ -1811,29 +1803,54 @@ handler.setInputAction(click=>{
   hidePlaceSheet();
 },Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
+function areaSignature(){
+  return `${currentCity.id}:${currentCity.lat.toFixed(4)}:${currentCity.lng.toFixed(4)}`;
+}
+
+function paintTerrasses(data, suffix=''){
+  document.getElementById('loadingState').style.display='none';
+  document.getElementById('terrasseList').style.display='block';
+  terrasses=data;
+  lastLoadedArea={lat:currentCity.lat,lng:currentCity.lng};
+  sunStates={};
+  terrasses.forEach(t=>{sunStates[t.id]=sunStates[t.id] ?? null;});
+  primeSunStates();
+  document.getElementById('footerText').textContent=`${terrasses.length} terrasses · ${currentCity.nom}${suffix}`;
+  renderList(currentHeure,searchQuery);
+  const launch=()=>{
+    syncDots();
+    if (ENABLE_SHADOW_RAYCASTS) {
+      if (viewer.scene.globe.tilesLoaded) { runShadow(); } else { scheduleShadow(); }
+    }
+  };
+  if(splashDone) launch();
+  else{const w=setInterval(()=>{if(splashDone){clearInterval(w);launch();}},100);}
+}
+
+let nearbyHydrationVersion=0;
+async function hydrateNearbyInBackground(signature){
+  const version=++nearbyHydrationVersion;
+  try{
+    const googlePlaces=await fetchGoogleNearbyTerrasses();
+    if(version!==nearbyHydrationVersion || signature!==areaSignature() || !googlePlaces.length) return;
+    const merged=mergeFeaturedPlaces(mergePlacesByIdentity([...terrasses,...googlePlaces])).slice(0,MAX_TERRASSES);
+    paintTerrasses(merged);
+  }catch(e){}
+}
+
 async function loadTerrasses(){
   document.getElementById('loadingState').style.display='flex';
   document.getElementById('terrasseList').style.display='none';
   try {
+    const signature=areaSignature();
+    const quick=mergeFeaturedPlaces(mergePlacesByIdentity([...localFallbackTerrasses()])).slice(0,MAX_TERRASSES);
+    if(quick.length) paintTerrasses(quick,' · chargement…');
     const data=await fetchTerrasses();
-    document.getElementById('loadingState').style.display='none';
-    document.getElementById('terrasseList').style.display='block';
-    terrasses=data;
-    lastLoadedArea={lat:currentCity.lat,lng:currentCity.lng};
-    sunStates={};
-    terrasses.forEach(t=>{sunStates[t.id]=null;});
-    primeSunStates();
-    document.getElementById('footerText').textContent=`${terrasses.length} terrasses · ${currentCity.nom}`;
-    renderList(currentHeure,'');
-    const launch=()=>{
-      syncDots();
-      if (ENABLE_SHADOW_RAYCASTS) {
-        if (viewer.scene.globe.tilesLoaded) { runShadow(); } else { scheduleShadow(); }
-      }
-    };
-    if(splashDone) launch();
-    else{const w=setInterval(()=>{if(splashDone){clearInterval(w);launch();}},100);}
+    if(signature!==areaSignature()) return;
+    paintTerrasses(data);
+    hydrateNearbyInBackground(signature);
   }catch(e){
+    if(terrasses.length) return;
     document.getElementById('loadingState').style.display='none';
     document.getElementById('terrasseList').style.display='block';
     document.getElementById('terrasseList').innerHTML=`<div class="no-results">Impossible de charger les terrasses.<br><button onclick="loadTerrasses()" style="margin-top:8px;background:#FFD600;border:none;padding:10px 20px;border-radius:12px;font-weight:600;cursor:pointer;font-size:14px;">🔄 Réessayer</button></div>`;
