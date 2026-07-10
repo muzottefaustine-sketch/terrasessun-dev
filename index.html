@@ -689,6 +689,7 @@ function osmDataToTerrasses(data, source='osm'){
       const props = f.properties || f.tags || {};
       const amenity = props.amenity;
       const name = props.name;
+      if(String(name || '').trim().toLowerCase() === 'el') return false;
       return AMENITY_VALIDES.has(amenity) && name && !seen.has(name) && seen.add(name);
     })
     .map((f,index) => {
@@ -1076,6 +1077,34 @@ const REFERENCED = [
     happyHours: "",
     reservationUrl: "https://www.google.com/maps/search/?api=1&query=Le%20Caf%C3%A9%20Fran%C3%A7ais%20Bordeaux",
     googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=Le%20Caf%C3%A9%20Fran%C3%A7ais%20Bordeaux",
+    priceLevel: "€€"
+  },
+  {
+    match: "Bistrot Le Nansouty",
+    aliases: ["Le Nansouty", "Nansouty", "Nansouty Chez Luis", "Bistrot Nansouty"],
+    lat: 44.8202065,
+    lng: -0.5725082,
+    adresse: "Place Nansouty",
+    photo: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1100&q=82",
+    description: "Bistrot de quartier côté Nansouty, pratique à retrouver dans la sélection avec sa terrasse et ses infos Google.",
+    type: "Café · Bistrot",
+    happyHours: "",
+    reservationUrl: "https://www.google.com/maps/search/?api=1&query=Bistrot%20Le%20Nansouty%20Bordeaux",
+    googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=Bistrot%20Le%20Nansouty%20Bordeaux",
+    priceLevel: "€€"
+  },
+  {
+    match: "La Terrasse Saint-Pierre",
+    aliases: ["Terrasse Saint Pierre", "La Terrasse Saint Pierre", "Terrasse Saint-Pierre"],
+    lat: 44.8401324,
+    lng: -0.5705691,
+    adresse: "7 Place Saint-Pierre",
+    photo: "https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=1100&q=82",
+    description: "Adresse centrale de Saint-Pierre, ajoutée à la sélection pour ouvrir une fiche simple, propre et utile.",
+    type: "Restaurant · Terrasse",
+    happyHours: "",
+    reservationUrl: "https://www.google.com/maps/search/?api=1&query=La%20Terrasse%20Saint-Pierre%20Bordeaux",
+    googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=La%20Terrasse%20Saint-Pierre%20Bordeaux",
     priceLevel: "€€"
   },
   {
