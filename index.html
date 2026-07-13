@@ -132,6 +132,7 @@
     #tooltip .tt-sun { font-size: 13px; font-weight: 600; margin-top: 6px; font-family: Arial, sans-serif; }
     #tooltip .tt-sun.sun { color: var(--yellow); }
     #tooltip .tt-sun.shade { color: #90CAF9; }
+    #tooltip .tt-sun.utility { color: #B8F7D4; }
 
     #drawer { position: fixed; z-index: 40; background: linear-gradient(180deg, rgba(255,255,255,0.98), #F8FAFC 46%, #F5F7FA); display: flex; flex-direction: column; transition: transform 0.42s cubic-bezier(0.22,0.9,0.18,1); box-shadow: -22px 0 48px rgba(15,23,42,0.16); }
     @media (min-width: 641px) { #drawer { top:0; right:0; width:var(--panel-w); height:100vh; border-left:1px solid rgba(255,255,255,0.6); transform:translateX(110%); } #drawer.open { transform:translateX(0); } }
@@ -179,6 +180,15 @@
     .card-name { font-size:15px; font-weight:800; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:3px; font-family: inherit; }
     .card-sub { font-size:12px; color:var(--text-2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-family: inherit; }
     .distance-pill { display:inline-flex; align-items:center; color:#007AFF; font-weight:800; }
+    .category-icon { width:36px; height:36px; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:18px; font-weight:850; border:1px solid rgba(255,255,255,0.76); box-shadow:0 6px 16px rgba(15,23,42,0.08), inset 0 1px 0 rgba(255,255,255,0.7); }
+    .category-icon.park { background:#DDF8EA; color:#0B7A45; }
+    .category-icon.water { background:#DFF2FF; color:#007AFF; }
+    .category-icon.parking { background:#EEF1F6; color:#526071; }
+    .category-icon.toilet { background:#F2E9FF; color:#7B45C7; }
+    .category-icon.cool { background:#E8F4FF; color:#276EF1; }
+    .card.utility { gap:10px; }
+    .utility-tag { display:inline-flex; align-items:center; height:22px; padding:0 8px; border-radius:999px; background:#F1F5F9; color:#5E6470; font-size:10px; font-weight:850; }
+    .utility-tag.heat { background:#EAFBF2; color:#12764A; }
     .card-meta { display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:6px; }
     .sun-status { display:inline-flex; align-items:center; justify-content:center; border-radius:999px; border:1px solid transparent; font-weight:850; white-space:nowrap; }
     .sun-status.sun { background:#FFF4C2; border-color:#F2CB45; color:#7A5200; }
@@ -307,7 +317,7 @@
 <div id="topBar">
   <div class="search-glass">
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="#1C1C1E" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="#1C1C1E" stroke-width="1.5" stroke-linecap="round"/></svg>
-    <input type="text" id="searchInput" placeholder="Cherche un restaurant ou une terrasse…">
+    <input type="text" id="searchInput" placeholder="Cherche une terrasse, un parc, un parking…">
     <button class="search-clear-btn" id="searchClear">✕</button>
   </div>
   <button class="icon-btn" id="btnListe" onclick="openDrawer()" title="Liste">
@@ -350,7 +360,7 @@
     </div>
     <div class="drawer-search">
       <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="#1C1C1E" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="#1C1C1E" stroke-width="1.5" stroke-linecap="round"/></svg>
-      <input type="text" id="drawerSearch" placeholder="Rechercher un établissement…">
+      <input type="text" id="drawerSearch" placeholder="Rechercher un lieu…">
     </div>
   </div>
   <div class="filter-chips" id="filterChips" aria-label="Filtres de recherche">
@@ -358,6 +368,12 @@
     <button class="filter-chip" data-filter="restaurant" type="button">Restaurants</button>
     <button class="filter-chip" data-filter="cafe" type="button">Cafés</button>
     <button class="filter-chip" data-filter="bar" type="button">Bars</button>
+    <button class="filter-chip" data-filter="heatwave" type="button">Canicule</button>
+    <button class="filter-chip" data-filter="park" type="button">Parcs</button>
+    <button class="filter-chip" data-filter="water" type="button">Eau</button>
+    <button class="filter-chip" data-filter="parking" type="button">Parkings</button>
+    <button class="filter-chip" data-filter="toilet" type="button">Toilettes</button>
+    <button class="filter-chip" data-filter="cool" type="button">Lieux frais</button>
     <button class="filter-chip" data-filter="favorite" type="button">Favoris</button>
     <button class="filter-chip" data-city="bordeaux" type="button">Bordeaux</button>
     <button class="filter-chip" data-city="cap-ferret" type="button">Cap Ferret</button>
@@ -627,8 +643,87 @@ function geolocate(e) {
 let terrasses=[], sunStates={}, searchQuery='', activeFilter='all', currentHeure=14, currentDate=new Date();
 const markerEntities={};
 
-const AMENITY_VALIDES = new Set(['bar','cafe','restaurant','pub','biergarten']);
-function typeLabel(a){return{bar:'Bar',cafe:'Café',restaurant:'Restaurant',pub:'Pub',biergarten:'Brasserie'}[a]||'Terrasse';}
+const FOOD_AMENITIES = new Set(['bar','cafe','restaurant','pub','biergarten']);
+const AMENITY_VALIDES = new Set([...FOOD_AMENITIES,'drinking_water','fountain','parking','bicycle_parking','toilets','library','cinema']);
+const PLACE_CATEGORY_META = {
+  food:    { label:'Terrasse', icon:'☀️', color:'#F8C83E', heat:'Terrasse à vérifier selon le soleil' },
+  park:    { label:'Parc', icon:'🌳', color:'#2AB773', heat:'Ombre naturelle possible' },
+  water:   { label:'Point d’eau', icon:'💧', color:'#1677FF', heat:'Utile en forte chaleur' },
+  parking: { label:'Parking', icon:'P', color:'#64748B', heat:'Stationnement à proximité' },
+  toilet:  { label:'Toilettes', icon:'WC', color:'#8B5CF6', heat:'Service utile à proximité' },
+  cool:    { label:'Lieu frais', icon:'❄️', color:'#38A3FF', heat:'Pause au frais possible' }
+};
+function categoryFromTags(tags={}){
+  const amenity=tags.amenity, leisure=tags.leisure, natural=tags.natural, landuse=tags.landuse, tourism=tags.tourism, shop=tags.shop;
+  if(FOOD_AMENITIES.has(amenity)) return 'food';
+  if(['park','garden','nature_reserve'].includes(leisure) || natural==='wood' || landuse==='forest') return 'park';
+  if(['drinking_water','fountain'].includes(amenity)) return 'water';
+  if(['parking','bicycle_parking'].includes(amenity)) return 'parking';
+  if(amenity==='toilets') return 'toilet';
+  if(['library','cinema'].includes(amenity) || tourism==='museum' || shop==='mall') return 'cool';
+  return null;
+}
+function placeCategory(t){ return t?.category || 'food'; }
+function isFoodPlace(t){ return placeCategory(t)==='food'; }
+function placeCategoryMeta(t){ return PLACE_CATEGORY_META[placeCategory(t)] || PLACE_CATEGORY_META.food; }
+function placeIcon(t){ return placeCategoryMeta(t).icon; }
+function utilityHeatNote(t){ return placeCategoryMeta(t).heat; }
+function typeLabel(a){return{bar:'Bar',cafe:'Café',restaurant:'Restaurant',pub:'Pub',biergarten:'Brasserie',drinking_water:'Point d’eau',fountain:'Fontaine',parking:'Parking',bicycle_parking:'Parking vélo',toilets:'Toilettes publiques',library:'Bibliothèque',cinema:'Cinéma'}[a]||'';}
+function typeLabelFromTags(tags={}){
+  if(FOOD_AMENITIES.has(tags.amenity)) return typeLabel(tags.amenity);
+  if(tags.leisure==='park') return 'Parc';
+  if(tags.leisure==='garden') return 'Jardin';
+  if(tags.leisure==='nature_reserve') return 'Espace naturel';
+  if(tags.natural==='wood' || tags.landuse==='forest') return 'Zone boisée';
+  if(tags.tourism==='museum') return 'Musée · lieu frais';
+  if(tags.shop==='mall') return 'Centre commercial · lieu frais';
+  return typeLabel(tags.amenity) || PLACE_CATEGORY_META[categoryFromTags(tags)]?.label || 'Lieu';
+}
+function defaultPlaceName(tags={}, category){
+  if(tags.name) return tags.name;
+  if(tags.amenity==='drinking_water') return 'Point d’eau';
+  if(tags.amenity==='fountain') return 'Fontaine';
+  if(tags.amenity==='bicycle_parking') return 'Parking vélo';
+  if(tags.amenity==='parking') return 'Parking';
+  if(tags.amenity==='toilets') return 'Toilettes publiques';
+  if(tags.leisure==='garden') return 'Jardin';
+  if(tags.leisure==='park') return 'Parc';
+  if(tags.natural==='wood' || tags.landuse==='forest') return 'Zone boisée';
+  return PLACE_CATEGORY_META[category]?.label || '';
+}
+function coordsFromOsmFeature(f){
+  if(Number.isFinite(f.lon) || Number.isFinite(f.center?.lon)) return {lng:f.lon ?? f.center.lon, lat:f.lat ?? f.center.lat};
+  const coords=f.geometry?.coordinates;
+  if(!coords) return null;
+  const points=[];
+  const collect=value=>{
+    if(Array.isArray(value) && value.length>=2 && Number.isFinite(value[0]) && Number.isFinite(value[1])) points.push(value);
+    else if(Array.isArray(value)) value.forEach(collect);
+  };
+  collect(coords);
+  if(!points.length) return null;
+  const sum=points.reduce((acc,p)=>({lng:acc.lng+p[0],lat:acc.lat+p[1]}),{lng:0,lat:0});
+  return {lng:sum.lng/points.length, lat:sum.lat/points.length};
+}
+function osmFeatureToPlace(f,index,source='osm'){
+  const props=f.properties || f.tags || {};
+  const category=categoryFromTags(props);
+  if(!category) return null;
+  const coords=coordsFromOsmFeature(f);
+  if(!coords || !Number.isFinite(coords.lat) || !Number.isFinite(coords.lng)) return null;
+  const name=defaultPlaceName(props,category);
+  if(!name || (category==='food' && String(name).trim().toLowerCase()==='el')) return null;
+  return {
+    id: props['@id'] || props.id || (f.id ? `${source}-${f.type||'node'}-${f.id}` : `${source}-${category}-${index}`),
+    nom: name,
+    adresse: props['addr:street'] ? ((props['addr:housenumber']||'')+' '+props['addr:street']).trim() : '',
+    type: typeLabelFromTags(props),
+    category,
+    lng: coords.lng,
+    lat: coords.lat,
+    source
+  };
+}
 
 const BORDEAUX_FALLBACK_TERRASSES = [
   ['Le Bistrot du Musée','Restaurant','37 Place Pey Berland',44.83715,-0.57765],
@@ -675,6 +770,7 @@ function localFallbackTerrasses(){
     id:`fallback-bordeaux-${i}`,
     nom:p[0],
     type:p[1],
+    category:'food',
     adresse:p[2],
     lat:p[3],
     lng:p[4],
@@ -685,29 +781,16 @@ function localFallbackTerrasses(){
 function osmDataToTerrasses(data, source='osm'){
   const seen = new Set();
   return (data?.features || data?.elements || [])
-    .filter(f => {
-      const props = f.properties || f.tags || {};
-      const amenity = props.amenity;
-      const name = props.name;
-      if(String(name || '').trim().toLowerCase() === 'el') return false;
-      return AMENITY_VALIDES.has(amenity) && name && !seen.has(name) && seen.add(name);
+    .map((f,index) => osmFeatureToPlace(f,index,source))
+    .filter(t => {
+      if(!t) return false;
+      const key=t.category==='food'
+        ? `${normalize(t.nom)}-${t.lat.toFixed(4)}-${t.lng.toFixed(4)}`
+        : `${t.category}-${normalize(t.nom)}-${t.lat.toFixed(4)}-${t.lng.toFixed(4)}`;
+      if(seen.has(key)) return false;
+      seen.add(key);
+      return true;
     })
-    .map((f,index) => {
-      const isGeoJSON = !!f.geometry;
-      const props = f.properties || f.tags || {};
-      const lng = isGeoJSON ? f.geometry.coordinates[0] : (f.lon ?? f.center?.lon);
-      const lat = isGeoJSON ? f.geometry.coordinates[1] : (f.lat ?? f.center?.lat);
-      return {
-        id: props['@id'] || props.id || (f.id ? `${source}-${f.type||'node'}-${f.id}` : `${source}-${index}`),
-        nom: props.name,
-        adresse: props['addr:street'] ? ((props['addr:housenumber']||'')+' '+props['addr:street']).trim() : '',
-        type: typeLabel(props.amenity),
-        lng,
-        lat,
-        source
-      };
-    })
-    .filter(f => f.lat && f.lng);
 }
 
 const cityDataCache = {};
@@ -772,7 +855,14 @@ async function fetchTerrasses(){
     return merged.slice(0, MAX_TERRASSES);
   }
 
-  const q=`[out:json][timeout:${OVERPASS_QUERY_TIMEOUT_SECONDS}];nwr["amenity"~"^(bar|cafe|restaurant|pub|biergarten)$"](around:${OVERPASS_RADIUS_METERS},${currentCity.lat},${currentCity.lng});out center tags;`;
+  const q=`[out:json][timeout:${OVERPASS_QUERY_TIMEOUT_SECONDS}];(
+    nwr["amenity"~"^(bar|cafe|restaurant|pub|biergarten|drinking_water|fountain|parking|bicycle_parking|toilets|library|cinema)$"](around:${OVERPASS_RADIUS_METERS},${currentCity.lat},${currentCity.lng});
+    nwr["leisure"~"^(park|garden|nature_reserve)$"](around:${OVERPASS_RADIUS_METERS},${currentCity.lat},${currentCity.lng});
+    nwr["natural"="wood"](around:${OVERPASS_RADIUS_METERS},${currentCity.lat},${currentCity.lng});
+    nwr["landuse"="forest"](around:${OVERPASS_RADIUS_METERS},${currentCity.lat},${currentCity.lng});
+    nwr["tourism"="museum"](around:${OVERPASS_RADIUS_METERS},${currentCity.lat},${currentCity.lng});
+    nwr["shop"="mall"](around:${OVERPASS_RADIUS_METERS},${currentCity.lat},${currentCity.lng});
+  );out center tags;`;
   const overpassRequests=OVERPASS.map(async url=>{
       const r=await fetchWithTimeout(url,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},body:'data='+encodeURIComponent(q)},OVERPASS_TIMEOUT_MS);
       if(!r.ok) throw new Error();
@@ -780,17 +870,11 @@ async function fetchTerrasses(){
       if(!(d.elements||[]).length) throw new Error();
       const seen=new Set();
       return (d.elements||[])
-        .map(el=>({
-          id:`${el.type}-${el.id}`,
-          nom:el.tags?.name,
-          adresse:el.tags?.['addr:street']?((el.tags?.['addr:housenumber']||'')+' '+el.tags['addr:street']).trim():'',
-          type:typeLabel(el.tags?.amenity),
-          lng:el.lon ?? el.center?.lon,
-          lat:el.lat ?? el.center?.lat
-        }))
+        .map((el,index)=>osmFeatureToPlace(el,index,'osm'))
         .filter(el=>{
+          if(!el) return false;
           if(!el.lat||!el.lng||!el.nom) return false;
-          const key=`${normalize(el.nom)}-${el.lat.toFixed(4)}-${el.lng.toFixed(4)}`;
+          const key=`${el.category}-${normalize(el.nom)}-${el.lat.toFixed(4)}-${el.lng.toFixed(4)}`;
           if(seen.has(key)) return false;
           seen.add(key);
           return true;
@@ -806,6 +890,34 @@ async function fetchTerrasses(){
     const merged = mergeFeaturedPlaces(mergePlacesByIdentity([...local, ...fallback]));
     return merged.slice(0, MAX_TERRASSES);
   }
+}
+
+async function fetchUtilityPlacesFromOverpass(){
+  const q=`[out:json][timeout:${OVERPASS_QUERY_TIMEOUT_SECONDS}];(
+    nwr["amenity"~"^(drinking_water|fountain|parking|bicycle_parking|toilets|library|cinema)$"](around:${OVERPASS_RADIUS_METERS},${currentCity.lat},${currentCity.lng});
+    nwr["leisure"~"^(park|garden|nature_reserve)$"](around:${OVERPASS_RADIUS_METERS},${currentCity.lat},${currentCity.lng});
+    nwr["natural"="wood"](around:${OVERPASS_RADIUS_METERS},${currentCity.lat},${currentCity.lng});
+    nwr["landuse"="forest"](around:${OVERPASS_RADIUS_METERS},${currentCity.lat},${currentCity.lng});
+    nwr["tourism"="museum"](around:${OVERPASS_RADIUS_METERS},${currentCity.lat},${currentCity.lng});
+    nwr["shop"="mall"](around:${OVERPASS_RADIUS_METERS},${currentCity.lat},${currentCity.lng});
+  );out center tags;`;
+  const requests=OVERPASS.map(async url=>{
+    const r=await fetchWithTimeout(url,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},body:'data='+encodeURIComponent(q)},OVERPASS_TIMEOUT_MS);
+    if(!r.ok) throw new Error();
+    const d=await r.json();
+    const seen=new Set();
+    return (d.elements||[])
+      .map((el,index)=>osmFeatureToPlace(el,index,'utility-osm'))
+      .filter(el=>{
+        if(!el || isFoodPlace(el) || !el.lat || !el.lng || !el.nom) return false;
+        const key=`${el.category}-${normalize(el.nom)}-${el.lat.toFixed(4)}-${el.lng.toFixed(4)}`;
+        if(seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      })
+      .sort((a,b)=>metersBetween(currentCity.lat,currentCity.lng,a.lat,a.lng)-metersBetween(currentCity.lat,currentCity.lng,b.lat,b.lng));
+  });
+  return Promise.any(requests).catch(()=>[]);
 }
 
 function getSunDir(jd){
@@ -935,13 +1047,43 @@ function makeFeaturedIcon(){
   return c.toDataURL();
 }
 const DOT_FEATURED=makeFeaturedIcon();
+function makeCategoryIcon(category){
+  const meta=PLACE_CATEGORY_META[category] || PLACE_CATEGORY_META.cool;
+  const c=document.createElement('canvas'); c.width=32; c.height=32; const ctx=c.getContext('2d');
+  ctx.shadowColor='rgba(15,23,42,0.22)'; ctx.shadowBlur=6; ctx.shadowOffsetY=2;
+  ctx.beginPath(); ctx.arc(16,16,12,0,Math.PI*2); ctx.fillStyle=meta.color; ctx.fill();
+  ctx.shadowColor='transparent';
+  ctx.beginPath(); ctx.arc(16,16,12,0,Math.PI*2); ctx.strokeStyle='white'; ctx.lineWidth=2.5; ctx.stroke();
+  ctx.fillStyle='white';
+  ctx.font=category==='parking' || category==='toilet' ? 'bold 11px Arial' : 'bold 15px Arial';
+  ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(meta.icon,16,17);
+  return c.toDataURL();
+}
+const DOT_CATEGORY={
+  park:makeCategoryIcon('park'),
+  water:makeCategoryIcon('water'),
+  parking:makeCategoryIcon('parking'),
+  toilet:makeCategoryIcon('toilet'),
+  cool:makeCategoryIcon('cool')
+};
+function markerImageForPlace(t){
+  const ref=findReferenced(t.nom);
+  if(ref) return DOT_FEATURED;
+  if(!isFoodPlace(t)) return DOT_CATEGORY[placeCategory(t)] || DOT_CATEGORY.cool;
+  const s=sunStates[t.id];
+  return s===true?DOT_SUN:s===false?DOT_SHADE:DOT_UNKNOWN;
+}
+function markerSizeForPlace(t){
+  if(findReferenced(t.nom)) return 34;
+  return isFoodPlace(t) ? 18 : 26;
+}
 
 let markerRenderToken=0;
 function prioritizedMarkerItems(items=terrasses){
   const source = Array.isArray(items) ? items : terrasses;
   const sorted = [...source].sort((a,b)=>{
-    const ra=findReferenced(a.nom)?0:1;
-    const rb=findReferenced(b.nom)?0:1;
+    const ra=findReferenced(a.nom)?0:(isFoodPlace(a)?2:1);
+    const rb=findReferenced(b.nom)?0:(isFoodPlace(b)?2:1);
     if(ra!==rb) return ra-rb;
     if(userLat!==null) return distMeters(a.lat,a.lng)-distMeters(b.lat,b.lng);
     return metersBetween(currentCity.lat,currentCity.lng,a.lat,a.lng)-metersBetween(currentCity.lat,currentCity.lng,b.lat,b.lng);
@@ -965,10 +1107,8 @@ function syncDots(items=terrasses){
     const end=Math.min(index+MARKER_RENDER_BATCH,targets.length);
     for(;index<end;index++){
       const t=targets[index];
-      const s=sunStates[t.id];
-      const ref=findReferenced(t.nom);
-      const img=ref?DOT_FEATURED:s===true?DOT_SUN:s===false?DOT_SHADE:DOT_UNKNOWN;
-      const size=ref?34:18;
+      const img=markerImageForPlace(t);
+      const size=markerSizeForPlace(t);
       if(!markerEntities[t.id]){
         markerEntities[t.id]=viewer.entities.add({position:Cesium.Cartesian3.fromDegrees(t.lng,t.lat,2),billboard:{image:img,verticalOrigin:Cesium.VerticalOrigin.CENTER,heightReference:Cesium.HeightReference.RELATIVE_TO_GROUND,width:size,height:size,disableDepthTestDistance:Number.POSITIVE_INFINITY},properties:{id:t.id}});
       }else{
@@ -989,8 +1129,13 @@ function showTooltip(t,x,y){
   document.getElementById('ttType').textContent=t.type+(t.adresse?' · '+t.adresse:'');
   const ttSun=document.getElementById('ttSun');
   if(ttSun){
-    ttSun.className='tt-sun '+sunStateClass(sunStates[t.id]);
-    ttSun.textContent=sunStateLabel(sunStates[t.id]);
+    if(isFoodPlace(t)){
+      ttSun.className='tt-sun '+sunStateClass(sunStates[t.id]);
+      ttSun.textContent=sunStateLabel(sunStates[t.id]);
+    }else{
+      ttSun.className='tt-sun utility';
+      ttSun.textContent=`${placeIcon(t)} ${utilityHeatNote(t)}`;
+    }
   }
   const w=260; tooltip.style.left=Math.min(Math.max(x-w/2,10),window.innerWidth-w-10)+'px'; tooltip.style.top=Math.max(y-130,10)+'px';
   tooltip.classList.add('visible'); if(navigator.vibrate) navigator.vibrate(10);
@@ -1344,6 +1489,7 @@ function googlePlaceToTerrasse(place, fallbackType){
     nom:place.name,
     adresse:place.vicinity || place.formatted_address || '',
     type:googlePlaceTypeLabel(place, fallbackType),
+    category:'food',
     lng:coords.lng,
     lat:coords.lat,
     source:'google',
@@ -1394,7 +1540,7 @@ function mergePlacesByIdentity(items){
     const duplicate = out.find(existing => {
       const e = normalize(existing.nom);
       const closeName = e === n || e.includes(n) || n.includes(e);
-      return closeName && metersBetween(existing.lat,existing.lng,item.lat,item.lng) < 140;
+      return placeCategory(existing) === placeCategory(item) && closeName && metersBetween(existing.lat,existing.lng,item.lat,item.lng) < 140;
     });
     if(duplicate){
       Object.assign(duplicate, {...item, ...duplicate, googleDetails:item.googleDetails || duplicate.googleDetails});
@@ -1699,10 +1845,17 @@ function highlight(text,q){
 
 function matchesActiveFilter(t){
   const type=normalize(t.type);
+  const category=placeCategory(t);
   if(activeFilter==='favorite') return isFavorite(t)||!!findReferenced(t.nom);
-  if(activeFilter==='restaurant') return type.includes('restaurant')||type.includes('brasserie')||type.includes('bistrot');
-  if(activeFilter==='cafe') return type.includes('cafe');
-  if(activeFilter==='bar') return type.includes('bar')||type.includes('pub');
+  if(activeFilter==='heatwave') return ['park','water','toilet','cool'].includes(category) || (isFoodPlace(t) && sunStates[t.id]===false);
+  if(activeFilter==='park') return category==='park';
+  if(activeFilter==='water') return category==='water';
+  if(activeFilter==='parking') return category==='parking';
+  if(activeFilter==='toilet') return category==='toilet';
+  if(activeFilter==='cool') return category==='cool';
+  if(activeFilter==='restaurant') return isFoodPlace(t) && (type.includes('restaurant')||type.includes('brasserie')||type.includes('bistrot'));
+  if(activeFilter==='cafe') return isFoodPlace(t) && type.includes('cafe');
+  if(activeFilter==='bar') return isFoodPlace(t) && (type.includes('bar')||type.includes('pub'));
   return true;
 }
 
@@ -1735,6 +1888,13 @@ function renderList(h,query){
     const pa=findReferenced(a.nom)?1:0, pb=findReferenced(b.nom)?1:0;
     if(pa!==pb) return pb-pa;
     if(pa&&pb) return referencedRank(a.nom)-referencedRank(b.nom);
+    if(activeFilter==='heatwave'){
+      const ca=isFoodPlace(a)?1:0, cb=isFoodPlace(b)?1:0;
+      if(ca!==cb) return ca-cb;
+    }else if(activeFilter==='all'){
+      const ca=isFoodPlace(a)?0:1, cb=isFoodPlace(b)?0:1;
+      if(ca!==cb) return ca-cb;
+    }
     const fa=isFavorite(a)?1:0, fb=isFavorite(b)?1:0;
     if(fa!==fb) return fb-fa;
     return distMeters(a.lat,a.lng)-distMeters(b.lat,b.lng);
@@ -1762,7 +1922,7 @@ function renderList(h,query){
     });
     wrap.appendChild(scroll);
     fragment.appendChild(wrap);
-    const divider=document.createElement('div'); divider.className='list-divider'; divider.textContent='Toutes les terrasses';
+    const divider=document.createElement('div'); divider.className='list-divider'; divider.textContent='Tous les lieux';
     fragment.appendChild(divider);
   }
 
@@ -1772,12 +1932,15 @@ function renderList(h,query){
   if(!allListItems.length){const nr=document.createElement('div');nr.className='no-results';nr.innerHTML=`Aucun résultat${query?' pour <strong>"'+escapeHTML(query)+'"</strong>':''}`;fragment.appendChild(nr);list.appendChild(fragment);return;}
   listItems.forEach(t=>{
     const ref=findReferenced(t.nom);
-    const card=document.createElement('div'); card.className='card'+(ref?' partner':' compact'); card.dataset.id=t.id;
+    const card=document.createElement('div'); card.className='card'+(ref?' partner':(!isFoodPlace(t)?' utility compact':' compact')); card.dataset.id=t.id;
     const dist=distKm(t.lat,t.lng);
     const tag=ref?`<span class="partner-tag">Sélection</span>`:'';
     if(ref){
       const photo=placePhotoUrl(t,ref,null);
       card.innerHTML=`<div class="card-photo-wrap"><img class="card-photo" data-place-id="${escapeAttr(t.id)}" src="${escapeAttr(photo)}" alt="${escapeAttr(t.nom)}" loading="lazy" decoding="async" onerror="markPhotoError(this)"><span class="partner-sun">☀️</span></div><div class="card-body"><div class="card-name">${highlight(t.nom,query)}${tag}</div><div class="card-sub">${escapeHTML(t.type)}${t.adresse?' · '+escapeHTML(t.adresse):''}${dist?' · '+escapeHTML(dist):''}</div></div>`;
+    }else if(!isFoodPlace(t)){
+      const category=placeCategory(t);
+      card.innerHTML=`<div class="category-icon ${escapeAttr(category)}">${escapeHTML(placeIcon(t))}</div><div class="card-body"><div class="card-name">${highlight(t.nom,query)}</div><div class="card-sub">${escapeHTML(t.type)}${t.adresse?' · '+escapeHTML(t.adresse):''}${dist?' · '+escapeHTML(dist):''}</div><div class="card-meta"><span class="utility-tag heat">${escapeHTML(utilityHeatNote(t))}</span></div></div>`;
     }else{
       card.innerHTML=`<div class="card-body"><div class="card-name">${highlight(t.nom,query)}</div><div class="card-sub">${escapeHTML(t.type)}${t.adresse?' · '+escapeHTML(t.adresse):''}${dist?' · '+escapeHTML(dist):''}</div></div>`;
     }
@@ -1874,7 +2037,7 @@ function paintTerrasses(data, suffix=''){
   sunStates={};
   terrasses.forEach(t=>{sunStates[t.id]=sunStates[t.id] ?? null;});
   primeSunStates();
-  document.getElementById('footerText').textContent=`${terrasses.length} terrasses · ${currentCity.nom}${suffix}`;
+  document.getElementById('footerText').textContent=`${terrasses.length} lieux · ${currentCity.nom}${suffix}`;
   renderList(currentHeure,searchQuery);
   const launch=()=>{
     syncDots();
@@ -1897,6 +2060,17 @@ async function hydrateNearbyInBackground(signature){
   }catch(e){}
 }
 
+let utilityHydrationVersion=0;
+async function hydrateUtilitiesInBackground(signature){
+  const version=++utilityHydrationVersion;
+  try{
+    const utilities=await fetchUtilityPlacesFromOverpass();
+    if(version!==utilityHydrationVersion || signature!==areaSignature() || !utilities.length) return;
+    const merged=mergeFeaturedPlaces(mergePlacesByIdentity([...terrasses,...utilities])).slice(0,MAX_TERRASSES);
+    paintTerrasses(merged);
+  }catch(e){}
+}
+
 let terraceLoadVersion=0;
 async function loadTerrasses(){
   document.getElementById('loadingState').style.display='flex';
@@ -1910,12 +2084,13 @@ async function loadTerrasses(){
   fetchTerrasses().then(data=>{
     if(version!==terraceLoadVersion || signature!==areaSignature()) return;
     paintTerrasses(data);
+    setTimeout(()=>hydrateUtilitiesInBackground(signature), 700);
     setTimeout(()=>hydrateNearbyInBackground(signature), 3500);
   }).catch(()=>{
     if(version!==terraceLoadVersion || terrasses.length) return;
     document.getElementById('loadingState').style.display='none';
     document.getElementById('terrasseList').style.display='block';
-    document.getElementById('terrasseList').innerHTML=`<div class="no-results">Impossible de charger les terrasses.<br><button onclick="loadTerrasses()" style="margin-top:8px;background:#FFD600;border:none;padding:10px 20px;border-radius:12px;font-weight:600;cursor:pointer;font-size:14px;">Réessayer</button></div>`;
+    document.getElementById('terrasseList').innerHTML=`<div class="no-results">Impossible de charger les lieux.<br><button onclick="loadTerrasses()" style="margin-top:8px;background:#FFD600;border:none;padding:10px 20px;border-radius:12px;font-weight:600;cursor:pointer;font-size:14px;">Réessayer</button></div>`;
   });
 }
 
