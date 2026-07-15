@@ -1128,7 +1128,8 @@ function prioritizedMarkerItems(items=terrasses){
 function syncDots(items=terrasses){
   const token=++markerRenderToken;
   const fullRefresh = !items || items===terrasses || items.length===terrasses.length;
-  const targets=fullRefresh ? prioritizedMarkerItems(terrasses) : items;
+  const mapItems = fullRefresh ? terrasses.filter(matchesActiveFilter) : items;
+  const targets=fullRefresh ? prioritizedMarkerItems(mapItems) : mapItems;
   if(fullRefresh){
     const visibleIds=new Set(targets.map(t=>String(t.id)));
     Object.keys(markerEntities).forEach(id=>{
@@ -1882,8 +1883,8 @@ function matchesActiveFilter(t){
   const category=placeCategory(t);
   if(activeFilter==='favorite') return isFavorite(t)||!!findReferenced(t.nom);
   if(activeFilter==='heatwave') {
-    const hasHeatwavePlaces = terrasses.some(item=>!isFoodPlace(item));
-    return !isFoodPlace(t) || (isFoodPlace(t) && (sunStates[t.id]===false || !hasHeatwavePlaces || !!findReferenced(t.nom)));
+    if(category==='parking') return false;
+    return ['park','water','toilet','cool'].includes(category);
   }
   if(activeFilter==='park') return category==='park';
   if(activeFilter==='water') return category==='water';
@@ -1942,7 +1943,8 @@ function renderList(h,query){
   const fragment=document.createDocumentFragment();
 
   // ── Section "Sélection" : uniquement les cafés référencés (avec photo) ──
-  const refTerrasses = terrasses.filter(t=>findReferenced(t.nom)&&matchesActiveFilter(t)).sort((a,b)=>referencedRank(a.nom)-referencedRank(b.nom));
+  const showSelection = activeFilter !== 'heatwave';
+  const refTerrasses = showSelection ? terrasses.filter(t=>findReferenced(t.nom)&&matchesActiveFilter(t)).sort((a,b)=>referencedRank(a.nom)-referencedRank(b.nom)) : [];
   if(refTerrasses.length && !q){
     const wrap=document.createElement('div'); wrap.className='sel-wrap';
     wrap.innerHTML=`<div class="sel-head"><span class="sel-emoji">⭐</span><span class="sel-title">Notre sélection</span></div>`;
@@ -2009,6 +2011,7 @@ document.getElementById('filterChips').addEventListener('click',e=>{
   activeFilter=chip.dataset.filter||'all';
   document.querySelectorAll('.filter-chip').forEach(c=>c.classList.toggle('active',c===chip));
   renderList(currentHeure,searchQuery);
+  syncDots();
 });
 
 const slider=document.getElementById('timeSlider');
