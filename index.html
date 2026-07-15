@@ -1,3 +1,4 @@
+
 <!DOCTYPE html><html lang="fr">
 
 <head>
@@ -184,7 +185,6 @@
     .category-icon.park { background:#DDF8EA; color:#0B7A45; }
     .category-icon.water { background:#DFF2FF; color:#007AFF; }
     .category-icon.parking { background:#EEF1F6; color:#526071; }
-    .category-icon.toilet { background:#F2E9FF; color:#7B45C7; }
     .category-icon.cool { background:#E8F4FF; color:#276EF1; }
     .card.utility { gap:10px; }
     .utility-tag { display:inline-flex; align-items:center; height:22px; padding:0 8px; border-radius:999px; background:#F1F5F9; color:#5E6470; font-size:10px; font-weight:850; }
@@ -372,7 +372,6 @@
     <button class="filter-chip" data-filter="park" type="button">Parcs</button>
     <button class="filter-chip" data-filter="water" type="button">Eau</button>
     <button class="filter-chip" data-filter="parking" type="button">Parkings</button>
-    <button class="filter-chip" data-filter="toilet" type="button">Toilettes</button>
     <button class="filter-chip" data-filter="cool" type="button">Lieux frais</button>
     <button class="filter-chip" data-filter="favorite" type="button">Favoris</button>
     <button class="filter-chip" data-city="bordeaux" type="button">Bordeaux</button>
@@ -644,13 +643,12 @@ let terrasses=[], sunStates={}, searchQuery='', activeFilter='all', currentHeure
 const markerEntities={};
 
 const FOOD_AMENITIES = new Set(['bar','cafe','restaurant','pub','biergarten']);
-const AMENITY_VALIDES = new Set([...FOOD_AMENITIES,'drinking_water','fountain','parking','bicycle_parking','toilets','library','cinema']);
+const AMENITY_VALIDES = new Set([...FOOD_AMENITIES,'drinking_water','fountain','parking','bicycle_parking','library','cinema']);
 const PLACE_CATEGORY_META = {
   food:    { label:'Terrasse', icon:'☀️', color:'#F8C83E', heat:'Terrasse à vérifier selon le soleil' },
   park:    { label:'Parc', icon:'🌳', color:'#2AB773', heat:'Ombre naturelle possible' },
   water:   { label:'Point d’eau', icon:'💧', color:'#1677FF', heat:'Utile en forte chaleur' },
   parking: { label:'Parking', icon:'P', color:'#64748B', heat:'Stationnement à proximité' },
-  toilet:  { label:'Toilettes', icon:'WC', color:'#8B5CF6', heat:'Service utile à proximité' },
   cool:    { label:'Lieu frais', icon:'❄️', color:'#38A3FF', heat:'Pause au frais possible' }
 };
 function categoryFromTags(tags={}){
@@ -659,7 +657,6 @@ function categoryFromTags(tags={}){
   if(['park','garden','nature_reserve'].includes(leisure) || natural==='wood' || landuse==='forest') return 'park';
   if(['drinking_water','fountain'].includes(amenity)) return 'water';
   if(['parking','bicycle_parking'].includes(amenity)) return 'parking';
-  if(amenity==='toilets') return 'toilet';
   if(['library','cinema'].includes(amenity) || tourism==='museum' || shop==='mall') return 'cool';
   return null;
 }
@@ -668,7 +665,7 @@ function isFoodPlace(t){ return placeCategory(t)==='food'; }
 function placeCategoryMeta(t){ return PLACE_CATEGORY_META[placeCategory(t)] || PLACE_CATEGORY_META.food; }
 function placeIcon(t){ return placeCategoryMeta(t).icon; }
 function utilityHeatNote(t){ return placeCategoryMeta(t).heat; }
-function typeLabel(a){return{bar:'Bar',cafe:'Café',restaurant:'Restaurant',pub:'Pub',biergarten:'Brasserie',drinking_water:'Point d’eau',fountain:'Fontaine',parking:'Parking',bicycle_parking:'Parking vélo',toilets:'Toilettes publiques',library:'Bibliothèque',cinema:'Cinéma'}[a]||'';}
+function typeLabel(a){return{bar:'Bar',cafe:'Café',restaurant:'Restaurant',pub:'Pub',biergarten:'Brasserie',drinking_water:'Point d’eau',fountain:'Fontaine',parking:'Parking',bicycle_parking:'Parking vélo',library:'Bibliothèque',cinema:'Cinéma'}[a]||'';}
 function typeLabelFromTags(tags={}){
   if(FOOD_AMENITIES.has(tags.amenity)) return typeLabel(tags.amenity);
   if(tags.leisure==='park') return 'Parc';
@@ -685,7 +682,6 @@ function defaultPlaceName(tags={}, category){
   if(tags.amenity==='fountain') return 'Fontaine';
   if(tags.amenity==='bicycle_parking') return 'Parking vélo';
   if(tags.amenity==='parking') return 'Parking';
-  if(tags.amenity==='toilets') return 'Toilettes publiques';
   if(tags.leisure==='garden') return 'Jardin';
   if(tags.leisure==='park') return 'Parc';
   if(tags.natural==='wood' || tags.landuse==='forest') return 'Zone boisée';
@@ -774,12 +770,9 @@ const FALLBACK_UTILITY_PLACES = [
   ['Musée d’Aquitaine','Musée · lieu frais','20 Cours Pasteur','cool',44.83524,-0.57564],
   ['Parking Bourse Jean Jaurès','Parking','Place de la Bourse','parking',44.84210,-0.57008],
   ['Parking Pey Berland','Parking','Place Pey Berland','parking',44.83783,-0.57772],
-  ['Toilettes publiques Pey Berland','Toilettes publiques','Place Pey Berland','toilet',44.83778,-0.57721],
-  ['Toilettes publiques Jardin Public','Toilettes publiques','Jardin Public','toilet',44.84921,-0.57538],
   ['Plage de l’Horizon','Espace naturel','Cap Ferret','park',44.64792,-1.26377],
   ['Jetée Bélisaire','Point d’eau','Cap Ferret','water',44.65035,-1.24448],
-  ['Parking Bélisaire','Parking','Cap Ferret','parking',44.65072,-1.24518],
-  ['Toilettes publiques Bélisaire','Toilettes publiques','Cap Ferret','toilet',44.65042,-1.24486]
+  ['Parking Bélisaire','Parking','Cap Ferret','parking',44.65072,-1.24518]
 ];
 
 function localFallbackTerrasses(){
@@ -890,7 +883,7 @@ async function fetchTerrasses(){
   }
 
   const q=`[out:json][timeout:${OVERPASS_QUERY_TIMEOUT_SECONDS}];(
-    nwr["amenity"~"^(bar|cafe|restaurant|pub|biergarten|drinking_water|fountain|parking|bicycle_parking|toilets|library|cinema)$"](around:${OVERPASS_RADIUS_METERS},${currentCity.lat},${currentCity.lng});
+    nwr["amenity"~"^(bar|cafe|restaurant|pub|biergarten|drinking_water|fountain|parking|bicycle_parking|library|cinema)$"](around:${OVERPASS_RADIUS_METERS},${currentCity.lat},${currentCity.lng});
     nwr["leisure"~"^(park|garden|nature_reserve)$"](around:${OVERPASS_RADIUS_METERS},${currentCity.lat},${currentCity.lng});
     nwr["natural"="wood"](around:${OVERPASS_RADIUS_METERS},${currentCity.lat},${currentCity.lng});
     nwr["landuse"="forest"](around:${OVERPASS_RADIUS_METERS},${currentCity.lat},${currentCity.lng});
@@ -928,7 +921,7 @@ async function fetchTerrasses(){
 
 async function fetchUtilityPlacesFromOverpass(){
   const q=`[out:json][timeout:${OVERPASS_QUERY_TIMEOUT_SECONDS}];(
-    nwr["amenity"~"^(drinking_water|fountain|parking|bicycle_parking|toilets|library|cinema)$"](around:${OVERPASS_RADIUS_METERS},${currentCity.lat},${currentCity.lng});
+    nwr["amenity"~"^(drinking_water|fountain|parking|bicycle_parking|library|cinema)$"](around:${OVERPASS_RADIUS_METERS},${currentCity.lat},${currentCity.lng});
     nwr["leisure"~"^(park|garden|nature_reserve)$"](around:${OVERPASS_RADIUS_METERS},${currentCity.lat},${currentCity.lng});
     nwr["natural"="wood"](around:${OVERPASS_RADIUS_METERS},${currentCity.lat},${currentCity.lng});
     nwr["landuse"="forest"](around:${OVERPASS_RADIUS_METERS},${currentCity.lat},${currentCity.lng});
@@ -1089,7 +1082,7 @@ function makeCategoryIcon(category){
   ctx.shadowColor='transparent';
   ctx.beginPath(); ctx.arc(16,16,12,0,Math.PI*2); ctx.strokeStyle='white'; ctx.lineWidth=2.5; ctx.stroke();
   ctx.fillStyle='white';
-  ctx.font=category==='parking' || category==='toilet' ? 'bold 11px Arial' : 'bold 15px Arial';
+  ctx.font=category==='parking' ? 'bold 11px Arial' : 'bold 15px Arial';
   ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(meta.icon,16,17);
   return c.toDataURL();
 }
@@ -1097,7 +1090,6 @@ const DOT_CATEGORY={
   park:makeCategoryIcon('park'),
   water:makeCategoryIcon('water'),
   parking:makeCategoryIcon('parking'),
-  toilet:makeCategoryIcon('toilet'),
   cool:makeCategoryIcon('cool')
 };
 function markerImageForPlace(t){
@@ -1884,12 +1876,11 @@ function matchesActiveFilter(t){
   if(activeFilter==='favorite') return isFavorite(t)||!!findReferenced(t.nom);
   if(activeFilter==='heatwave') {
     if(category==='parking') return false;
-    return ['park','water','toilet','cool'].includes(category);
+    return ['park','water','cool'].includes(category);
   }
   if(activeFilter==='park') return category==='park';
   if(activeFilter==='water') return category==='water';
   if(activeFilter==='parking') return category==='parking';
-  if(activeFilter==='toilet') return category==='toilet';
   if(activeFilter==='cool') return category==='cool';
   if(activeFilter==='restaurant') return isFoodPlace(t) && (type.includes('restaurant')||type.includes('brasserie')||type.includes('bistrot'));
   if(activeFilter==='cafe') return isFoodPlace(t) && type.includes('cafe');
