@@ -763,6 +763,25 @@ const BORDEAUX_FALLBACK_TERRASSES = [
   ['Soif','Bar à vin','35 Rue du Cancera',44.83988,-0.57107]
 ];
 
+const FALLBACK_UTILITY_PLACES = [
+  ['Jardin Public','Parc','Cours de Verdun','park',44.84872,-0.57444],
+  ['Parc Bordelais','Parc','Rue du Bocage','park',44.85539,-0.60443],
+  ['Parc aux Angéliques','Parc','Quai des Queyries','park',44.84482,-0.55892],
+  ['Square Vinet','Jardin ombragé','Rue Vinet','park',44.83892,-0.57212],
+  ['Miroir d’eau','Point d’eau','Place de la Bourse','water',44.84139,-0.56943],
+  ['Fontaine des Trois Grâces','Fontaine','Place de la Bourse','water',44.84105,-0.57008],
+  ['Bibliothèque Mériadeck','Bibliothèque · lieu frais','85 Cours du Maréchal Juin','cool',44.83589,-0.58603],
+  ['Musée d’Aquitaine','Musée · lieu frais','20 Cours Pasteur','cool',44.83524,-0.57564],
+  ['Parking Bourse Jean Jaurès','Parking','Place de la Bourse','parking',44.84210,-0.57008],
+  ['Parking Pey Berland','Parking','Place Pey Berland','parking',44.83783,-0.57772],
+  ['Toilettes publiques Pey Berland','Toilettes publiques','Place Pey Berland','toilet',44.83778,-0.57721],
+  ['Toilettes publiques Jardin Public','Toilettes publiques','Jardin Public','toilet',44.84921,-0.57538],
+  ['Plage de l’Horizon','Espace naturel','Cap Ferret','park',44.64792,-1.26377],
+  ['Jetée Bélisaire','Point d’eau','Cap Ferret','water',44.65035,-1.24448],
+  ['Parking Bélisaire','Parking','Cap Ferret','parking',44.65072,-1.24518],
+  ['Toilettes publiques Bélisaire','Toilettes publiques','Cap Ferret','toilet',44.65042,-1.24486]
+];
+
 function localFallbackTerrasses(){
   const bordeaux={lat:44.837789,lng:-0.57918};
   if(metersBetween(currentCity.lat,currentCity.lng,bordeaux.lat,bordeaux.lng)>18000) return [];
@@ -776,6 +795,21 @@ function localFallbackTerrasses(){
     lng:p[4],
     source:'fallback'
   }));
+}
+
+function localFallbackUtilities(){
+  return FALLBACK_UTILITY_PLACES
+    .filter(p=>metersBetween(currentCity.lat,currentCity.lng,p[4],p[5])<=18000)
+    .map((p,i)=>({
+      id:`fallback-utility-${i}`,
+      nom:p[0],
+      type:p[1],
+      adresse:p[2],
+      category:p[3],
+      lat:p[4],
+      lng:p[5],
+      source:'fallback-utility'
+    }));
 }
 
 function osmDataToTerrasses(data, source='osm'){
@@ -843,7 +877,7 @@ const OVERPASS_QUERY_TIMEOUT_SECONDS = 14;
 const MAX_TERRASSES = 1800;
 async function fetchTerrasses(){
   let local = [];
-  const fallback = localFallbackTerrasses();
+  const fallback = [...localFallbackTerrasses(), ...localFallbackUtilities()];
   if (!currentCity.dynamic) {
     try {
       const localData = await fetchLocalCityData(currentCity.id);
@@ -1847,7 +1881,10 @@ function matchesActiveFilter(t){
   const type=normalize(t.type);
   const category=placeCategory(t);
   if(activeFilter==='favorite') return isFavorite(t)||!!findReferenced(t.nom);
-  if(activeFilter==='heatwave') return ['park','water','toilet','cool'].includes(category) || (isFoodPlace(t) && sunStates[t.id]===false);
+  if(activeFilter==='heatwave') {
+    const hasHeatwavePlaces = terrasses.some(item=>!isFoodPlace(item));
+    return !isFoodPlace(t) || (isFoodPlace(t) && (sunStates[t.id]===false || !hasHeatwavePlaces || !!findReferenced(t.nom)));
+  }
   if(activeFilter==='park') return category==='park';
   if(activeFilter==='water') return category==='water';
   if(activeFilter==='parking') return category==='parking';
@@ -2077,7 +2114,7 @@ async function loadTerrasses(){
   document.getElementById('terrasseList').style.display='none';
   const signature=areaSignature();
   const version=++terraceLoadVersion;
-  const quick=mergeFeaturedPlaces(mergePlacesByIdentity([...localFallbackTerrasses()])).slice(0,MAX_TERRASSES);
+  const quick=mergeFeaturedPlaces(mergePlacesByIdentity([...localFallbackTerrasses(), ...localFallbackUtilities()])).slice(0,MAX_TERRASSES);
   await preloadGooglePhotosForFeatured(quick);
   paintTerrasses(quick,' · chargement…');
 
