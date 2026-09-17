@@ -2,8 +2,9 @@
 
 <head>
   <meta charset="UTF-8">
-  <!-- Le cache HTTP est laissé au navigateur : les tuiles et les images déjà vues ne sont
-       pas téléchargées une seconde fois. -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -28,7 +29,7 @@
     }
     .panel-map input[type=range] { touch-action: pan-x; }
     #cesiumContainer { touch-action: none; }
-    html, body { height: 100%; width: 100%; overflow: hidden; font-family: Inter, -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif; background: #EDF1F6; position: fixed; inset: 0; color: var(--text); }
+    html, body { height: 100%; width: 100%; overflow: hidden; font-family: Inter, -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif; background: #000; position: fixed; inset: 0; color: var(--text); }
 
     #splash { position: fixed; inset: 0; z-index: 1000; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.6s ease; }
     #splash.out { opacity: 0; pointer-events: none; }
@@ -44,9 +45,8 @@
     .splash-progress-bar { height: 100%; border-radius: 2px; background: var(--yellow); width: 0%; transition: width 0.25s ease; }
     .splash-status { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); font-size: 10px; color: var(--text-3); white-space: nowrap; }
 
-    #cesiumContainer { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; background:radial-gradient(circle at 70% 22%,#DCEBFA 0 14%,transparent 38%),linear-gradient(145deg,#F9FAFC,#DDE6F1); }
-    .cesium-widget canvas { outline: none !important; opacity:0; transition:opacity 0.35s ease; }
-    .map-ready .cesium-widget canvas { opacity:1; }
+    #cesiumContainer { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; }
+    .cesium-widget canvas { outline: none !important; }
     .cesium-selection-wrapper, .cesium-infoBox { display: none !important; }
     .cesium-widget-credits { display: none !important; }
 
@@ -404,11 +404,12 @@ const LOCAL_DATA_ALIASES = {
   'la-teste-de-buch': ['arcachon'],
   'la-teste': ['arcachon']
 };
+// Colle ta cle Google Maps ici pour activer les vraies photos, liens Google,
+// telephones et sites en local. APIs a activer: Maps JavaScript API + Places API.
 const GOOGLE_MAPS_API_KEY = "AIzaSyD7ApectcO9UqS4B8POlEwm1hlRbmKiuig";
 // Test 3D Google photorealiste: colle ici une cle avec Map Tiles API activee.
 // Si cette valeur reste vide, l'app garde la 3D OpenStreetMap normale.
 const GOOGLE_MAP_TILES_API_KEY = "AIzaSyA2qaFERG7pF-uHHwgIA2upLxZxoWqlNDs";
-// Complément rapide autour de l'utilisateur pendant que la liste OSM complète arrive.
 const GOOGLE_NEARBY_RADIUS_METERS = 12000;
 const GOOGLE_NEARBY_TYPES = ['restaurant', 'cafe', 'bar'];
 const PERFORMANCE_MODE = false;
@@ -574,22 +575,19 @@ setTimeout(completeSplash, 1200);
 Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIwM2M0Njk1Yi1iYzI1LTQ3MzAtOGU1MS1iNzU4MTRiNWVkY2QiLCJpZCI6Mzk5MDg5LCJpYXQiOjE3NzI3ODI3NTh9.aGJt8zcDKPwk-pJsAcp0egE1wgJ5Vg41y_yQKNfUtYw';
 
 const viewer = new Cesium.Viewer('cesiumContainer', {
-  // Une sphère légère permet un premier rendu sans écran noir ; le relief arrive ensuite.
-  terrainProvider: new Cesium.EllipsoidTerrainProvider(), skyBox: false, skyAtmosphere: false,
+  terrainProvider: Cesium.createWorldTerrain(), skyBox: false, skyAtmosphere: false,
   baseLayerPicker: false, homeButton: false, infoBox: false, selectionIndicator: false,
   navigationHelpButton: false, sceneModePicker: false, animation: false, timeline: false,
   fullscreenButton: false, geocoder: false, scene3DOnly: true,
 });
-viewer.scene.globe.maximumScreenSpaceError = 3;
-viewer.scene.globe.tileCacheSize = 120;
-viewer.scene.globe.preloadAncestors = false;
+viewer.scene.globe.maximumScreenSpaceError = 1;
+viewer.scene.globe.tileCacheSize = 500;
+viewer.scene.globe.preloadAncestors = true;
 viewer.scene.globe.preloadSiblings = false;
 viewer.scene.globe.enableLighting = true;
 viewer.scene.fog.enabled = false;
-viewer.shadows = false;
-viewer.resolutionScale = Math.min(window.devicePixelRatio || 1, 1.5);
-viewer.scene.requestRenderMode = true;
-viewer.scene.maximumRenderTimeChange = 0.5;
+viewer.shadows = true;
+viewer.resolutionScale = window.devicePixelRatio || 1;
 viewer.scene.globe.showWaterEffect = false;
 viewer.scene.postProcessStages.fxaa.enabled = false;
 viewer.scene.screenSpaceCameraController.inertiaSpin = 0.9;
@@ -598,32 +596,22 @@ viewer.scene.screenSpaceCameraController.inertiaZoom = 0.8;
 viewer.camera.setView({ destination: Cesium.Cartesian3.fromDegrees(-0.57918, 44.837789, 450), orientation: { heading: 0, pitch: Cesium.Math.toRadians(-50), roll: 0 } });
 
 setProgress(10, 'Chargement…');
-let osmBuildings = null;
-function revealMap(){ document.body.classList.add('map-ready'); }
+const osmBuildings = viewer.scene.primitives.add(Cesium.createOsmBuildings());
+osmBuildings.maximumScreenSpaceError = 2;
 viewer.scene.globe.tileLoadProgressEvent.addEventListener(remaining => {
   setProgress(Math.min(60, 10 + (1 - Math.min(remaining, 50) / 50) * 50), remaining === 0 ? 'Bâtiments…' : 'Chargement…');
-  if(remaining < 8) revealMap();
   if (remaining === 0 && terrasses.length > 0 && !computing && ENABLE_SHADOW_RAYCASTS) { scheduleShadow(); }
 });
-let globeOk = false, buildingsOk = true;
+let globeOk = false, buildingsOk = false;
 function tryOpen() {
   if (!globeOk || !buildingsOk) return;
   let f = 0;
   viewer.scene.postRender.addEventListener(function waitRender() { if (++f >= 6) { viewer.scene.postRender.removeEventListener(waitRender); completeSplash(); } });
 }
 viewer.scene.postRender.addEventListener(function watchGlobe() {
-  if (viewer.scene.globe.tilesLoaded && !globeOk) { globeOk = true; revealMap(); setProgress(70, 'Bâtiments…'); viewer.scene.postRender.removeEventListener(watchGlobe); tryOpen(); }
+  if (viewer.scene.globe.tilesLoaded && !globeOk) { globeOk = true; setProgress(70, 'Bâtiments…'); viewer.scene.postRender.removeEventListener(watchGlobe); tryOpen(); }
 });
-function loadMapDetails(){
-  viewer.terrainProvider = Cesium.createWorldTerrain();
-  osmBuildings = viewer.scene.primitives.add(Cesium.createOsmBuildings());
-  osmBuildings.maximumScreenSpaceError = 6;
-  viewer.scene.requestRender();
-}
-setTimeout(()=>{
-  if(window.requestIdleCallback) window.requestIdleCallback(loadMapDetails,{timeout:3000});
-  else loadMapDetails();
-},1400);
+osmBuildings.readyPromise.then(() => { buildingsOk = true; setProgress(85, 'Finalisation…'); tryOpen(); }).catch(() => { buildingsOk = true; tryOpen(); });
 
 let userDot = null, userHalo = null, userPulse = null, pulseT = 0, pulseStarted = false;
 function makeUserDot() {
@@ -960,10 +948,9 @@ async function localTerrassesForCurrentArea(){
 }
 
 const OVERPASS=['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter','https://overpass.openstreetmap.ru/api/interpreter'];
-// Rayon et délai du mode fluide : les résultats arrivent, puis la liste s'enrichit.
-const OVERPASS_RADIUS_METERS = 12000;
-const OVERPASS_TIMEOUT_MS = 8500;
-const OVERPASS_QUERY_TIMEOUT_SECONDS = 14;
+const OVERPASS_RADIUS_METERS = 18000;
+const OVERPASS_TIMEOUT_MS = 24000;
+const OVERPASS_QUERY_TIMEOUT_SECONDS = 30;
 const MAX_TERRASSES = 1800;
 function overpassProxyUrl(query){
   if(!/^https?:$/.test(location.protocol)) return '';
@@ -1050,7 +1037,7 @@ function getSunDir(jd){
   const d=new Cesium.Cartesian3(); Cesium.Matrix3.multiplyByVector(m,s,d); return Cesium.Cartesian3.normalize(d,d);
 }
 function sceneReadyForShadows(relaxed=false){
-  return !cameraMoving && viewer.scene.globe.tilesLoaded && (relaxed || !osmBuildings || osmBuildings.tilesLoaded) && typeof viewer.scene.pickFromRay==='function';
+  return !cameraMoving && viewer.scene.globe.tilesLoaded && (relaxed || osmBuildings.tilesLoaded) && typeof viewer.scene.pickFromRay==='function';
 }
 function sunAboveHorizon(lng,lat,sunDir){
   if(!sunDir) return null;
@@ -1558,7 +1545,7 @@ function placeNamesMatch(sourceName, candidateName){
   return source.length>0 && source.filter(token=>candidate.has(token)).length/source.length>=0.7;
 }
 
-function isSameGooglePlace(source, candidate){
+function isSameGooglePlace(source,candidate){
   const coords=latLngFromGoogle(candidate);
   return !!coords && Number.isFinite(source.lat) && Number.isFinite(source.lng)
     && placeNamesMatch(source.nom,candidate.name)
@@ -1612,6 +1599,15 @@ async function findGooglePlaceInBrowser(t){
       });
     });
   });
+}
+
+async function getGooglePlaceById(placeId){
+  const service=await getGooglePlacesService();
+  if(!service || !placeId) return {};
+  return new Promise(resolve=>service.getDetails({
+    placeId,
+    fields:['name','place_id','geometry','photos','formatted_phone_number','international_phone_number','website','url','rating','user_ratings_total']
+  },(place,status)=>resolve(googleStatusOk(status) ? normalizeGoogleJsPlace(place) : {})));
 }
 
 function googlePlaceTypeLabel(place, fallbackType){
@@ -1702,13 +1698,20 @@ async function fetchGooglePlace(t){
     googlePlaceCache[key]=t.googleDetails;
     return googlePlaceCache[t.id];
   }
+  const knownPlaceId=t.googlePlaceId || findReferenced(t.nom)?.googlePlaceId;
+  if(knownPlaceId){
+    const details=await getGooglePlaceById(knownPlaceId);
+    googlePlaceCache[t.id]=details;
+    googlePlaceCache[key]=details;
+    return details;
+  }
   const browserDetails = await findGooglePlaceInBrowser(t);
   if(browserDetails.photo || browserDetails.rating || browserDetails.tel || browserDetails.googleMapsUrl || browserDetails.websiteUrl){
     googlePlaceCache[t.id]=browserDetails;
     googlePlaceCache[key]=browserDetails;
     return googlePlaceCache[t.id];
   }
-  // Le proxy historique ne fournit pas de place_id vérifiable : on ne l'utilise pas pour une photo.
+  // Un proxy sans place_id ne peut pas prouver l'identité de la photo.
   googlePlaceCache[t.id]={};
   googlePlaceCache[key]={};
   return {};
@@ -1731,7 +1734,6 @@ async function fetchPlaceDetails(t){
   const ref=findReferenced(t.nom);
   const google=await fetchGooglePlace(t);
   if(google.photo||google.rating||google.tel||google.googleMapsUrl||google.websiteUrl) return {...google,source:'google'};
-  // Pas de photo non vérifiée pour un homonyme : le visuel neutre est préférable à une erreur.
   return ref ? {...ref,source:'referenced'} : {};
 }
 
@@ -2113,6 +2115,8 @@ slider.addEventListener('input',e=>{
   slider.style.setProperty('--pct',((val-6)/15)*100+'%');
   currentDate=new Date(); currentDate.setHours(h,m,0,0);
   viewer.clock.currentTime=Cesium.JulianDate.fromDate(currentDate); currentHeure=val;
+  // Force immédiatement le nouveau soleil et les ombres, y compris sur mobile.
+  viewer.scene.requestRender();
   if(terrasses.length>0){
     shadowVersion++;
     if(ENABLE_SHADOW_RAYCASTS){
@@ -2219,33 +2223,26 @@ async function loadTerrasses(){
   document.getElementById('terrasseList').style.display='none';
   const signature=areaSignature();
   const version=++terraceLoadVersion;
-  // Ordre de démarrage : affichage immédiat, enrichissements ensuite. C'est l'ordre
-  // qui rendait l'ancienne version fluide ; aucun fetch local, Google ou Overpass ne bloque la vue.
+  // Liste immédiatement disponible ; les sources complètes enrichissent ensuite sans bloquer la 3D.
   const quick=mergeFeaturedPlaces(mergePlacesByIdentity([...localFallbackTerrasses(), ...localFallbackUtilities()])).slice(0,MAX_TERRASSES);
-  paintTerrasses(quick,' · mise à jour…');
-  // Les résultats Google arrivent rapidement, sans attendre un éventuel Overpass lent.
+  paintTerrasses(quick,' · chargement…');
   setTimeout(()=>hydrateNearbyInBackground(signature),1600);
-
-  const enrich = async () => {
+  const enrich=async()=>{
     try{
       const local=await localTerrassesForCurrentArea();
       if(version!==terraceLoadVersion || signature!==areaSignature()) return;
-      if(local.length > 80){
-        const merged=mergeFeaturedPlaces(mergePlacesByIdentity([...local, ...localFallbackTerrasses(), ...localFallbackUtilities()])).slice(0,MAX_TERRASSES);
-        paintTerrasses(merged);
-        setTimeout(()=>hydrateOverpassInBackground(signature),800);
-      }else{
-        const data=await fetchTerrasses(local);
-        if(version!==terraceLoadVersion || signature!==areaSignature()) return;
-        paintTerrasses(data);
-      }
-      setTimeout(()=>hydrateUtilitiesInBackground(signature),700);
+      const data=local.length>80
+        ? mergeFeaturedPlaces(mergePlacesByIdentity([...local,...localFallbackTerrasses(),...localFallbackUtilities()])).slice(0,MAX_TERRASSES)
+        : await fetchTerrasses(local);
+      if(version!==terraceLoadVersion || signature!==areaSignature()) return;
+      paintTerrasses(data);
+      setTimeout(()=>hydrateOverpassInBackground(signature),800);
+      setTimeout(()=>hydrateUtilitiesInBackground(signature),1400);
       setTimeout(()=>preloadGooglePhotosForFeatured(terrasses,1200).then(()=>{
         if(version===terraceLoadVersion && signature===areaSignature()) renderList(currentHeure,searchQuery);
       }).catch(()=>{}),1200);
     }catch(e){}
   };
-  // Laisse le navigateur peindre l'écran et répondre aux premiers gestes avant le réseau secondaire.
   setTimeout(()=>{
     if(window.requestIdleCallback) window.requestIdleCallback(enrich,{timeout:1400});
     else enrich();
@@ -2257,11 +2254,10 @@ async function init(){
   const initH=Math.min(21,Math.max(6,now.getHours()+(Math.round(now.getMinutes()/15)*15/60)));
   slider.value=initH;
   slider.dispatchEvent(new Event('input'));
+  loadGooglePlacesLibrary();
   loadTerrasses();
-  // L'API Google est utile aux photos, jamais au premier affichage.
-  setTimeout(()=>loadGooglePlacesLibrary(),1200);
 
-  // Le point bleu démarre tout de suite ; la demande GPS est asynchrone et ne bloque pas l'écran.
+  // Géoloc auto ensuite : l'app reste utilisable pendant que le GPS répond.
   if(navigator.geolocation){
     navigator.geolocation.getCurrentPosition(async pos=>{
       const {longitude:lng,latitude:lat,accuracy}=pos.coords;
