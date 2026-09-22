@@ -204,10 +204,13 @@
     /* ══ FICHE LIEU (bottom sheet) ══ */
     #psOverlay { position: fixed; inset: 0; z-index: 49; background: rgba(10,14,20,0.48); opacity: 0; pointer-events: none; transition: opacity 0.3s; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); }
     #psOverlay.open { opacity: 1; pointer-events: auto; }
-    #placeSheet { position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; background: var(--white); border-radius: 22px 22px 0 0; box-shadow: 0 -24px 70px rgba(15,23,42,0.28); transform: translateY(110%); transition: transform 0.42s cubic-bezier(0.22,0.9,0.18,1); overflow: hidden; max-height: 90vh; padding-bottom: env(safe-area-inset-bottom, 16px); }
+    #placeSheet { position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; background: var(--white); border-radius: 22px 22px 0 0; box-shadow: 0 -24px 70px rgba(15,23,42,0.28); transform: translateY(110%); transition: transform 0.36s cubic-bezier(0.22,0.9,0.18,1); overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; max-height: min(74dvh, 640px); padding-bottom: env(safe-area-inset-bottom, 16px); }
     #placeSheet.open { transform: translateY(0); }
-    .ps-handle { display: flex; justify-content: center; padding: 12px 0 6px; cursor: pointer; flex-shrink: 0; }
+    .ps-handle { position:relative; display:grid; place-items:center; min-height:42px; padding:8px 0 4px; cursor:pointer; flex-shrink:0; touch-action:pan-y; }
     .ps-bar { width: 40px; height: 4px; background: #E0E0E5; border-radius: 2px; }
+    .ps-close { position:absolute; top:5px; right:13px; width:32px; height:32px; border:0; border-radius:50%; background:#F2F4F7; color:var(--text); display:grid; place-items:center; cursor:pointer; font-size:25px; font-family:inherit; font-weight:400; line-height:1; transition:background .18s, transform .18s; }
+    .ps-close:hover { background:#E7F0FF; transform:scale(1.06); }
+    .ps-close:active { transform:scale(.94); }
     .ps-hero { position:relative; min-height:210px; background:linear-gradient(135deg,#1E293B,#475569); overflow:hidden; }
     .ps-photo { width: 100%; height: 230px; object-fit: cover; display: block; background: var(--bg); }
     .ps-hero::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg,rgba(5,10,18,0.02) 18%,rgba(5,10,18,0.5) 100%); pointer-events:none; }
@@ -234,10 +237,12 @@
     .weather-line { display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:13px; font-weight:800; color:var(--text); }
     .weather-sub { margin-top:3px; font-size:11px; color:var(--text-2); line-height:1.35; }
     .ps-btns { display: flex; gap: 10px; flex-wrap: wrap; }
-    .ps-btn { flex: 1; min-width: 0; padding: 13px 12px; border: none; border-radius: 14px; font-size: 14px; font-weight: 820; cursor: pointer; text-align: center; font-family: inherit; white-space: nowrap; transition: transform 0.14s ease, opacity 0.14s ease, box-shadow 0.14s ease; box-shadow: inset 0 1px 0 rgba(255,255,255,0.22); }
+    .ps-btn { flex: 1; min-width: 0; padding: 13px 12px; border: none; border-radius: 14px; font-size: 14px; font-weight: 820; cursor: pointer; text-align: center; font-family: inherit; white-space: nowrap; text-decoration:none; transition: transform 0.14s ease, opacity 0.14s ease, box-shadow 0.14s ease; box-shadow: inset 0 1px 0 rgba(255,255,255,0.22); }
     .ps-btn:active { opacity: 0.82; transform:scale(0.98); }
     .ps-btn.reserve { background: var(--coral); color: white; flex-basis: 100%; }
     .ps-btn.maps { background: var(--blue); color: white; }
+    .ps-btn.reviews { background:#F59E0B; color:white; }
+    .ps-btn.events { background:#7C3AED; color:white; }
     .ps-btn.site { background: var(--text); color: white; display:none; }
     .ps-btn.tel { background: var(--green); color: white; }
     .ps-btn.fav { background:#FFF3B8; color:#7A5200; border:1px solid rgba(242,203,69,0.7); }
@@ -272,6 +277,11 @@
     .list-divider { padding: 10px 20px 6px; font-size:11px; font-weight:600; color:var(--text-3); text-transform:uppercase; letter-spacing:0.8px; }
 
     .ps-desc { font-size:14px; color:var(--text-2); line-height:1.55; margin-bottom:16px; }
+    @media (max-width: 699px) {
+      .ps-hero { min-height:170px; }
+      .ps-photo { height:180px; }
+      .ps-photo-placeholder { height:170px; }
+    }
     @media (min-width: 700px) {
       #placeSheet { left:50%; right:auto; width:min(520px, calc(100% - 32px)); transform:translate(-50%, 110%); border-radius:22px; bottom:18px; padding-bottom:0; }
       #placeSheet.open { transform:translate(-50%, 0); }
@@ -345,8 +355,9 @@
 
 <!-- Fiche lieu (Foursquare + partenaires) -->
 <div id="psOverlay" onclick="hidePlaceSheet()"></div>
-<div id="placeSheet">
-  <div class="ps-handle" onclick="hidePlaceSheet()"><div class="ps-bar"></div></div>
+<div id="placeSheet" role="dialog" aria-modal="true" aria-label="Fiche du lieu">
+  <div class="ps-handle" id="psHandle" role="button" tabindex="0" aria-label="Fermer la fiche"><div class="ps-bar"></div></div>
+  <button class="ps-close" id="psClose" type="button" aria-label="Fermer la fiche" title="Fermer la fiche">⌄</button>
   <div id="psContent"></div>
 </div>
 
@@ -410,7 +421,7 @@ const GOOGLE_MAPS_API_KEY = "AIzaSyD7ApectcO9UqS4B8POlEwm1hlRbmKiuig";
 // Test 3D Google photorealiste: colle ici une cle avec Map Tiles API activee.
 // Si cette valeur reste vide, l'app garde la 3D OpenStreetMap normale.
 const GOOGLE_MAP_TILES_API_KEY = "AIzaSyA2qaFERG7pF-uHHwgIA2upLxZxoWqlNDs";
-const GOOGLE_NEARBY_RADIUS_METERS = 12000;
+const GOOGLE_NEARBY_RADIUS_METERS = 3500;
 const GOOGLE_NEARBY_TYPES = ['restaurant', 'cafe', 'bar'];
 const PERFORMANCE_MODE = false;
 const ENABLE_GOOGLE_3D_TEST = false;
@@ -542,12 +553,7 @@ async function switchCity(cityId){
   document.querySelectorAll('[data-filter]').forEach(c => c.classList.toggle('active', c.dataset.filter === 'all'));
   showAreaPill(currentCity.nom);
   clearPlaces();
-  viewer.camera.flyTo({
-    destination: Cesium.Cartesian3.fromDegrees(city.lng, city.lat, 560),
-    orientation: { heading:0, pitch:Cesium.Math.toRadians(-52), roll:0 },
-    duration:0.9,
-    easingFunction: Cesium.EasingFunction.CUBIC_OUT
-  });
+  frameArea(city.lng, city.lat, {animate:true});
   await loadTerrasses();
 }
 
@@ -570,7 +576,11 @@ function completeSplash() {
   if (splashDone) return; splashDone = true; setProgress(100, 'Prêt !');
   setTimeout(() => { document.getElementById('splash').classList.add('out'); setTimeout(() => { document.getElementById('splash').style.display = 'none'; }, 650); }, 300);
 }
-setTimeout(completeSplash, 1200);
+// On garde l'écran d'accueil tant que la première vraie vue 3D n'est pas prête.
+// Ainsi, on ne découvre jamais un écran noir ou une carte à moitié chargée.
+setTimeout(()=>{
+  if(!splashDone) setProgress(92, 'La 3D se prépare…');
+}, 4500);
 
 Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIwM2M0Njk1Yi1iYzI1LTQ3MzAtOGU1MS1iNzU4MTRiNWVkY2QiLCJpZCI6Mzk5MDg5LCJpYXQiOjE3NzI3ODI3NTh9.aGJt8zcDKPwk-pJsAcp0egE1wgJ5Vg41y_yQKNfUtYw';
 
@@ -593,7 +603,41 @@ viewer.scene.postProcessStages.fxaa.enabled = false;
 viewer.scene.screenSpaceCameraController.inertiaSpin = 0.9;
 viewer.scene.screenSpaceCameraController.inertiaTranslate = 0.9;
 viewer.scene.screenSpaceCameraController.inertiaZoom = 0.8;
-viewer.camera.setView({ destination: Cesium.Cartesian3.fromDegrees(-0.57918, 44.837789, 450), orientation: { heading: 0, pitch: Cesium.Math.toRadians(-50), roll: 0 } });
+
+// Même cadrage dans toute la France : la hauteur est calculée au-dessus du sol,
+// pas au-dessus du niveau de la mer. Cela évite les vues trop basses ou trop hautes
+// quand on passe de Bordeaux à Paris, à une ville en pente ou à la géolocalisation.
+const AREA_CAMERA_RANGE = 450;
+const AREA_CAMERA_PITCH = Cesium.Math.toRadians(-50);
+let areaCameraRequest = 0;
+function frameArea(lng, lat, {animate=true, range=AREA_CAMERA_RANGE, pitch=AREA_CAMERA_PITCH}={}) {
+  const request = ++areaCameraRequest;
+  const cartographic = Cesium.Cartographic.fromDegrees(lng, lat);
+  const immediateHeight = viewer.scene.globe.getHeight(cartographic);
+  const fly = (groundHeight, duration) => {
+    if(request !== areaCameraRequest) return;
+    const safeHeight = Number.isFinite(groundHeight) ? Math.max(0, groundHeight) : 0;
+    const target = new Cesium.BoundingSphere(
+      Cesium.Cartesian3.fromDegrees(lng, lat, safeHeight), 1
+    );
+    viewer.camera.flyToBoundingSphere(target, {
+      offset: new Cesium.HeadingPitchRange(0, pitch, range),
+      duration,
+      easingFunction: Cesium.EasingFunction.CUBIC_OUT
+    });
+  };
+  fly(immediateHeight, animate ? 0.85 : 0);
+  Cesium.sampleTerrainMostDetailed(viewer.terrainProvider, [cartographic])
+    .then(([sample]) => {
+      const preciseHeight = sample?.height;
+      if(request !== areaCameraRequest || !Number.isFinite(preciseHeight)) return;
+      if(!Number.isFinite(immediateHeight) || Math.abs(preciseHeight - immediateHeight) > 4) {
+        fly(preciseHeight, animate ? 0.25 : 0);
+      }
+    })
+    .catch(() => {});
+}
+frameArea(currentCity.lng, currentCity.lat, {animate:false});
 
 setProgress(10, 'Chargement…');
 const osmBuildings = viewer.scene.primitives.add(Cesium.createOsmBuildings());
@@ -602,11 +646,15 @@ viewer.scene.globe.tileLoadProgressEvent.addEventListener(remaining => {
   setProgress(Math.min(60, 10 + (1 - Math.min(remaining, 50) / 50) * 50), remaining === 0 ? 'Bâtiments…' : 'Chargement…');
   if (remaining === 0 && terrasses.length > 0 && !computing && ENABLE_SHADOW_RAYCASTS) { scheduleShadow(); }
 });
-let globeOk = false, buildingsOk = false;
+let globeOk = false, buildingsOk = false, splashReadyQueued = false;
 function tryOpen() {
-  if (!globeOk || !buildingsOk) return;
+  if (!globeOk || !buildingsOk || splashReadyQueued) return;
+  splashReadyQueued = true;
   let f = 0;
-  viewer.scene.postRender.addEventListener(function waitRender() { if (++f >= 6) { viewer.scene.postRender.removeEventListener(waitRender); completeSplash(); } });
+  viewer.scene.postRender.addEventListener(function waitRender() {
+    // Quelques images rendues après la fin du chargement évitent le flash noir au dévoilement.
+    if (++f >= 6) { viewer.scene.postRender.removeEventListener(waitRender); completeSplash(); }
+  });
 }
 viewer.scene.postRender.addEventListener(function watchGlobe() {
   if (viewer.scene.globe.tilesLoaded && !globeOk) { globeOk = true; setProgress(70, 'Bâtiments…'); viewer.scene.postRender.removeEventListener(watchGlobe); tryOpen(); }
@@ -666,9 +714,7 @@ function placeUserDot(lng, lat, accuracy) {
 // Centre la caméra EXACTEMENT sur la position (le rond bleu au centre de l'écran)
 // flyToBoundingSphere cale le centre de la sphère au centre de l'écran, même avec la vue inclinée
 function focusUser(lng, lat, animate) {
-  const sphere = new Cesium.BoundingSphere(Cesium.Cartesian3.fromDegrees(lng, lat, 0), 45);
-  const hpr = new Cesium.HeadingPitchRange(0, Cesium.Math.toRadians(-55), 300);
-  viewer.camera.flyToBoundingSphere(sphere, { offset: hpr, duration: animate ? 1.2 : 0 });
+  frameArea(lng, lat, {animate, range:AREA_CAMERA_RANGE, pitch:Cesium.Math.toRadians(-55)});
 }
 
 // Géolocalisation manuelle (bouton) — recentre sur la position réelle
@@ -1001,8 +1047,8 @@ async function fetchFoodPlacesFromOverpass(){
   return fetchOverpassPlaces(q,'osm').then(items=>items.filter(isFoodPlace));
 }
 
-async function fetchTerrasses(initialLocal){
-  let local = Array.isArray(initialLocal) ? initialLocal : await localTerrassesForCurrentArea();
+async function fetchTerrasses(){
+  let local = await localTerrassesForCurrentArea();
   const fallback = [...localFallbackTerrasses(), ...localFallbackUtilities()];
   if(local.length > 80){
     const merged = mergeFeaturedPlaces(mergePlacesByIdentity([...local, ...fallback]));
@@ -1177,14 +1223,14 @@ const DOT_CATEGORY={
   cool:makeCategoryIcon('cool')
 };
 function markerImageForPlace(t){
-  const ref=findReferenced(t.nom);
+  const ref=findReferenced(t);
   if(ref) return DOT_FEATURED;
   if(!isFoodPlace(t)) return DOT_CATEGORY[placeCategory(t)] || DOT_CATEGORY.cool;
   const s=sunStates[t.id];
   return s===true?DOT_SUN:s===false?DOT_SHADE:DOT_UNKNOWN;
 }
 function markerSizeForPlace(t){
-  if(findReferenced(t.nom)) return 34;
+  if(findReferenced(t)) return 34;
   return isFoodPlace(t) ? 18 : 26;
 }
 
@@ -1192,8 +1238,8 @@ let markerRenderToken=0;
 function prioritizedMarkerItems(items=terrasses){
   const source = Array.isArray(items) ? items : terrasses;
   const sorted = [...source].sort((a,b)=>{
-    const ra=findReferenced(a.nom)?0:(isFoodPlace(a)?2:1);
-    const rb=findReferenced(b.nom)?0:(isFoodPlace(b)?2:1);
+    const ra=findReferenced(a)?0:(isFoodPlace(a)?2:1);
+    const rb=findReferenced(b)?0:(isFoodPlace(b)?2:1);
     if(ra!==rb) return ra-rb;
     if(userLat!==null) return distMeters(a.lat,a.lng)-distMeters(b.lat,b.lng);
     return metersBetween(currentCity.lat,currentCity.lng,a.lat,a.lng)-metersBetween(currentCity.lat,currentCity.lng,b.lat,b.lng);
@@ -1393,11 +1439,14 @@ const REFERENCED = [
   },
 ];
 const FEATURED_RADIUS_METERS = 12000;
-function findReferenced(nom){
-  const n=(nom||'').toLowerCase().trim();
+function findReferenced(placeOrName){
+  const place=typeof placeOrName==='object' ? placeOrName : null;
+  const n=normalize(place?.nom || placeOrName).trim();
   return REFERENCED.find(p=>{
-    const names=[p.match,...(p.aliases||[])].map(x=>x.toLowerCase().trim());
-    return names.some(pm=>n===pm || n.includes(pm) || pm.includes(n));
+    const names=[p.match,...(p.aliases||[])].map(normalize);
+    if(!names.includes(n)) return false;
+    return !place || !Number.isFinite(place.lat) || !Number.isFinite(place.lng)
+      || !p.lat || !p.lng || metersBetween(place.lat,place.lng,p.lat,p.lng)<=700;
   })||null;
 }
 // alias pour compat
@@ -1419,6 +1468,11 @@ function referencedToPlace(ref){
   };
 }
 
+function preferredPlaceType(t,ref){
+  const type=(ref?.type || '').trim();
+  return !type || normalize(type)==='terrasse' ? (t.type || 'Adresse référencée') : type;
+}
+
 function mergeFeaturedPlaces(items){
   const places=[...items];
   const existing=new Set(places.map(t=>normalize(t.nom)));
@@ -1427,7 +1481,7 @@ function mergeFeaturedPlaces(items){
     const nearArea = metersBetween(currentCity.lat,currentCity.lng,ref.lat,ref.lng) <= FEATURED_RADIUS_METERS;
     if(!nearArea) return;
     const aliases=[ref.match,...(ref.aliases||[])].map(normalize);
-    const already=aliases.some(name=>existing.has(name)) || places.some(t=>aliases.some(name=>normalize(t.nom).includes(name)||name.includes(normalize(t.nom))));
+    const already=aliases.some(name=>existing.has(name));
     if(!already) places.unshift(referencedToPlace(ref));
   });
   return places;
@@ -1538,20 +1592,6 @@ function latLngFromGoogle(place){
   return {lat,lng};
 }
 
-function placeNamesMatch(sourceName, candidateName){
-  const ignored=new Set(['le','la','les','de','du','des','au','aux','restaurant','cafe','bar','brasserie']);
-  const tokens=value=>normalize(value).replace(/[^a-z0-9 ]/g,' ').split(/\s+/).filter(token=>token.length>1&&!ignored.has(token));
-  const source=tokens(sourceName), candidate=new Set(tokens(candidateName));
-  return source.length>0 && source.filter(token=>candidate.has(token)).length/source.length>=0.7;
-}
-
-function isSameGooglePlace(source,candidate){
-  const coords=latLngFromGoogle(candidate);
-  return !!coords && Number.isFinite(source.lat) && Number.isFinite(source.lng)
-    && placeNamesMatch(source.nom,candidate.name)
-    && metersBetween(source.lat,source.lng,coords.lat,coords.lng)<=350;
-}
-
 function googlePhotoFromPlace(place, maxWidth=1100){
   try {
     return place?.photos?.[0]?.getUrl({maxWidth, maxHeight:760}) || '';
@@ -1595,19 +1635,13 @@ async function findGooglePlaceInBrowser(t){
         fields:['name','place_id','geometry','photos','formatted_phone_number','international_phone_number','website','url','rating','user_ratings_total']
       }, (place, detailsStatus) => {
         if(!googleStatusOk(detailsStatus)) { resolve({}); return; }
-        resolve(isSameGooglePlace(t,place) ? normalizeGoogleJsPlace(place) : {});
+        const coords = latLngFromGoogle(place);
+        const closeEnough = coords ? metersBetween(t.lat,t.lng,coords.lat,coords.lng) < 1500 : true;
+        const similarName = normalize(place?.name || '').includes(normalize(t.nom).slice(0, 8)) || normalize(t.nom).includes(normalize(place?.name || '').slice(0, 8));
+        resolve(closeEnough || similarName ? normalizeGoogleJsPlace(place) : {});
       });
     });
   });
-}
-
-async function getGooglePlaceById(placeId){
-  const service=await getGooglePlacesService();
-  if(!service || !placeId) return {};
-  return new Promise(resolve=>service.getDetails({
-    placeId,
-    fields:['name','place_id','geometry','photos','formatted_phone_number','international_phone_number','website','url','rating','user_ratings_total']
-  },(place,status)=>resolve(googleStatusOk(status) ? normalizeGoogleJsPlace(place) : {})));
 }
 
 function googlePlaceTypeLabel(place, fallbackType){
@@ -1698,23 +1732,29 @@ async function fetchGooglePlace(t){
     googlePlaceCache[key]=t.googleDetails;
     return googlePlaceCache[t.id];
   }
-  const knownPlaceId=t.googlePlaceId || findReferenced(t.nom)?.googlePlaceId;
-  if(knownPlaceId){
-    const details=await getGooglePlaceById(knownPlaceId);
-    googlePlaceCache[t.id]=details;
-    googlePlaceCache[key]=details;
-    return details;
-  }
   const browserDetails = await findGooglePlaceInBrowser(t);
   if(browserDetails.photo || browserDetails.rating || browserDetails.tel || browserDetails.googleMapsUrl || browserDetails.websiteUrl){
     googlePlaceCache[t.id]=browserDetails;
     googlePlaceCache[key]=browserDetails;
     return googlePlaceCache[t.id];
   }
-  // Un proxy sans place_id ne peut pas prouver l'identité de la photo.
-  googlePlaceCache[t.id]={};
-  googlePlaceCache[key]={};
-  return {};
+  if(!/^https?:$/.test(location.protocol)){
+    googlePlaceCache[t.id]={};
+    googlePlaceCache[key]={};
+    return {};
+  }
+  try{
+    const r=await fetch(`/api/google-place?name=${encodeURIComponent(t.nom)}&lat=${t.lat}&lng=${t.lng}&city=${encodeURIComponent(currentCity.nom||'')}`);
+    if(!r.ok) throw new Error();
+    const data=await r.json();
+    googlePlaceCache[t.id]=data||{};
+    googlePlaceCache[key]=googlePlaceCache[t.id];
+    return googlePlaceCache[t.id];
+  }catch(e){
+    googlePlaceCache[t.id]={};
+    googlePlaceCache[key]={};
+    return {};
+  }
 }
 
 // Foursquare reste un secours si Google ne renvoie pas encore le lieu.
@@ -1731,14 +1771,28 @@ async function fetchFoursquare(t){
 }
 
 async function fetchPlaceDetails(t){
-  const ref=findReferenced(t.nom);
+  const ref=findReferenced(t);
   const google=await fetchGooglePlace(t);
   if(google.photo||google.rating||google.tel||google.googleMapsUrl||google.websiteUrl) return {...google,source:'google'};
+  const fsq=await fetchFoursquare(t);
+  if(fsq.photo||fsq.rating||fsq.tel) return {...fsq,source:'foursquare'};
   return ref ? {...ref,source:'referenced'} : {};
 }
 
 function googleMapsSearchUrl(t){
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(t.nom+', '+(currentCity.nom||'France'))}`;
+}
+function googleDirectionsUrl(t,details={}){
+  const placeId=details.googlePlaceId || t.googlePlaceId || '';
+  const destination=`${t.lat},${t.lng}`;
+  return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}${placeId?`&destination_place_id=${encodeURIComponent(placeId)}`:''}`;
+}
+function googleReviewsUrl(t,details={}){
+  const placeId=details.googlePlaceId || t.googlePlaceId || '';
+  return placeId ? `https://search.google.com/local/reviews?placeid=${encodeURIComponent(placeId)}` : googleMapsSearchUrl(t);
+}
+function googleEventsUrl(t){
+  return `https://www.google.com/search?q=${encodeURIComponent(`${t.nom} ${currentCity.nom||''} événements`)}`;
 }
 
 function applyGooglePhoto(t,details){
@@ -1768,7 +1822,7 @@ function timeoutAfter(ms){
 }
 
 async function preloadGooglePhotosForFeatured(items, timeoutMs=2200){
-  const targets=(items||[]).filter(t=>findReferenced(t.nom)).slice(0,10);
+  const targets=(items||[]).filter(t=>findReferenced(t)).slice(0,10);
   if(!targets.length || !hasGoogleMapsKey()) return;
   await Promise.race([
     (async()=>{
@@ -1851,8 +1905,24 @@ function hidePlaceSheet(){
   document.getElementById('psOverlay').classList.remove('open');
 }
 
+(()=>{
+  const handle=document.getElementById('psHandle');
+  const close=document.getElementById('psClose');
+  let dragStartY=null;
+  close.addEventListener('click',hidePlaceSheet);
+  handle.addEventListener('click',hidePlaceSheet);
+  handle.addEventListener('keydown',e=>{
+    if(e.key==='Enter'||e.key===' '){ e.preventDefault(); hidePlaceSheet(); }
+  });
+  handle.addEventListener('touchstart',e=>{ dragStartY=e.touches[0].clientY; },{passive:true});
+  handle.addEventListener('touchend',e=>{
+    if(dragStartY!==null && e.changedTouches[0].clientY-dragStartY>32) hidePlaceSheet();
+    dragStartY=null;
+  },{passive:true});
+})();
+
 function isFeaturedOrFavorite(t){
-  return !!findReferenced(t.nom) || isFavorite(t);
+  return !!findReferenced(t) || isFavorite(t);
 }
 
 function placeFact(label,value){
@@ -1863,7 +1933,7 @@ function placeFact(label,value){
 function placeFactsHTML(t,ref,dist){
   const address=(ref&&ref.adresse)||t.adresse||currentCity.nom;
   const facts=[
-    placeFact('Style',(ref&&ref.type)||t.type),
+    placeFact('Style',preferredPlaceType(t,ref)),
     placeFact('Distance',dist||'Autour de vous'),
     placeFact('Budget',ref&&ref.priceLevel),
     placeFact('Adresse',address)
@@ -1874,8 +1944,11 @@ function placeFactsHTML(t,ref,dist){
 async function showPlaceSheet(t){
   if(navigator.vibrate) navigator.vibrate(10);
   activePlaceId=String(t.id);
-  const ref=findReferenced(t.nom);
+  const ref=findReferenced(t);
   const mapsUrl=(ref&&ref.googleMapsUrl)||googleMapsSearchUrl(t);
+  const directionUrl=googleDirectionsUrl(t);
+  const reviewsUrl=googleReviewsUrl(t);
+  const eventsUrl=googleEventsUrl(t);
   const reservationUrl=ref&&ref.reservationUrl;
   const siteUrl=ref&&ref.websiteUrl;
   const initialTel=ref&&ref.tel;
@@ -1884,7 +1957,7 @@ async function showPlaceSheet(t){
   const initialPhoto=placePhotoUrl(t,ref,null);
 
   const badge = ref ? `<div class="ps-badge">⭐ Sélection Soleilenterrasse</div>` : '';
-  const typeLine = (ref&&ref.type)||t.type;
+  const typeLine = preferredPlaceType(t,ref);
   const priceLine = ref&&ref.priceLevel ? ' · '+ref.priceLevel : '';
   const desc = ref&&ref.description ? `<div class="ps-desc">${escapeHTML(ref.description)}</div>` : '';
   const happy = ref&&ref.happyHours ? `<span class="ps-happy">🍹 Happy hour ${escapeHTML(ref.happyHours)}</span>` : '';
@@ -1904,10 +1977,13 @@ async function showPlaceSheet(t){
       <div class="ps-meta" id="psMeta">${happy}</div>
       <div class="ps-btns" id="psBtns">
         <button class="ps-btn fav ${favActive?'active':''}" id="psFavBtn">${favActive?'Favori enregistré':'Ajouter aux favoris'}</button>
-        ${ref ? '<button class="ps-btn reserve" id="psReserveBtn">Réserver</button>' : ''}
-        <button class="ps-btn maps" id="psGoogleBtn">Google</button>
-        <button class="ps-btn site" id="psSiteBtn" style="${siteUrl?'display:block':''}">Site</button>
-        <button class="ps-btn tel" id="psTelBtn" style="display:none">📞 Appeler</button>
+        ${reservationUrl ? `<a class="ps-btn reserve" id="psReserveBtn" href="${escapeAttr(reservationUrl)}" target="_blank" rel="noopener noreferrer">Réserver</a>` : ''}
+        <a class="ps-btn maps" id="psDirectionsBtn" href="${escapeAttr(directionUrl)}" target="_blank" rel="noopener noreferrer">Itinéraire</a>
+        <a class="ps-btn maps" id="psGoogleBtn" href="${escapeAttr(mapsUrl)}" target="_blank" rel="noopener noreferrer">Fiche Google</a>
+        <a class="ps-btn reviews" id="psReviewsBtn" href="${escapeAttr(reviewsUrl)}" target="_blank" rel="noopener noreferrer">⭐ Avis</a>
+        <a class="ps-btn events" id="psEventsBtn" href="${escapeAttr(eventsUrl)}" target="_blank" rel="noopener noreferrer">Événements</a>
+        <a class="ps-btn site" id="psSiteBtn" href="${escapeAttr(siteUrl||'#')}" target="_blank" rel="noopener noreferrer" style="${siteUrl?'display:block':'display:none'}">Site</a>
+        <a class="ps-btn tel" id="psTelBtn" href="${initialTel?`tel:${escapeAttr(initialTel)}`:'#'}" style="${initialTel?'display:block':'display:none'}">📞 Appeler</a>
       </div>
     </div>`;
   document.getElementById('placeSheet').classList.add('open');
@@ -1921,21 +1997,20 @@ async function showPlaceSheet(t){
     renderList(currentHeure,searchQuery);
   };
   const reserveBtn=document.getElementById('psReserveBtn');
-  if(reserveBtn && reservationUrl) reserveBtn.onclick=()=>window.open(reservationUrl,'_blank');
   const googleBtn=document.getElementById('psGoogleBtn');
-  if(googleBtn) googleBtn.onclick=()=>window.open(mapsUrl,'_blank');
-  if(siteUrl){ const b=document.getElementById('psSiteBtn'); if(b) b.onclick=()=>window.open(siteUrl,'_blank'); }
-  if(initialTel){ const b=document.getElementById('psTelBtn'); if(b){ b.style.display='block'; b.onclick=()=>{ window.location.href='tel:'+initialTel; }; } }
 
   const details=await fetchPlaceDetails(t);
   applyGooglePhoto(t,details);
   if(activePlaceId!==String(t.id)) return;
   if(details.rating){ const meta=document.getElementById('psMeta'); if(meta) meta.insertAdjacentHTML('afterbegin', `<span class="ps-rating">⭐ ${details.rating} / 5</span>`); }
-  if(details.googleMapsUrl && googleBtn) googleBtn.onclick=()=>window.open(details.googleMapsUrl,'_blank');
-  if(ref && details.googleMapsUrl && reserveBtn) reserveBtn.onclick=()=>window.open(details.reservationUrl||reservationUrl||details.googleMapsUrl,'_blank');
-  if(details.websiteUrl){ const b=document.getElementById('psSiteBtn'); if(b){ b.style.display='block'; b.onclick=()=>window.open(details.websiteUrl,'_blank'); } }
+  if(details.googleMapsUrl && googleBtn) googleBtn.href=details.googleMapsUrl;
+  if(details.googleMapsUrl && reserveBtn) reserveBtn.href=details.reservationUrl||reservationUrl||details.googleMapsUrl;
+  const detailsDirections=googleDirectionsUrl(t,details);
+  const directionsBtn=document.getElementById('psDirectionsBtn'); if(directionsBtn) directionsBtn.href=detailsDirections;
+  const reviewsBtn=document.getElementById('psReviewsBtn'); if(reviewsBtn) reviewsBtn.href=googleReviewsUrl(t,details);
+  if(details.websiteUrl){ const b=document.getElementById('psSiteBtn'); if(b){ b.style.display='block'; b.href=details.websiteUrl; } }
   const tel=details.tel||initialTel;
-  if(tel){ const b=document.getElementById('psTelBtn'); if(b){ b.style.display='block'; b.onclick=()=>{ window.location.href='tel:'+tel; }; } }
+  if(tel){ const b=document.getElementById('psTelBtn'); if(b){ b.style.display='block'; b.href='tel:'+tel; } }
 }
 
 function normalize(s){return(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
@@ -1975,7 +2050,7 @@ function highlight(text,q){
 function matchesActiveFilter(t){
   const type=normalize(t.type);
   const category=placeCategory(t);
-  if(activeFilter==='favorite') return isFavorite(t)||!!findReferenced(t.nom);
+  if(activeFilter==='favorite') return isFavorite(t)||!!findReferenced(t);
   if(activeFilter==='heatwave') {
     if(category==='parking') return false;
     return ['park','water','cool'].includes(category);
@@ -2016,7 +2091,7 @@ function renderList(h,query){
   if(q) filtered=filtered.filter(t=>normalize(t.nom).includes(q)||normalize(t.type).includes(q)||normalize(t.adresse).includes(q));
   // Tri : référencés d'abord, puis par distance.
   const sorted=[...filtered].sort((a,b)=>{
-    const pa=findReferenced(a.nom)?1:0, pb=findReferenced(b.nom)?1:0;
+    const pa=findReferenced(a)?1:0, pb=findReferenced(b)?1:0;
     if(pa!==pb) return pb-pa;
     if(pa&&pb) return referencedRank(a.nom)-referencedRank(b.nom);
     if(activeFilter==='heatwave'){
@@ -2037,18 +2112,18 @@ function renderList(h,query){
 
   // ── Section "Sélection" : uniquement les cafés référencés (avec photo) ──
   const showSelection = activeFilter !== 'heatwave';
-  const refTerrasses = showSelection ? terrasses.filter(t=>findReferenced(t.nom)&&matchesActiveFilter(t)).sort((a,b)=>referencedRank(a.nom)-referencedRank(b.nom)) : [];
+  const refTerrasses = showSelection ? terrasses.filter(t=>findReferenced(t)&&matchesActiveFilter(t)).sort((a,b)=>referencedRank(a.nom)-referencedRank(b.nom)) : [];
   if(refTerrasses.length && !q){
     const wrap=document.createElement('div'); wrap.className='sel-wrap';
     wrap.innerHTML=`<div class="sel-head"><span class="sel-emoji">⭐</span><span class="sel-title">Notre sélection</span></div>`;
     const scroll=document.createElement('div'); scroll.className='sel-scroll';
     refTerrasses.forEach(t=>{
-      const ref=findReferenced(t.nom);
+      const ref=findReferenced(t);
       const dist=distKm(t.lat,t.lng);
       const photo=`<div class="sel-photo-wrap"><img class="sel-photo" data-place-id="${escapeAttr(t.id)}" src="${escapeAttr(placePhotoUrl(t,ref,null))}" alt="${escapeAttr(t.nom)}" loading="lazy" decoding="async" onerror="markPhotoError(this)"><span class="partner-sun">☀️</span></div>`;
       const happy=ref.happyHours?`<span class="sel-happy">🍹 ${escapeHTML(ref.happyHours)}</span>`:'';
       const c=document.createElement('div'); c.className='sel-card partner';
-      c.innerHTML=`${photo}<div class="sel-info"><div class="sel-name">${escapeHTML(t.nom)}</div><div class="sel-sub">${escapeHTML(ref.type||t.type)}${ref.priceLevel?' · '+escapeHTML(ref.priceLevel):''}${dist?' · '+escapeHTML(dist):''}</div>${happy}</div>`;
+      c.innerHTML=`${photo}<div class="sel-info"><div class="sel-name">${escapeHTML(t.nom)}</div><div class="sel-sub">${escapeHTML(preferredPlaceType(t,ref))}${ref.priceLevel?' · '+escapeHTML(ref.priceLevel):''}${dist?' · '+escapeHTML(dist):''}</div>${happy}</div>`;
       c.addEventListener('click',()=>{ closeDrawer(); focusPlace(t); showPlaceSheet(t); });
       scroll.appendChild(c);
     });
@@ -2058,18 +2133,18 @@ function renderList(h,query){
     fragment.appendChild(divider);
   }
 
-  const allListItems = (!q && refTerrasses.length) ? sorted.filter(t=>!findReferenced(t.nom)) : sorted;
+  const allListItems = (!q && refTerrasses.length) ? sorted.filter(t=>!findReferenced(t)) : sorted;
   const renderLimit = q ? Math.max(MAX_RENDERED_LIST_ITEMS, 900) : Math.min(allListItems.length, 900);
   const listItems = allListItems.slice(0, renderLimit);
   if(!allListItems.length){const nr=document.createElement('div');nr.className='no-results';nr.innerHTML=`Aucun résultat${query?' pour <strong>"'+escapeHTML(query)+'"</strong>':''}`;fragment.appendChild(nr);list.appendChild(fragment);return;}
   listItems.forEach(t=>{
-    const ref=findReferenced(t.nom);
+    const ref=findReferenced(t);
     const card=document.createElement('div'); card.className='card'+(ref?' partner':(!isFoodPlace(t)?' utility compact':' compact')); card.dataset.id=t.id;
     const dist=distKm(t.lat,t.lng);
     const tag=ref?`<span class="partner-tag">Sélection</span>`:'';
     if(ref){
       const photo=placePhotoUrl(t,ref,null);
-      card.innerHTML=`<div class="card-photo-wrap"><img class="card-photo" data-place-id="${escapeAttr(t.id)}" src="${escapeAttr(photo)}" alt="${escapeAttr(t.nom)}" loading="lazy" decoding="async" onerror="markPhotoError(this)"><span class="partner-sun">☀️</span></div><div class="card-body"><div class="card-name">${highlight(t.nom,query)}${tag}</div><div class="card-sub">${escapeHTML(t.type)}${t.adresse?' · '+escapeHTML(t.adresse):''}${dist?' · '+escapeHTML(dist):''}</div></div>`;
+      card.innerHTML=`<div class="card-photo-wrap"><img class="card-photo" data-place-id="${escapeAttr(t.id)}" src="${escapeAttr(photo)}" alt="${escapeAttr(t.nom)}" loading="lazy" decoding="async" onerror="markPhotoError(this)"><span class="partner-sun">☀️</span></div><div class="card-body"><div class="card-name">${highlight(t.nom,query)}${tag}</div><div class="card-sub">${escapeHTML(preferredPlaceType(t,ref))}${t.adresse?' · '+escapeHTML(t.adresse):''}${dist?' · '+escapeHTML(dist):''}</div></div>`;
     }else if(!isFoodPlace(t)){
       const category=placeCategory(t);
       card.innerHTML=`<div class="category-icon ${escapeAttr(category)}">${escapeHTML(placeIcon(t))}</div><div class="card-body"><div class="card-name">${highlight(t.nom,query)}</div><div class="card-sub">${escapeHTML(t.type)}${t.adresse?' · '+escapeHTML(t.adresse):''}${dist?' · '+escapeHTML(dist):''}</div><div class="card-meta"><span class="utility-tag heat">${escapeHTML(utilityHeatNote(t))}</span></div></div>`;
@@ -2086,7 +2161,7 @@ function renderList(h,query){
     fragment.appendChild(more);
   }
   list.appendChild(fragment);
-  const hydrateTargets=[...refTerrasses,...listItems.filter(t=>findReferenced(t.nom))].filter((item,index,self)=>self.findIndex(other=>String(other.id)===String(item.id))===index);
+  const hydrateTargets=[...refTerrasses,...listItems.filter(t=>findReferenced(t))].filter((item,index,self)=>self.findIndex(other=>String(other.id)===String(item.id))===index);
   setTimeout(()=>hydrateVisiblePhotos(hydrateTargets), 80);
 }
 
@@ -2223,30 +2298,36 @@ async function loadTerrasses(){
   document.getElementById('terrasseList').style.display='none';
   const signature=areaSignature();
   const version=++terraceLoadVersion;
-  // Liste immédiatement disponible ; les sources complètes enrichissent ensuite sans bloquer la 3D.
+  const local = await localTerrassesForCurrentArea();
+  if(version!==terraceLoadVersion || signature!==areaSignature()) return;
+  if(local.length > 80){
+    const localMerged=mergeFeaturedPlaces(mergePlacesByIdentity([...local, ...localFallbackTerrasses(), ...localFallbackUtilities()])).slice(0,MAX_TERRASSES);
+    paintTerrasses(localMerged);
+    preloadGooglePhotosForFeatured(localMerged, 1200).then(()=>{
+      if(version===terraceLoadVersion && signature===areaSignature()) renderList(currentHeure,searchQuery);
+    }).catch(()=>{});
+    setTimeout(()=>hydrateOverpassInBackground(signature), 800);
+    setTimeout(()=>hydrateUtilitiesInBackground(signature), 1400);
+    setTimeout(()=>hydrateNearbyInBackground(signature), 3500);
+    return;
+  }
   const quick=mergeFeaturedPlaces(mergePlacesByIdentity([...localFallbackTerrasses(), ...localFallbackUtilities()])).slice(0,MAX_TERRASSES);
   paintTerrasses(quick,' · chargement…');
-  setTimeout(()=>hydrateNearbyInBackground(signature),1600);
-  const enrich=async()=>{
-    try{
-      const local=await localTerrassesForCurrentArea();
-      if(version!==terraceLoadVersion || signature!==areaSignature()) return;
-      const data=local.length>80
-        ? mergeFeaturedPlaces(mergePlacesByIdentity([...local,...localFallbackTerrasses(),...localFallbackUtilities()])).slice(0,MAX_TERRASSES)
-        : await fetchTerrasses(local);
-      if(version!==terraceLoadVersion || signature!==areaSignature()) return;
-      paintTerrasses(data);
-      setTimeout(()=>hydrateOverpassInBackground(signature),800);
-      setTimeout(()=>hydrateUtilitiesInBackground(signature),1400);
-      setTimeout(()=>preloadGooglePhotosForFeatured(terrasses,1200).then(()=>{
-        if(version===terraceLoadVersion && signature===areaSignature()) renderList(currentHeure,searchQuery);
-      }).catch(()=>{}),1200);
-    }catch(e){}
-  };
-  setTimeout(()=>{
-    if(window.requestIdleCallback) window.requestIdleCallback(enrich,{timeout:1400});
-    else enrich();
-  },350);
+  preloadGooglePhotosForFeatured(quick, 1200).then(()=>{
+    if(version===terraceLoadVersion && signature===areaSignature()) renderList(currentHeure,searchQuery);
+  }).catch(()=>{});
+
+  fetchTerrasses().then(data=>{
+    if(version!==terraceLoadVersion || signature!==areaSignature()) return;
+    paintTerrasses(data);
+    setTimeout(()=>hydrateUtilitiesInBackground(signature), 700);
+    setTimeout(()=>hydrateNearbyInBackground(signature), 3500);
+  }).catch(()=>{
+    if(version!==terraceLoadVersion || terrasses.length) return;
+    document.getElementById('loadingState').style.display='none';
+    document.getElementById('terrasseList').style.display='block';
+    document.getElementById('terrasseList').innerHTML=`<div class="no-results">Impossible de charger les lieux.<br><button onclick="loadTerrasses()" style="margin-top:8px;background:#FFD600;border:none;padding:10px 20px;border-radius:12px;font-weight:600;cursor:pointer;font-size:14px;">Réessayer</button></div>`;
+  });
 }
 
 async function init(){
