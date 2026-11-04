@@ -425,7 +425,7 @@ const GOOGLE_NEARBY_RADIUS_METERS = 3500;
 const GOOGLE_NEARBY_TYPES = ['restaurant', 'cafe', 'bar'];
 const PERFORMANCE_MODE = false;
 const ENABLE_GOOGLE_3D_TEST = false;
-const ENABLE_SHADOW_RAYCASTS = false;
+const ENABLE_SHADOW_RAYCASTS = true;
 const MAX_RENDERED_LIST_ITEMS = 280;
 const MAX_MARKERS_ON_MAP = 950;
 const MARKER_RENDER_BATCH = 180;
@@ -1082,99 +1082,149 @@ function getSunDir(jd){
   const m=Cesium.Transforms.computeIcrfToFixedMatrix(jd); if(!m) return null;
   const d=new Cesium.Cartesian3(); Cesium.Matrix3.multiplyByVector(m,s,d); return Cesium.Cartesian3.normalize(d,d);
 }
-function sceneReadyForShadows(relaxed=false){
-  return !cameraMoving && viewer.scene.globe.tilesLoaded && (relaxed || osmBuildings.tilesLoaded) && typeof viewer.scene.pickFromRay==='function';
-}
 function sunAboveHorizon(lng,lat,sunDir){
   if(!sunDir) return null;
   const pos=Cesium.Cartesian3.fromDegrees(lng,lat,1);
   const up=Cesium.Cartesian3.normalize(pos,new Cesium.Cartesian3());
   return Cesium.Cartesian3.dot(sunDir,up)>0.01;
 }
-function checkSunnyPoint(lng,lat,sunDir){
-  const carto=Cesium.Cartographic.fromDegrees(lng,lat);
-  const terrainH=viewer.scene.globe.getHeight(carto);
+// ── Ombre des bâtiments ─────────────────────────────────────────────
+// Calcul précis (rayon vers le soleil contre les bâtiments 3D), conçu pour
+// ne JAMAIS faire ramer l'appli :
+//  • seulement les terrasses visibles à l'écran (60 max, les plus proches) ;
+//  • découpé en tranches de 4 ms, lancées quand le navigateur est inactif ;
+//  • arrêté immédiatement dès qu'on bouge la carte ou le curseur ;
+//  • résultats mis en cache par quart d'heure (retour en arrière instantané) ;
+//  • coupé automatiquement pour la session si l'appareil est trop lent.
+// En attendant le résultat précis, on affiche l'estimation « soleil levé ».
+const SHADOW_FRAME_BUDGET_MS = 4;
+const SHADOW_MAX_PLACES = 60;
+const SHADOW_SLOW_PICK_MS = 6;
+const SHADOW_SAMPLE_OFFSETS = [[0,0],[8,0],[-8,0],[0,8],[0,-8],[15,0],[-15,0],[0,15],[0,-15]];
+const shadowCache = new Map();
+let shadowsAutoDisabled = false, shadowPickCount = 0, shadowPickAvgMs = 0, shadowJob = null;
+const shadowScratch = { pos:new Cesium.Cartesian3(), up:new Cesium.Cartesian3(), off:new Cesium.Cartesian3(), origin:new Cesium.Cartesian3(), ray:new Cesium.Ray(), win:new Cesium.Cartesian2() };
+function shadowsActive(){ return ENABLE_SHADOW_RAYCASTS && !shadowsAutoDisabled; }
+function shadowTimeKey(jd){ return Math.round(Cesium.JulianDate.toDate(jd).getTime()/900000); }
+function shadowCacheKey(t,timeKey){ return `${t.id}|${timeKey}`; }
+function checkSunnyPoint(lng,lat,sunDir,excludes){
+  const terrainH=viewer.scene.globe.getHeight(Cesium.Cartographic.fromDegrees(lng,lat));
   if(!Number.isFinite(terrainH)) return null;
-  const pos=Cesium.Cartesian3.fromDegrees(lng,lat,terrainH+2.2);
-  const up=Cesium.Cartesian3.normalize(pos,new Cesium.Cartesian3());
-  if(Cesium.Cartesian3.dot(sunDir,up)<=0.0) return false;
-  const origin=Cesium.Cartesian3.add(pos,Cesium.Cartesian3.multiplyByScalar(sunDir,2.8,new Cesium.Cartesian3()),new Cesium.Cartesian3());
-  const hit=viewer.scene.pickFromRay(new Cesium.Ray(origin,sunDir),Object.values(markerEntities));
+  const sc=shadowScratch;
+  Cesium.Cartesian3.fromDegrees(lng,lat,terrainH+2.2,undefined,sc.pos);
+  Cesium.Cartesian3.normalize(sc.pos,sc.up);
+  if(Cesium.Cartesian3.dot(sunDir,sc.up)<=0.0) return false;
+  Cesium.Cartesian3.add(sc.pos,Cesium.Cartesian3.multiplyByScalar(sunDir,2.8,sc.off),sc.origin);
+  Cesium.Cartesian3.clone(sc.origin,sc.ray.origin);
+  Cesium.Cartesian3.clone(sunDir,sc.ray.direction);
+  const t0=performance.now();
+  const hit=viewer.scene.pickFromRay(sc.ray,excludes);
+  const dt=performance.now()-t0;
+  // Les 3 premiers calculs (préchauffage GPU) ne comptent pas dans la moyenne.
+  if(++shadowPickCount>3) shadowPickAvgMs=shadowPickCount===4?dt:shadowPickAvgMs*0.8+dt*0.2;
   if(!hit) return true;
-  if(hit.position && Cesium.Cartesian3.distance(origin,hit.position)<5) return true;
+  if(hit.position && Cesium.Cartesian3.distance(sc.origin,hit.position)<5) return true;
   return false;
 }
-function checkSunny(t,sunDir,relaxed=false){
-  if(!sunDir) return null;
-  if(!ENABLE_SHADOW_RAYCASTS) return sunAboveHorizon(t.lng,t.lat,sunDir);
-  if(!sceneReadyForShadows(relaxed)) return sunAboveHorizon(t.lng,t.lat,sunDir);
-  const latMeter=1/111320;
-  const lngMeter=1/(111320*Math.max(0.2,Math.cos(t.lat*Math.PI/180)));
-  const offsets=[
-    [0,0],[7,0],[-7,0],[0,7],[0,-7],[5,5],[-5,5],[5,-5],[-5,-5],
-    [12,0],[-12,0],[0,12],[0,-12],[9,9],[-9,9],[9,-9],[-9,-9],
-    [18,0],[-18,0],[0,18],[0,-18]
-  ];
-  let sunny=0, valid=0;
-  for(const [east,north] of offsets){
-    const result=checkSunnyPoint(t.lng+east*lngMeter,t.lat+north*latMeter,sunDir);
-    if(result===null) continue;
-    valid++;
-    if(result) sunny++;
+// Terrasses dont le marqueur est affiché ET à l'écran, les plus proches d'abord.
+function shadowCandidates(sunDir,timeKey){
+  const scene=viewer.scene, cam=viewer.camera, sc=shadowScratch;
+  const w=scene.canvas.clientWidth, h=scene.canvas.clientHeight;
+  const project=Cesium.SceneTransforms.wgs84ToWindowCoordinates || Cesium.SceneTransforms.worldToWindowCoordinates;
+  const list=[];
+  for(const t of terrasses){
+    if(!isFoodPlace(t) || !markerEntities[t.id]?.show) continue;
+    if(!sunAboveHorizon(t.lng,t.lat,sunDir)) continue;
+    if(shadowCache.has(shadowCacheKey(t,timeKey))) continue;
+    Cesium.Cartesian3.fromDegrees(t.lng,t.lat,2,undefined,sc.pos);
+    Cesium.Cartesian3.subtract(sc.pos,cam.positionWC,sc.off);
+    if(Cesium.Cartesian3.dot(sc.off,cam.directionWC)<=0) continue;
+    const p=project(scene,sc.pos,sc.win);
+    if(!p || p.x<0 || p.y<0 || p.x>w || p.y>h) continue;
+    list.push({t,d:Cesium.Cartesian3.magnitudeSquared(sc.off)});
   }
-  if(valid<3) return sunAboveHorizon(t.lng,t.lat,sunDir);
-  return sunny>0;
+  list.sort((a,b)=>a.d-b.d);
+  return list.slice(0,SHADOW_MAX_PLACES).map(x=>x.t);
 }
 
 let cameraMoving=false;
-viewer.camera.moveStart.addEventListener(()=>{cameraMoving=true;});
-viewer.camera.moveEnd.addEventListener(()=>{cameraMoving=false;});
+viewer.camera.moveStart.addEventListener(()=>{cameraMoving=true;cancelShadowJob();});
+viewer.camera.moveEnd.addEventListener(()=>{cameraMoving=false;if(terrasses.length) scheduleShadow();});
+osmBuildings.allTilesLoaded.addEventListener(()=>{if(terrasses.length && !shadowJob) scheduleShadow();});
 
 let shadowDebounce=null,computing=false,shadowVersion=0,shadowPending=false;
 function computeFastSunStates(){
   const sunDir=getSunDir(viewer.clock.currentTime);
-  terrasses.forEach(t=>{sunStates[t.id]=sunAboveHorizon(t.lng,t.lat,sunDir);});
+  const timeKey=shadowTimeKey(viewer.clock.currentTime);
+  terrasses.forEach(t=>{
+    const horizon=sunAboveHorizon(t.lng,t.lat,sunDir);
+    const cached=horizon?shadowCache.get(shadowCacheKey(t,timeKey)):undefined;
+    sunStates[t.id]=cached!=null?cached:horizon;
+  });
+}
+function cancelShadowJob(){
+  shadowVersion++;
+  if(shadowJob){ shadowJob=null; computing=false; shadowPending=true; }
 }
 function scheduleShadow(){
-  if(!ENABLE_SHADOW_RAYCASTS){
-    shadowPending = false;
-    clearTimeout(shadowDebounce);
+  clearTimeout(shadowDebounce);
+  if(!shadowsActive()){
+    shadowPending=false;
     computeFastSunStates();
     requestAnimationFrame(()=>{syncDots(); refreshActivePlaceSunStatus();});
     return;
   }
-  shadowPending = true;
-  clearTimeout(shadowDebounce);
-  shadowDebounce=setTimeout(()=>{
-    if(cameraMoving) return;
-    const unsub=viewer.scene.postRender.addEventListener(()=>{ unsub(); runShadow(); });
-  }, 150);
+  shadowPending=true;
+  shadowDebounce=setTimeout(runShadow, 400);
 }
-async function runShadow(){
-  if(!ENABLE_SHADOW_RAYCASTS){
-    computing=false;
-    shadowPending=false;
-    computeFastSunStates();
-    syncDots();
-    refreshActivePlaceSunStatus();
-    return;
-  }
-  if(computing || cameraMoving) return;
-  computing=true; shadowPending=false; const version=++shadowVersion;
-  const jd=viewer.clock.currentTime; const sunDir=getSunDir(jd);
-  for(let i=0;i<terrasses.length;i+=45){
-    if(version!==shadowVersion||cameraMoving){computing=false;if(shadowPending)scheduleShadow();return;}
-    const batch=terrasses.slice(i,i+45);
-    for(const t of batch) sunStates[t.id]=checkSunny(t,sunDir,true);
-    syncDots(batch);
-    refreshActivePlaceSunStatus();
-    await new Promise(r=>setTimeout(r,0));
-  }
-  // Une seule reconstruction de la liste à la fin (évite le clignotement)
-  renderList(currentHeure,searchQuery);
-  refreshActivePlaceSunStatus();
-  computing=false;
-  if(shadowPending) scheduleShadow();
+const idleCall = window.requestIdleCallback ? (fn)=>window.requestIdleCallback(fn,{timeout:300}) : (fn)=>setTimeout(fn,32);
+function runShadow(){
+  if(!shadowsActive()){ scheduleShadow(); return; }
+  if(cameraMoving || !viewer.scene.globe.tilesLoaded || !osmBuildings.tilesLoaded || typeof viewer.scene.pickFromRay!=='function') return; // relancé par moveEnd / allTilesLoaded
+  cancelShadowJob();
+  const jd=viewer.clock.currentTime, sunDir=getSunDir(jd), timeKey=shadowTimeKey(jd);
+  if(!sunDir) return;
+  const queue=shadowCandidates(sunDir,timeKey);
+  const active=activePlaceId?terrasses.find(x=>String(x.id)===String(activePlaceId)):null;
+  if(active && isFoodPlace(active) && !queue.includes(active) && sunAboveHorizon(active.lng,active.lat,sunDir) && !shadowCache.has(shadowCacheKey(active,timeKey))) queue.unshift(active);
+  shadowPending=false;
+  if(!queue.length) return;
+  if(shadowCache.size>8000) shadowCache.clear();
+  const job=shadowJob={version:shadowVersion,queue,sunDir,timeKey,current:null,excludes:Object.values(markerEntities)};
+  let anyChange=false;
+  computing=true;
+  const step=()=>{
+    if(shadowJob!==job || job.version!==shadowVersion || cameraMoving) return;
+    const start=performance.now(), changed=[];
+    while(performance.now()-start<SHADOW_FRAME_BUDGET_MS){
+      if(!job.current){
+        const t=job.queue.shift();
+        if(!t) break;
+        job.current={t,i:0,valid:0,sunny:false,latM:1/111320,lngM:1/(111320*Math.max(0.2,Math.cos(t.lat*Math.PI/180)))};
+      }
+      const c=job.current, [east,north]=SHADOW_SAMPLE_OFFSETS[c.i++];
+      const r=checkSunnyPoint(c.t.lng+east*c.lngM,c.t.lat+north*c.latM,job.sunDir,job.excludes);
+      if(r!==null){ c.valid++; if(r) c.sunny=true; }
+      if(c.sunny || c.i>=SHADOW_SAMPLE_OFFSETS.length){
+        // Au moins un point de la terrasse au soleil → « au soleil ».
+        const result=c.valid>=3||c.sunny ? c.sunny : null;
+        // Résultat incertain (relief pas chargé) : mémorisé aussi, pour ne pas reboucler.
+        shadowCache.set(shadowCacheKey(c.t,job.timeKey),result);
+        if(result!==null && sunStates[c.t.id]!==result){ sunStates[c.t.id]=result; changed.push(c.t); }
+        job.current=null;
+      }
+    }
+    // Appareil trop lent : on coupe le calcul précis pour toute la session.
+    if(shadowPickCount>=15 && shadowPickAvgMs>SHADOW_SLOW_PICK_MS){
+      shadowsAutoDisabled=true; shadowJob=null; computing=false; return;
+    }
+    if(changed.length){ anyChange=true; syncDots(changed); refreshActivePlaceSunStatus(); }
+    if(job.queue.length || job.current){ idleCall(step); return; }
+    shadowJob=null; computing=false;
+    // La liste n'est reconstruite qu'une fois, et seulement si elle est ouverte.
+    if(anyChange && drawer.classList.contains('open')) renderList(currentHeure,searchQuery);
+  };
+  idleCall(step);
 }
 
 function makeSunIcon(sunny){
@@ -1944,6 +1994,7 @@ function placeFactsHTML(t,ref,dist){
 async function showPlaceSheet(t){
   if(navigator.vibrate) navigator.vibrate(10);
   activePlaceId=String(t.id);
+  if(shadowsActive()) scheduleShadow();
   const ref=findReferenced(t);
   const mapsUrl=(ref&&ref.googleMapsUrl)||googleMapsSearchUrl(t);
   const directionUrl=googleDirectionsUrl(t);
@@ -2194,16 +2245,8 @@ slider.addEventListener('input',e=>{
   viewer.scene.requestRender();
   if(terrasses.length>0){
     shadowVersion++;
-    if(ENABLE_SHADOW_RAYCASTS){
-      terrasses.forEach(t=>{sunStates[t.id]=null;});
-      clearTimeout(sliderUiTimer);
-      sliderUiTimer=setTimeout(()=>{
-        syncDots();
-        renderList(currentHeure,searchQuery);
-        refreshActivePlaceSunStatus();
-      }, 90);
-      scheduleShadow();
-    }else{
+    cancelShadowJob();
+    {
       computeFastSunStates();
       syncDots();
       refreshActivePlaceSunStatus();
@@ -2215,8 +2258,8 @@ slider.addEventListener('input',e=>{
 slider.addEventListener('change',e=>{
   if(terrasses.length>0){
     shadowVersion++;
-    if(ENABLE_SHADOW_RAYCASTS) scheduleShadow();
-    else { computeFastSunStates(); syncDots(); renderList(currentHeure,searchQuery); refreshActivePlaceSunStatus(); }
+    computeFastSunStates(); syncDots(); renderList(currentHeure,searchQuery); refreshActivePlaceSunStatus();
+    if(shadowsActive()) scheduleShadow();
   }
 });
 
@@ -2251,9 +2294,7 @@ function paintTerrasses(data, suffix=''){
   renderList(currentHeure,searchQuery);
   const launch=()=>{
     syncDots();
-    if (ENABLE_SHADOW_RAYCASTS) {
-      if (viewer.scene.globe.tilesLoaded) { runShadow(); } else { scheduleShadow(); }
-    }
+    if (shadowsActive()) scheduleShadow();
   };
   if(splashDone) launch();
   else{const w=setInterval(()=>{if(splashDone){clearInterval(w);launch();}},100);}
